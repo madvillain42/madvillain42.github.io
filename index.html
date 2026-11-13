@@ -1422,8 +1422,13 @@
         hover: new Audio("PasarMouse.mp3")
       };
 
+      Object.keys(sfxArchivos).forEach(function (k) {
+        sfxArchivos[k].preload = "auto";
+        sfxArchivos[k].load();
+      });
+
       var indicePista = 0;
-      var volumenMusica = 0.45; // Volumen medio por defecto (45%)
+      var volumenMusica = 0.45;
       var audioElement = document.getElementById("bgm-player");
       var radioHud = document.getElementById("radio-hud");
       var radioTitulo = document.getElementById("radio-titulo");
@@ -1445,6 +1450,7 @@
       var sfxActivo = true;
       var bgmActiva = false;
       var usuarioPausoManual = false;
+      var sableYaSonoEnIntro = false;
       var idioma = "es";
       var timerFin = null;
       var timerAudio = null;
@@ -1579,36 +1585,63 @@
       window.addEventListener("resize", ajustarAnguloCorte);
 
       /* =====================================================
-         REPRODUCTOR DE SFX REALES (sable.wav, BarritaDerecha, etc.)
+         REPRODUCTOR DE SFX REALES CON ADELANTO DE INICIO
          ===================================================== */
-      function dispararSfx(tipo, volumen) {
+      function dispararSfx(tipo, volumen, offsetSegundos, onSuccess) {
         if (!sfxActivo) return;
         var base = sfxArchivos[tipo];
         if (!base) return;
         try {
           var clon = base.cloneNode();
           clon.volume = typeof volumen === "number" ? volumen : 0.6;
-          clon.play().catch(function () {});
+
+          var iniciarReproduccion = function () {
+            if (typeof offsetSegundos === "number" && offsetSegundos > 0) {
+              try {
+                if (!isFinite(clon.duration) || offsetSegundos < clon.duration) {
+                  clon.currentTime = offsetSegundos;
+                }
+              } catch (err) {}
+            }
+            var promesa = clon.play();
+            if (promesa !== undefined) {
+              promesa.then(function () {
+                if (typeof onSuccess === "function") onSuccess();
+              }).catch(function () {});
+            } else if (typeof onSuccess === "function") {
+              onSuccess();
+            }
+          };
+
+          if (clon.readyState >= 1) {
+            iniciarReproduccion();
+          } else {
+            clon.addEventListener("loadedmetadata", iniciarReproduccion, { once: true });
+            iniciarReproduccion();
+          }
         } catch (e) {}
       }
 
       function reproducirSablazo() {
-        dispararSfx("sable", 0.65);
+        dispararSfx("sable", 0.7, 0, function () {
+          sableYaSonoEnIntro = true;
+        });
       }
 
       function reproducirBarraDerecha() {
-        dispararSfx("barra", 0.6);
+        dispararSfx("barra", 0.6, 0);
       }
 
+      /* Adelantados 0.12s (120ms) para eliminar el silencio inicial sin cortar el ataque */
       function reproducirHover() {
         var ahoraMs = performance.now();
         if (ahoraMs - ultimoHover < 65) return;
         ultimoHover = ahoraMs;
-        dispararSfx("hover", 0.45);
+        dispararSfx("hover", 0.45, 0.12);
       }
 
       function reproducirSeleccionar() {
-        dispararSfx("seleccionar", 0.6);
+        dispararSfx("seleccionar", 0.6, 0.12);
       }
 
       /* =====================================================
@@ -1627,7 +1660,6 @@
         if (radioPlayBtn) radioPlayBtn.textContent = bgmActiva ? "❚❚" : "▶";
         if (radioHud) radioHud.classList.toggle("reproduciendo", bgmActiva);
 
-        /* Sincronizar mini-módulo de opciones */
         if (optMiniNombre) {
           optMiniNombre.textContent = pista.titulo;
           optMiniNombre.title = pista.titulo;
@@ -1697,14 +1729,15 @@
         actualizarUIPlaylist();
       }
 
+      /* Todos los botones del reproductor usan BarritaDerecha.mp3 */
       function siguientePista(automatico) {
-        if (!automatico) reproducirSeleccionar();
+        if (!automatico) reproducirBarraDerecha();
         usuarioPausoManual = false;
         cargarPista(indicePista + 1, true);
       }
 
       function anteriorPista() {
-        reproducirSeleccionar();
+        reproducirBarraDerecha();
         usuarioPausoManual = false;
         cargarPista(indicePista - 1, true);
       }
@@ -1721,7 +1754,6 @@
         });
       }
 
-      /* Control de Volumen en tiempo real */
       if (radioVolSlider) {
         radioVolSlider.value = Math.round(volumenMusica * 100);
         radioVolSlider.addEventListener("input", function () {
@@ -1732,11 +1764,11 @@
         });
       }
 
-      /* Eventos reproductor esquina inferior izquierda */
+      /* Reproductor esquina inferior izquierda -> BarritaDerecha.mp3 */
       if (radioPlayBtn) {
         radioPlayBtn.addEventListener("mouseenter", reproducirHover);
         radioPlayBtn.addEventListener("click", function () {
-          reproducirSeleccionar();
+          reproducirBarraDerecha();
           if (bgmActiva) {
             pausarMusica();
           } else {
@@ -1758,13 +1790,14 @@
       if (radioProgresoWrap) {
         radioProgresoWrap.addEventListener("click", function (e) {
           if (!audioElement || !audioElement.duration) return;
+          reproducirBarraDerecha();
           var rect = radioProgresoWrap.getBoundingClientRect();
           var pos = (e.clientX - rect.left) / rect.width;
           audioElement.currentTime = Math.max(0, Math.min(1, pos)) * audioElement.duration;
         });
       }
 
-      /* Eventos mini-reproductor en panel lateral de Opciones (retroceder, pausa/play, siguiente) */
+      /* Mini-reproductor en panel lateral de Opciones -> BarritaDerecha.mp3 */
       if (optMiniPrev) {
         optMiniPrev.addEventListener("mouseenter", reproducirHover);
         optMiniPrev.addEventListener("click", anteriorPista);
@@ -1773,7 +1806,7 @@
       if (optMiniPlay) {
         optMiniPlay.addEventListener("mouseenter", reproducirHover);
         optMiniPlay.addEventListener("click", function () {
-          reproducirSeleccionar();
+          reproducirBarraDerecha();
           if (bgmActiva) {
             pausarMusica();
           } else {
@@ -1801,7 +1834,6 @@
         intro.classList.remove("activa");
         document.documentElement.classList.remove("bloqueado");
 
-        /* Intentar arrancar Departure automáticamente al abrirse la pantalla */
         if (!bgmActiva && !usuarioPausoManual) {
           activarMusica();
         }
@@ -1812,6 +1844,7 @@
         ajustarAnguloCorte();
         clearTimeout(timerFin);
         clearTimeout(timerAudio);
+        sableYaSonoEnIntro = false;
         document.documentElement.classList.add("bloqueado");
         intro.style.display = "block";
         intro.classList.remove("activa");
@@ -1824,8 +1857,11 @@
 
       iniciarSecuencia();
 
-      /* Respaldo por si el navegador bloqueó el autoplay antes del primer toque */
+      /* Respaldo por si el navegador bloqueó el autoplay antes de la primera interacción */
       function desbloquearAudioPrimerToque() {
+        if (!sableYaSonoEnIntro && intro && intro.style.display !== "none") {
+          reproducirSablazo();
+        }
         if (!bgmActiva && !usuarioPausoManual) {
           activarMusica();
         }
