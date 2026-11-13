@@ -215,7 +215,7 @@
     }
     .opt-mini-controles {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
     .opt-mini-btn {
       flex: 1;
@@ -226,6 +226,7 @@
       font-family: var(--pixel);
       font-size: 0.44rem;
       line-height: 1;
+      letter-spacing: -1px;
       color: var(--texto);
       background: #191922;
       border: 1px solid var(--acero);
@@ -247,7 +248,7 @@
       bottom: 1.1rem;
       left: 1.1rem;
       z-index: 75;
-      width: 310px;
+      width: 315px;
       max-width: calc(100vw - 2.2rem);
       padding: 0.8rem 0.95rem;
       background: linear-gradient(180deg, rgba(24, 24, 31, 0.96), rgba(10, 10, 14, 0.97));
@@ -305,8 +306,8 @@
       display: flex;
       align-items: center;
       gap: 0.4rem;
+      margin-bottom: 0.55rem;
     }
-    /* Flechas centradas exactamente dentro de cada botón */
     .radio-btn {
       width: 28px;
       height: 26px;
@@ -353,6 +354,48 @@
       width: 0%;
       background: linear-gradient(90deg, var(--rojo), var(--verde-sable));
       transition: width 0.15s linear;
+    }
+
+    /* Control de volumen retro */
+    .radio-vol-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--pixel);
+      font-size: 0.4rem;
+      color: var(--acero-claro);
+    }
+    .radio-vol-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 6px;
+      background: #050507;
+      border: 1px solid var(--acero);
+      outline: none;
+      cursor: pointer;
+    }
+    .radio-vol-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 10px;
+      height: 12px;
+      background: var(--verde-sable);
+      border: 1px solid #000;
+      cursor: pointer;
+    }
+    .radio-vol-slider::-moz-range-thumb {
+      width: 10px;
+      height: 12px;
+      background: var(--verde-sable);
+      border: 1px solid #000;
+      border-radius: 0;
+      cursor: pointer;
+    }
+    .radio-vol-val {
+      min-width: 32px;
+      text-align: right;
+      color: var(--verde-sable);
     }
 
     /* ---------- Hero ---------- */
@@ -855,7 +898,7 @@
     /* ---------- Footer ---------- */
     footer {
       text-align: center;
-      padding: 2rem 1rem 6rem;
+      padding: 2rem 1rem 6.5rem;
       font-family: var(--pixel);
       font-size: 0.5rem;
       color: #5d5d66;
@@ -868,7 +911,7 @@
       .hero { padding: 4rem 1rem 3rem; }
       .panel { padding: 1.3rem; }
       .briefing-body { padding: 1.2rem; }
-      .radio-corner { width: 270px; bottom: 0.7rem; left: 0.7rem; }
+      .radio-corner { width: 275px; bottom: 0.7rem; left: 0.7rem; }
     }
 
     /* =====================================================
@@ -1052,6 +1095,11 @@
         <div class="radio-progreso-bar" id="radio-progreso-bar"></div>
       </div>
     </div>
+    <div class="radio-vol-row">
+      <span>VOL</span>
+      <input type="range" id="radio-vol" class="radio-vol-slider" min="0" max="100" value="45" aria-label="Volumen de música">
+      <span class="radio-vol-val" id="radio-vol-val">45%</span>
+    </div>
   </div>
 
   <!-- Tarjeta flotante de Opciones a la derecha -->
@@ -1062,7 +1110,7 @@
     <div id="opciones-panel" class="opciones-panel">
       <div class="opciones-titulo">
         <span data-i18n="optHeader">// SISTEMA</span>
-        <small>HUD v2.6</small>
+        <small>HUD v2.7</small>
       </div>
 
       <button type="button" id="btn-sfx" class="opt-btn activo" title="Activar o apagar efectos de sonido">
@@ -1070,12 +1118,13 @@
         <span class="opt-estado" id="estado-sfx">ON</span>
       </button>
 
-      <!-- Mini-módulo compacto de música junto a SFX (solo nombre, pausar y next) -->
+      <!-- Mini-módulo compacto de música junto a SFX (nombre, retroceder, pausa/play y siguiente) -->
       <div class="opt-mini-radio" aria-label="Control rápido de música">
         <div class="opt-mini-nombre" id="opt-mini-nombre">Departure - Megaman Zero 2</div>
         <div class="opt-mini-controles">
-          <button type="button" id="opt-mini-play" class="opt-mini-btn" title="Reproducir o pausar música">▶ PLAY</button>
-          <button type="button" id="opt-mini-next" class="opt-mini-btn" title="Siguiente canción">NEXT ►►</button>
+          <button type="button" id="opt-mini-prev" class="opt-mini-btn" title="Canción anterior" aria-label="Canción anterior">◄◄</button>
+          <button type="button" id="opt-mini-play" class="opt-mini-btn" title="Reproducir o pausar música" aria-label="Reproducir o pausar">▶</button>
+          <button type="button" id="opt-mini-next" class="opt-mini-btn" title="Siguiente canción" aria-label="Siguiente canción">►►</button>
         </div>
       </div>
 
@@ -1363,7 +1412,18 @@
         { titulo: "END OF FILE - Mega Man X Legacy Collection", src: "mmxlcend.mp3" }
       ];
 
+      /* =====================================================================
+         ARCHIVOS DE EFECTOS DE SONIDO REALES (SFX)
+         ===================================================================== */
+      var sfxArchivos = {
+        sable: new Audio("sable.wav"),
+        barra: new Audio("BarritaDerecha.mp3"),
+        seleccionar: new Audio("Seleccionar.mp3"),
+        hover: new Audio("PasarMouse.mp3")
+      };
+
       var indicePista = 0;
+      var volumenMusica = 0.45; // Volumen medio por defecto (45%)
       var audioElement = document.getElementById("bgm-player");
       var radioHud = document.getElementById("radio-hud");
       var radioTitulo = document.getElementById("radio-titulo");
@@ -1373,9 +1433,12 @@
       var radioNextBtn = document.getElementById("radio-next");
       var radioProgresoWrap = document.getElementById("radio-progreso-wrap");
       var radioProgresoBar = document.getElementById("radio-progreso-bar");
+      var radioVolSlider = document.getElementById("radio-vol");
+      var radioVolVal = document.getElementById("radio-vol-val");
 
       /* Mini controles en el panel lateral de Opciones */
       var optMiniNombre = document.getElementById("opt-mini-nombre");
+      var optMiniPrev = document.getElementById("opt-mini-prev");
       var optMiniPlay = document.getElementById("opt-mini-play");
       var optMiniNext = document.getElementById("opt-mini-next");
 
@@ -1383,7 +1446,6 @@
       var bgmActiva = false;
       var usuarioPausoManual = false;
       var idioma = "es";
-      var audioCtx = null;
       var timerFin = null;
       var timerAudio = null;
       var ultimoHover = 0;
@@ -1516,12 +1578,37 @@
       ajustarAnguloCorte();
       window.addEventListener("resize", ajustarAnguloCorte);
 
-      function obtenerAudioContext() {
-        var AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return null;
-        if (!audioCtx) audioCtx = new AudioContext();
-        if (audioCtx.state === "suspended") audioCtx.resume();
-        return audioCtx;
+      /* =====================================================
+         REPRODUCTOR DE SFX REALES (sable.wav, BarritaDerecha, etc.)
+         ===================================================== */
+      function dispararSfx(tipo, volumen) {
+        if (!sfxActivo) return;
+        var base = sfxArchivos[tipo];
+        if (!base) return;
+        try {
+          var clon = base.cloneNode();
+          clon.volume = typeof volumen === "number" ? volumen : 0.6;
+          clon.play().catch(function () {});
+        } catch (e) {}
+      }
+
+      function reproducirSablazo() {
+        dispararSfx("sable", 0.65);
+      }
+
+      function reproducirBarraDerecha() {
+        dispararSfx("barra", 0.6);
+      }
+
+      function reproducirHover() {
+        var ahoraMs = performance.now();
+        if (ahoraMs - ultimoHover < 65) return;
+        ultimoHover = ahoraMs;
+        dispararSfx("hover", 0.45);
+      }
+
+      function reproducirSeleccionar() {
+        dispararSfx("seleccionar", 0.6);
       }
 
       /* =====================================================
@@ -1546,7 +1633,7 @@
           optMiniNombre.title = pista.titulo;
         }
         if (optMiniPlay) {
-          optMiniPlay.textContent = bgmActiva ? "❚❚ PAUSE" : "▶ PLAY";
+          optMiniPlay.textContent = bgmActiva ? "❚❚" : "▶";
           optMiniPlay.classList.toggle("activo", bgmActiva);
         }
       }
@@ -1560,7 +1647,7 @@
           if (rutaActual !== pista.src) {
             audioElement.src = pista.src;
           }
-          audioElement.volume = 0.45;
+          audioElement.volume = volumenMusica;
         }
         if (radioProgresoBar) radioProgresoBar.style.width = "0%";
 
@@ -1586,6 +1673,7 @@
       function activarMusica() {
         usuarioPausoManual = false;
         if (!audioElement) return;
+        audioElement.volume = volumenMusica;
         if (!audioElement.getAttribute("src")) {
           cargarPista(indicePista, true);
           return;
@@ -1610,18 +1698,19 @@
       }
 
       function siguientePista(automatico) {
-        if (!automatico) reproducirConfirmacion();
+        if (!automatico) reproducirSeleccionar();
         usuarioPausoManual = false;
         cargarPista(indicePista + 1, true);
       }
 
       function anteriorPista() {
-        reproducirConfirmacion();
+        reproducirSeleccionar();
         usuarioPausoManual = false;
         cargarPista(indicePista - 1, true);
       }
 
       if (audioElement) {
+        audioElement.volume = volumenMusica;
         audioElement.addEventListener("ended", function () {
           siguientePista(true);
         });
@@ -1632,15 +1721,25 @@
         });
       }
 
+      /* Control de Volumen en tiempo real */
+      if (radioVolSlider) {
+        radioVolSlider.value = Math.round(volumenMusica * 100);
+        radioVolSlider.addEventListener("input", function () {
+          var val = parseInt(radioVolSlider.value, 10);
+          volumenMusica = Math.max(0, Math.min(1, val / 100));
+          if (audioElement) audioElement.volume = volumenMusica;
+          if (radioVolVal) radioVolVal.textContent = val + "%";
+        });
+      }
+
       /* Eventos reproductor esquina inferior izquierda */
       if (radioPlayBtn) {
         radioPlayBtn.addEventListener("mouseenter", reproducirHover);
         radioPlayBtn.addEventListener("click", function () {
+          reproducirSeleccionar();
           if (bgmActiva) {
-            reproducirCancelar();
             pausarMusica();
           } else {
-            reproducirConfirmacion();
             activarMusica();
           }
         });
@@ -1665,15 +1764,19 @@
         });
       }
 
-      /* Eventos mini-reproductor en panel lateral de Opciones */
+      /* Eventos mini-reproductor en panel lateral de Opciones (retroceder, pausa/play, siguiente) */
+      if (optMiniPrev) {
+        optMiniPrev.addEventListener("mouseenter", reproducirHover);
+        optMiniPrev.addEventListener("click", anteriorPista);
+      }
+
       if (optMiniPlay) {
         optMiniPlay.addEventListener("mouseenter", reproducirHover);
         optMiniPlay.addEventListener("click", function () {
+          reproducirSeleccionar();
           if (bgmActiva) {
-            reproducirCancelar();
             pausarMusica();
           } else {
-            reproducirConfirmacion();
             activarMusica();
           }
         });
@@ -1688,168 +1791,8 @@
       cargarPista(0, false);
 
       /* =====================================================
-         EFECTOS DE SONIDO RETRO (SFX)
+         SECUENCIA DE INTRO Y ARRANQUE AUTOMÁTICO DE DEPARTURE
          ===================================================== */
-      function reproducirSablazo() {
-        if (!sfxActivo) return;
-        try {
-          var ctx = obtenerAudioContext();
-          if (!ctx) return;
-
-          var ahora = ctx.currentTime;
-
-          var osc = ctx.createOscillator();
-          var gainOsc = ctx.createGain();
-          osc.type = "sawtooth";
-          osc.frequency.setValueAtTime(1450, ahora);
-          osc.frequency.exponentialRampToValueAtTime(160, ahora + 0.24);
-
-          gainOsc.gain.setValueAtTime(0.001, ahora);
-          gainOsc.gain.linearRampToValueAtTime(0.22, ahora + 0.02);
-          gainOsc.gain.exponentialRampToValueAtTime(0.001, ahora + 0.28);
-
-          var sub = ctx.createOscillator();
-          var gainSub = ctx.createGain();
-          sub.type = "square";
-          sub.frequency.setValueAtTime(520, ahora);
-          sub.frequency.exponentialRampToValueAtTime(75, ahora + 0.26);
-
-          gainSub.gain.setValueAtTime(0.001, ahora);
-          gainSub.gain.linearRampToValueAtTime(0.12, ahora + 0.015);
-          gainSub.gain.exponentialRampToValueAtTime(0.001, ahora + 0.28);
-
-          var bufferSize = Math.floor(ctx.sampleRate * 0.32);
-          var noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-          var data = noiseBuffer.getChannelData(0);
-          for (var i = 0; i < bufferSize; i++) {
-            data[i] = Math.random() * 2 - 1;
-          }
-          var noise = ctx.createBufferSource();
-          noise.buffer = noiseBuffer;
-
-          var filtro = ctx.createBiquadFilter();
-          filtro.type = "bandpass";
-          filtro.frequency.setValueAtTime(3200, ahora);
-          filtro.frequency.exponentialRampToValueAtTime(480, ahora + 0.30);
-          filtro.Q.value = 1.8;
-
-          var gainNoise = ctx.createGain();
-          gainNoise.gain.setValueAtTime(0.001, ahora);
-          gainNoise.gain.linearRampToValueAtTime(0.32, ahora + 0.015);
-          gainNoise.gain.exponentialRampToValueAtTime(0.001, ahora + 0.32);
-
-          osc.connect(gainOsc).connect(ctx.destination);
-          sub.connect(gainSub).connect(ctx.destination);
-          noise.connect(filtro).connect(gainNoise).connect(ctx.destination);
-
-          osc.start(ahora);
-          sub.start(ahora);
-          noise.start(ahora);
-
-          osc.stop(ahora + 0.3);
-          sub.stop(ahora + 0.3);
-          noise.stop(ahora + 0.33);
-        } catch (e) {}
-      }
-
-      function reproducirHover() {
-        if (!sfxActivo) return;
-        var ahoraMs = performance.now();
-        if (ahoraMs - ultimoHover < 55) return;
-        ultimoHover = ahoraMs;
-
-        try {
-          var ctx = obtenerAudioContext();
-          if (!ctx || ctx.state !== "running") return;
-
-          var t = ctx.currentTime;
-          var osc = ctx.createOscillator();
-          var gain = ctx.createGain();
-
-          osc.type = "square";
-          osc.frequency.setValueAtTime(1180, t);
-          osc.frequency.setValueAtTime(1480, t + 0.022);
-
-          gain.gain.setValueAtTime(0.055, t);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.055);
-
-          osc.connect(gain).connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.06);
-        } catch (e) {}
-      }
-
-      function reproducirConfirmacion() {
-        if (!sfxActivo) return;
-        try {
-          var ctx = obtenerAudioContext();
-          if (!ctx) return;
-
-          var t = ctx.currentTime;
-          var osc = ctx.createOscillator();
-          var gain = ctx.createGain();
-
-          osc.type = "square";
-          osc.frequency.setValueAtTime(987.77, t);
-          osc.frequency.setValueAtTime(1567.98, t + 0.045);
-
-          gain.gain.setValueAtTime(0.085, t);
-          gain.gain.setValueAtTime(0.085, t + 0.045);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
-
-          osc.connect(gain).connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.17);
-        } catch (e) {}
-      }
-
-      function reproducirBriefingOpen() {
-        if (!sfxActivo) return;
-        try {
-          var ctx = obtenerAudioContext();
-          if (!ctx) return;
-
-          var t = ctx.currentTime;
-          var osc = ctx.createOscillator();
-          var gain = ctx.createGain();
-
-          osc.type = "square";
-          osc.frequency.setValueAtTime(659.25, t);
-          osc.frequency.setValueAtTime(987.77, t + 0.04);
-          osc.frequency.setValueAtTime(1318.51, t + 0.08);
-
-          gain.gain.setValueAtTime(0.085, t);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.21);
-
-          osc.connect(gain).connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.22);
-        } catch (e) {}
-      }
-
-      function reproducirCancelar() {
-        if (!sfxActivo) return;
-        try {
-          var ctx = obtenerAudioContext();
-          if (!ctx) return;
-
-          var t = ctx.currentTime;
-          var osc = ctx.createOscillator();
-          var gain = ctx.createGain();
-
-          osc.type = "square";
-          osc.frequency.setValueAtTime(740, t);
-          osc.frequency.setValueAtTime(440, t + 0.045);
-
-          gain.gain.setValueAtTime(0.08, t);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
-
-          osc.connect(gain).connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.15);
-        } catch (e) {}
-      }
-
       function finalizarIntro() {
         if (!intro) return;
         clearTimeout(timerFin);
@@ -1857,6 +1800,11 @@
         intro.style.display = "none";
         intro.classList.remove("activa");
         document.documentElement.classList.remove("bloqueado");
+
+        /* Intentar arrancar Departure automáticamente al abrirse la pantalla */
+        if (!bgmActiva && !usuarioPausoManual) {
+          activarMusica();
+        }
       }
 
       function iniciarSecuencia() {
@@ -1876,17 +1824,16 @@
 
       iniciarSecuencia();
 
-      /* Desbloquear audio y arrancar Departure automáticamente en la primera interacción */
-      function desbloquearAudio() {
-        obtenerAudioContext();
+      /* Respaldo por si el navegador bloqueó el autoplay antes del primer toque */
+      function desbloquearAudioPrimerToque() {
         if (!bgmActiva && !usuarioPausoManual) {
           activarMusica();
         }
-        window.removeEventListener("pointerdown", desbloquearAudio);
-        window.removeEventListener("keydown", desbloquearAudio);
+        window.removeEventListener("pointerdown", desbloquearAudioPrimerToque);
+        window.removeEventListener("keydown", desbloquearAudioPrimerToque);
       }
-      window.addEventListener("pointerdown", desbloquearAudio);
-      window.addEventListener("keydown", desbloquearAudio);
+      window.addEventListener("pointerdown", desbloquearAudioPrimerToque);
+      window.addEventListener("keydown", desbloquearAudioPrimerToque);
 
       if (intro) {
         intro.addEventListener("click", function () {
@@ -1895,17 +1842,13 @@
         });
       }
 
-      /* Panel lateral desplegable de Opciones */
+      /* Panel lateral desplegable de Opciones con sonido BarritaDerecha.mp3 */
       if (opcionesToggle && opcionesDock) {
         opcionesToggle.addEventListener("mouseenter", reproducirHover);
         opcionesToggle.addEventListener("click", function () {
+          reproducirBarraDerecha();
           var abierto = opcionesDock.classList.toggle("abierto");
           opcionesToggle.setAttribute("aria-expanded", abierto ? "true" : "false");
-          if (abierto) {
-            reproducirBriefingOpen();
-          } else {
-            reproducirCancelar();
-          }
         });
       }
 
@@ -1978,7 +1921,7 @@
         btn.addEventListener("mouseenter", reproducirHover);
         btn.addEventListener("focus", reproducirHover);
         btn.addEventListener("click", function () {
-          reproducirConfirmacion();
+          reproducirSeleccionar();
           filtroBtns.forEach(function (b) { b.classList.remove("activo"); });
           btn.classList.add("activo");
           aplicarFiltroProyectos(btn.getAttribute("data-filtro") || "all");
@@ -1988,7 +1931,7 @@
       /* Abrir y cerrar Modal Briefing de Proyecto */
       function abrirBriefing(card) {
         if (!modal) return;
-        reproducirBriefingOpen();
+        reproducirSeleccionar();
 
         var esIngles = idioma === "en";
         var dict = textos[idioma];
@@ -2051,12 +1994,14 @@
 
       function cerrarBriefing() {
         if (!modal || !modal.classList.contains("abierto")) return;
-        reproducirCancelar();
+        reproducirSeleccionar();
         modal.classList.remove("abierto");
         document.documentElement.classList.remove("bloqueado");
       }
 
       tarjetasProyectos.forEach(function (card) {
+        card.addEventListener("mouseenter", reproducirHover);
+        card.addEventListener("focus", reproducirHover);
         card.addEventListener("click", function () {
           abrirBriefing(card);
         });
@@ -2083,20 +2028,21 @@
         if (e.key === "Escape") {
           cerrarBriefing();
           if (opcionesDock && opcionesDock.classList.contains("abierto")) {
+            reproducirBarraDerecha();
             opcionesDock.classList.remove("abierto");
             opcionesToggle.setAttribute("aria-expanded", "false");
           }
         }
       });
 
-      /* Vincular sonidos retro de menú a enlaces, botones y tarjetas */
-      var elementosInteractivos = document.querySelectorAll("nav a, .btn, .opt-btn, .proyecto-card");
+      /* Vincular PasarMouse y Seleccionar a todos los apartados y botones */
+      var elementosInteractivos = document.querySelectorAll("nav a, .btn, .opt-btn, .estado, .panel");
       elementosInteractivos.forEach(function (el) {
         el.addEventListener("mouseenter", reproducirHover);
         el.addEventListener("focus", reproducirHover);
 
-        if (el.id !== "btn-sfx" && el.id !== "btn-lang" && el.id !== "btn-replay" && !el.classList.contains("proyecto-card")) {
-          el.addEventListener("click", reproducirConfirmacion);
+        if (!el.classList.contains("estado") && !el.classList.contains("panel") && el.id !== "btn-sfx") {
+          el.addEventListener("click", reproducirSeleccionar);
         }
       });
 
@@ -2107,20 +2053,18 @@
           var estadoSfx = document.getElementById("estado-sfx");
           if (estadoSfx) estadoSfx.textContent = sfxActivo ? "ON" : "OFF";
           btnSfx.classList.toggle("activo", sfxActivo);
-          if (sfxActivo) reproducirConfirmacion();
+          if (sfxActivo) reproducirSeleccionar();
         });
       }
 
       if (btnLang) {
         btnLang.addEventListener("click", function () {
-          reproducirConfirmacion();
           aplicarIdioma(idioma === "es" ? "en" : "es");
         });
       }
 
       if (btnReplay) {
         btnReplay.addEventListener("click", function () {
-          reproducirConfirmacion();
           if (opcionesDock) {
             opcionesDock.classList.remove("abierto");
             opcionesToggle.setAttribute("aria-expanded", "false");
