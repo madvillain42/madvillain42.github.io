@@ -266,9 +266,139 @@
       .hero { padding: 4rem 1rem 3rem; }
       .panel { padding: 1.3rem; }
     }
+
+    /* =====================================================
+       INTRO: pared metálica + sablazo láser verde
+       ===================================================== */
+    html.bloqueado { overflow: hidden; }
+
+    #intro {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      overflow: hidden;
+      cursor: pointer;
+      /* respaldo sin JS: se oculta al terminar la animación */
+      animation: ocultar 0s linear 3.5s forwards;
+    }
+    @keyframes ocultar { to { visibility: hidden; } }
+
+    /* Las dos mitades de la pared */
+    .mitad {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 14px 14px, #a4a4ae 0 2px, #09090b 3px 4px, transparent 5px) 0 0 / 180px 25vh,
+        repeating-linear-gradient(180deg, transparent 0 calc(25vh - 3px), rgba(0,0,0,0.8) calc(25vh - 3px) calc(25vh - 1px), rgba(255,255,255,0.09) calc(25vh - 1px) 25vh),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 3px),
+        linear-gradient(180deg, #4a4a52 0%, #212126 35%, #31313a 55%, #141417 100%);
+      box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.75);
+      animation: abrir 1.2s cubic-bezier(0.7, 0, 0.85, 0.5) 2.1s forwards;
+    }
+    .izq { left: 0;  --dir: -102%; }
+    .der { right: 0; --dir: 102%; }
+    @keyframes abrir { to { transform: translateX(var(--dir)); } }
+
+    /* El grabado ocupa todo el ancho; cada mitad muestra su parte */
+    .grabado {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 200%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .izq .grabado { left: 0; }
+    .der .grabado { right: 0; }
+    .grabado span {
+      font-family: var(--pixel);
+      font-size: clamp(1.2rem, 6vw, 3.2rem);
+      letter-spacing: 2px;
+      color: #15151a;
+      text-shadow:
+        1px 1px 0 rgba(255, 255, 255, 0.30),
+        -1px -1px 1px rgba(0, 0, 0, 0.95),
+        0 0 3px rgba(0, 0, 0, 0.7);
+      opacity: 0;
+      animation: aparecer 0.9s ease-out 0.3s forwards;
+    }
+    @keyframes aparecer { to { opacity: 1; } }
+
+    /* Borde incandescente del corte (aparece cuando pasa el láser) */
+    .mitad::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #d6ffc9;
+      box-shadow: 0 0 8px 2px #8dff7a, 0 0 26px 7px rgba(125, 255, 106, 0.6);
+      opacity: 0;
+      animation: borde 0.4s ease-out 1.95s forwards;
+    }
+    .izq::after { right: 0; }
+    .der::after { left: 0; }
+    @keyframes borde { to { opacity: 1; } }
+
+    /* El sablazo: una línea verde neón que baja por el centro */
+    .sable {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      margin-left: -2px;
+      z-index: 3;
+      background: linear-gradient(180deg, #ffffff, #d2ffc4 20%, #a4ff8e 60%, #7dff6a);
+      box-shadow:
+        0 0 6px 2px #e0ffd6,
+        0 0 18px 6px #8dff7a,
+        0 0 50px 14px rgba(125, 255, 106, 0.55);
+      transform-origin: top;
+      transform: scaleY(0);
+      opacity: 0;
+      animation: sablazo 0.9s ease-out 1.6s forwards;
+    }
+    @keyframes sablazo {
+      0%   { opacity: 1; transform: scaleY(0); }
+      40%  { opacity: 1; transform: scaleY(1); }
+      75%  { opacity: 1; transform: scaleY(1); }
+      100% { opacity: 0; transform: scaleY(1); }
+    }
+
+    /* Destello al terminar el corte */
+    .destello {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: radial-gradient(ellipse 30% 75% at 50% 50%, rgba(190, 255, 170, 0.6), transparent 70%);
+      opacity: 0;
+      animation: flash 0.5s ease-out 1.9s;
+    }
+    @keyframes flash {
+      0%   { opacity: 0; }
+      30%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #intro { display: none; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Intro: pared metálica cortada por un sable láser -->
+  <div id="intro" aria-hidden="true">
+    <div class="mitad izq"><div class="grabado"><span>madvillain42</span></div></div>
+    <div class="mitad der"><div class="grabado"><span>madvillain42</span></div></div>
+    <div class="destello"></div>
+    <div class="sable"></div>
+  </div>
 
   <nav>
     <a href="#inicio" class="logo">MADVILLAIN42</a>
@@ -350,6 +480,25 @@
   <footer>
     <p>© 2026 MADVILLAIN42 · FIN DE LA TRANSMISIÓN</p>
   </footer>
+
+  <script>
+    // Quita la intro al terminar (o al hacer clic para saltarla) y libera el scroll
+    (function () {
+      var intro = document.getElementById("intro");
+      if (!intro) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        intro.style.display = "none";
+        return;
+      }
+      document.documentElement.classList.add("bloqueado");
+      function fin() {
+        intro.style.display = "none";
+        document.documentElement.classList.remove("bloqueado");
+      }
+      setTimeout(fin, 3500);
+      intro.addEventListener("click", fin);
+    })();
+  </script>
 
 </body>
 </html>
