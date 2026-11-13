@@ -1147,7 +1147,7 @@
     <div id="opciones-panel" class="opciones-panel">
       <div class="opciones-titulo">
         <span data-i18n="optHeader">// SISTEMA</span>
-        <small>HUD v2.9</small>
+        <small>HUD v3.0</small>
       </div>
 
       <button type="button" id="btn-sfx" class="opt-btn activo" title="Activar o apagar efectos de sonido">
@@ -1501,6 +1501,8 @@
       var idioma = "es";
       var timerFin = null;
       var ultimoHover = 0;
+      var ultimoClickSfx = 0;
+      var ultimoElementoHover = null;
 
       /* Diccionario ES / EN */
       var textos = {
@@ -1633,7 +1635,7 @@
       window.addEventListener("resize", ajustarAnguloCorte);
 
       /* =====================================================
-         REPRODUCTOR DE SFX REALES CON ADELANTO DE INICIO
+         REPRODUCTOR DE SFX REALES CON ADELANTO Y ENFRIAMIENTO
          ===================================================== */
       function dispararSfx(tipo, volumen, offsetSegundos) {
         if (!sfxActivo) return;
@@ -1674,20 +1676,31 @@
         } catch (e) {}
       }
 
-      /* BarritaDerecha adelantado 0.3s */
+      /* BarritaDerecha adelantado 0.3s + enfriamiento de hover tras clic */
       function reproducirBarraDerecha() {
+        ultimoClickSfx = performance.now();
         dispararSfx("barra", 0.6, 0.3);
       }
 
-      /* PasarMouse y Seleccionar adelantados 0.22s */
-      function reproducirHover() {
+      /* PasarMouse adelantado 0.22s, bloqueado 450 ms después de hacer clic */
+      function reproducirHover(e) {
         var ahoraMs = performance.now();
-        if (ahoraMs - ultimoHover < 65) return;
+        if (ahoraMs - ultimoClickSfx < 450) return;
+        if (ahoraMs - ultimoHover < 90) return;
+
+        var objetivo = e && e.currentTarget ? e.currentTarget : null;
+        if (objetivo && objetivo === ultimoElementoHover && (ahoraMs - ultimoHover < 300)) {
+          return;
+        }
+
         ultimoHover = ahoraMs;
+        ultimoElementoHover = objetivo;
         dispararSfx("hover", 0.45, 0.22);
       }
 
+      /* Seleccionar adelantado 0.22s + enfriamiento de hover tras clic */
       function reproducirSeleccionar() {
+        ultimoClickSfx = performance.now();
         dispararSfx("seleccionar", 0.6, 0.22);
       }
 
@@ -1776,7 +1789,6 @@
         actualizarUIPlaylist();
       }
 
-      /* Todos los botones del reproductor usan BarritaDerecha.mp3 */
       function siguientePista(automatico) {
         if (!automatico) reproducirBarraDerecha();
         usuarioPausoManual = false;
@@ -1889,14 +1901,13 @@
         ajustarAnguloCorte();
         clearTimeout(timerFin);
         introIniciada = true;
+        ultimoClickSfx = performance.now();
         document.documentElement.classList.add("bloqueado");
         intro.style.display = "block";
         intro.classList.remove("activa");
         void intro.offsetWidth;
         intro.classList.add("activa");
 
-        /* Disparo inmediato dentro del evento de clic del usuario:
-           garantiza 100% que el navegador reproduzca sable.wav y departuremmz.mp3 */
         reproducirSablazo();
         if (!bgmActiva && !usuarioPausoManual) {
           activarMusica();
@@ -2115,13 +2126,13 @@
         }
       });
 
-      /* Vincular PasarMouse y Seleccionar a todos los apartados y botones */
-      var elementosInteractivos = document.querySelectorAll("nav a, .btn, .opt-btn, .estado, .panel");
+      /* Vincular PasarMouse y Seleccionar SOLO a enlaces y botones interactuables */
+      var elementosInteractivos = document.querySelectorAll("nav a, .btn, .opt-btn");
       elementosInteractivos.forEach(function (el) {
         el.addEventListener("mouseenter", reproducirHover);
         el.addEventListener("focus", reproducirHover);
 
-        if (!el.classList.contains("estado") && !el.classList.contains("panel") && el.id !== "btn-sfx") {
+        if (el.id !== "btn-sfx") {
           el.addEventListener("click", reproducirSeleccionar);
         }
       });
