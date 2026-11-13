@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>madvillain42 | Informática y Ciberseguridad</title>
-  <meta name="description" content="Sitio personal de madvillain42: estudiante de Informática, ciberseguridad, redes y Linux.">
+  <title>madvillain42 | Ingeniería en Informática</title>
+  <meta name="description" content="Sitio personal de madvillain42: estudiante de 3er año de Ingeniería en Informática en Santo Tomás Concepción.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -18,6 +18,7 @@
       --rojo: #e3231f;
       --rojo-brillo: #ff5048;
       --rojo-oscuro: #7d0d0e;
+      --verde-sable: #7dff6a;
       --texto: #ececf0;
       --pixel: "Press Start 2P", "Courier New", monospace;
     }
@@ -44,7 +45,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 100;
+      z-index: 120;
       background: repeating-linear-gradient(180deg, rgba(0,0,0,0.22) 0 1px, transparent 1px 3px);
     }
 
@@ -70,7 +71,7 @@
       text-decoration: none;
       text-shadow: 0 0 10px rgba(227,35,31,0.7);
     }
-    nav ul { display: flex; gap: 1.4rem; list-style: none; flex-wrap: wrap; }
+    nav ul { display: flex; gap: 1.2rem; list-style: none; flex-wrap: wrap; align-items: center; }
     nav a.link {
       font-family: var(--pixel);
       font-size: 0.55rem;
@@ -82,6 +83,31 @@
     nav a.link:hover { color: var(--rojo-brillo); }
     nav a.link::before { content: "> "; opacity: 0; }
     nav a.link:hover::before { opacity: 1; }
+
+    .hud-controles {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .hud-btn {
+      font-family: var(--pixel);
+      font-size: 0.48rem;
+      color: var(--texto);
+      background: #18181f;
+      border: 1px solid var(--acero);
+      padding: 0.45rem 0.65rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .hud-btn:hover {
+      border-color: var(--verde-sable);
+      color: var(--verde-sable);
+    }
+    .hud-btn.activo {
+      border-color: var(--verde-sable);
+      color: var(--verde-sable);
+      box-shadow: 0 0 8px rgba(125, 255, 106, 0.25);
+    }
 
     /* ---------- Hero ---------- */
     .hero {
@@ -114,7 +140,7 @@
     }
     .hero .sub {
       margin: 2rem auto 2.5rem;
-      max-width: 560px;
+      max-width: 600px;
       color: var(--acero-claro);
     }
     .hero .sub strong { color: var(--rojo-brillo); }
@@ -150,6 +176,8 @@
       text-decoration: none;
       padding: 1rem 1.6rem;
       margin: 0.4rem;
+      border: none;
+      cursor: pointer;
       transition: transform 0.1s, filter 0.15s;
       clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
     }
@@ -212,14 +240,20 @@
       clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
       color: #c6c6cc;
     }
+    .panel p + p { margin-top: 1rem; }
+    .destacado { color: var(--texto); font-weight: bold; }
 
     /* ---------- Barras de nivel (estilo barra de vida) ---------- */
-    .equipo { display: grid; gap: 1.6rem; }
+    .equipo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.6rem 2rem;
+    }
     .skill-cab {
       display: flex;
       justify-content: space-between;
       font-family: var(--pixel);
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       margin-bottom: 0.6rem;
       text-transform: uppercase;
     }
@@ -246,6 +280,328 @@
       box-shadow: 0 0 12px rgba(227,35,31,0.5);
     }
 
+    /* ---------- Barra de Filtros HUD (Proyectos) ---------- */
+    .filtros-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding-bottom: 1.3rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #222229;
+    }
+    .filtros-grupo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .filtro-btn {
+      font-family: var(--pixel);
+      font-size: 0.48rem;
+      color: var(--acero-claro);
+      background: #0b0b0f;
+      border: 1px solid var(--acero);
+      padding: 0.55rem 0.85rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+      transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
+    }
+    .filtro-btn:hover {
+      border-color: var(--rojo-brillo);
+      color: var(--texto);
+      transform: translateY(-2px);
+    }
+    .filtro-btn.activo {
+      color: #fff;
+      background: linear-gradient(180deg, var(--rojo) 0%, var(--rojo-oscuro) 100%);
+      border-color: var(--rojo-brillo);
+      box-shadow: 0 0 12px rgba(227, 35, 31, 0.4);
+    }
+    .filtro-btn.activo::before {
+      content: "▶ ";
+    }
+    .filtros-contador {
+      font-family: var(--pixel);
+      font-size: 0.48rem;
+      color: var(--verde-sable);
+      background: #09090c;
+      padding: 0.45rem 0.7rem;
+      border: 1px solid #262630;
+    }
+
+    /* ---------- Plantilla de Proyectos ---------- */
+    .proyectos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 1.5rem;
+    }
+    .proyecto-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem;
+      background: linear-gradient(180deg, #18181f, #0d0d11);
+      border: 2px dashed var(--acero);
+      border-left: 5px solid var(--acero);
+      clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s, background 0.2s;
+    }
+    .proyecto-card.oculto {
+      display: none;
+    }
+    .proyecto-card.aparecer-filtro {
+      animation: filtrarCard 0.22s ease-out forwards;
+    }
+    @keyframes filtrarCard {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .proyecto-card:hover,
+    .proyecto-card:focus-visible {
+      border-color: var(--rojo);
+      border-left-color: var(--rojo-brillo);
+      background: linear-gradient(180deg, #21191d, #0f0d11);
+      transform: translateY(-3px);
+      outline: none;
+    }
+    .proyecto-tag {
+      font-family: var(--pixel);
+      font-size: 0.5rem;
+      color: var(--rojo-brillo);
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+    .proyecto-card h3 {
+      font-family: var(--pixel);
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--texto);
+      margin-bottom: 0.8rem;
+      line-height: 1.5;
+    }
+    .proyecto-card p {
+      font-size: 0.92rem;
+      color: var(--acero-claro);
+      margin-bottom: 1.2rem;
+    }
+    .proyecto-pie {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .proyecto-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .proyecto-tech span {
+      font-family: var(--pixel);
+      font-size: 0.45rem;
+      padding: 0.3rem 0.55rem;
+      background: #070709;
+      border: 1px solid var(--acero);
+      color: var(--acero-claro);
+    }
+    .proyecto-abrir {
+      font-family: var(--pixel);
+      font-size: 0.45rem;
+      color: var(--verde-sable);
+    }
+    .sin-resultados {
+      display: none;
+      text-align: center;
+      padding: 2rem 1rem;
+      font-family: var(--pixel);
+      font-size: 0.58rem;
+      color: var(--acero-claro);
+      border: 1px dashed var(--acero);
+      background: #0a0a0e;
+    }
+    .sin-resultados.visible {
+      display: block;
+    }
+
+    /* ---------- Modal Briefing de Misión (Mega Man Zero) ---------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 110;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.2rem;
+      background: rgba(4, 4, 7, 0.86);
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.abierto {
+      display: flex;
+      animation: fadeOverlay 0.18s ease-out forwards;
+    }
+    @keyframes fadeOverlay {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .briefing-box {
+      width: 100%;
+      max-width: 720px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background:
+        linear-gradient(135deg, rgba(227, 35, 31, 0.08), transparent 40%),
+        linear-gradient(180deg, #1b1b22, #0c0c10);
+      border: 2px solid var(--rojo);
+      border-left: 8px solid var(--rojo);
+      box-shadow: 0 0 35px rgba(227, 35, 31, 0.35), inset 0 0 25px rgba(0, 0, 0, 0.8);
+      clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+      animation: abrirBriefing 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes abrirBriefing {
+      from { opacity: 0; transform: scaleY(0.75) translateY(12px); }
+      to { opacity: 1; transform: scaleY(1) translateY(0); }
+    }
+
+    .briefing-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1.4rem;
+      background: linear-gradient(90deg, var(--rojo-oscuro), #1a1a22);
+      border-bottom: 2px solid var(--rojo);
+    }
+    .briefing-top-izq {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .briefing-badge {
+      font-family: var(--pixel);
+      font-size: 0.52rem;
+      color: #fff;
+      background: var(--rojo);
+      padding: 0.35rem 0.6rem;
+    }
+    .briefing-status {
+      font-family: var(--pixel);
+      font-size: 0.48rem;
+      color: var(--verde-sable);
+    }
+    .briefing-cerrar {
+      font-family: var(--pixel);
+      font-size: 0.55rem;
+      color: var(--texto);
+      background: #101014;
+      border: 1px solid var(--acero);
+      padding: 0.45rem 0.7rem;
+      cursor: pointer;
+    }
+    .briefing-cerrar:hover {
+      border-color: var(--rojo-brillo);
+      color: var(--rojo-brillo);
+    }
+
+    .briefing-body {
+      padding: 1.6rem;
+    }
+    .briefing-body h3 {
+      font-family: var(--pixel);
+      font-size: clamp(0.85rem, 2.5vw, 1.15rem);
+      font-weight: 400;
+      color: var(--texto);
+      text-shadow: 2px 2px 0 var(--rojo-oscuro);
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .briefing-media {
+      position: relative;
+      width: 100%;
+      min-height: 170px;
+      margin-bottom: 1.4rem;
+      background:
+        radial-gradient(circle at center, rgba(125, 255, 106, 0.08), transparent 70%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 18px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 18px),
+        #07070a;
+      border: 2px solid var(--acero);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .briefing-media img {
+      width: 100%;
+      max-height: 290px;
+      object-fit: cover;
+      display: block;
+    }
+    .briefing-placeholder {
+      text-align: center;
+      padding: 1.5rem;
+      font-family: var(--pixel);
+      font-size: 0.52rem;
+      color: var(--acero-claro);
+      line-height: 1.9;
+    }
+    .briefing-placeholder span {
+      display: block;
+      color: var(--verde-sable);
+      margin-bottom: 0.4rem;
+    }
+
+    .briefing-subtitulo {
+      font-family: var(--pixel);
+      font-size: 0.55rem;
+      color: var(--rojo-brillo);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+    .briefing-desc {
+      color: #d4d4dc;
+      margin-bottom: 1.2rem;
+      font-size: 0.98rem;
+    }
+    .briefing-lista {
+      list-style: none;
+      margin-bottom: 1.4rem;
+      padding: 1rem 1.2rem;
+      background: #0c0c10;
+      border-left: 3px solid var(--verde-sable);
+    }
+    .briefing-lista li {
+      font-size: 0.92rem;
+      color: var(--acero-claro);
+      margin-bottom: 0.45rem;
+    }
+    .briefing-lista li:last-child { margin-bottom: 0; }
+    .briefing-lista li::before {
+      content: "▸ ";
+      color: var(--verde-sable);
+    }
+
+    .briefing-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding-top: 1rem;
+      border-top: 1px dashed var(--acero);
+    }
+    .briefing-footer .btn {
+      margin: 0;
+      font-size: 0.58rem;
+      padding: 0.85rem 1.3rem;
+    }
+
     /* ---------- Enlaces ---------- */
     .enlaces { text-align: center; }
     .enlaces p { margin-bottom: 1.5rem; color: var(--acero-claro); }
@@ -265,10 +621,11 @@
       nav { justify-content: center; }
       .hero { padding: 4rem 1rem 3rem; }
       .panel { padding: 1.3rem; }
+      .briefing-body { padding: 1.2rem; }
     }
 
     /* =====================================================
-       INTRO: pared metálica + sablazo láser verde
+       INTRO: pared metálica + corte diagonal Z-Saber
        ===================================================== */
     html.bloqueado { overflow: hidden; }
 
@@ -278,17 +635,26 @@
       z-index: 90;
       overflow: hidden;
       cursor: pointer;
-      /* respaldo sin JS: se oculta al terminar la animación */
-      animation: ocultar 0s linear 3.5s forwards;
+    }
+
+    #intro.activa {
+      animation:
+        sacudida 0.24s linear 0.52s,
+        ocultar 0s linear 1.65s forwards;
     }
     @keyframes ocultar { to { visibility: hidden; } }
 
-    /* Las dos mitades de la pared */
+    @keyframes sacudida {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-9px, 6px); }
+      40% { transform: translate(9px, -6px); }
+      60% { transform: translate(-6px, -4px); }
+      80% { transform: translate(6px, 4px); }
+    }
+
     .mitad {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 50%;
+      inset: 0;
       overflow: hidden;
       background:
         radial-gradient(circle at 14px 14px, #a4a4ae 0 2px, #09090b 3px 4px, transparent 5px) 0 0 / 180px 25vh,
@@ -296,24 +662,33 @@
         repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 3px),
         linear-gradient(180deg, #4a4a52 0%, #212126 35%, #31313a 55%, #141417 100%);
       box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.75);
-      animation: abrir 1.2s cubic-bezier(0.7, 0, 0.85, 0.5) 2.1s forwards;
     }
-    .izq { left: 0;  --dir: -102%; }
-    .der { right: 0; --dir: 102%; }
-    @keyframes abrir { to { transform: translateX(var(--dir)); } }
 
-    /* El grabado ocupa todo el ancho; cada mitad muestra su parte */
+    .izq {
+      clip-path: polygon(0 0, 72% 0, 28% 100%, 0 100%);
+      --tx: -72%;
+      --ty: -45%;
+    }
+    .der {
+      clip-path: polygon(72% 0, 100% 0, 100% 100%, 28% 100%);
+      --tx: 72%;
+      --ty: 45%;
+    }
+
+    #intro.activa .mitad {
+      animation: abrirDiag 0.65s cubic-bezier(0.75, 0, 0.9, 0.35) 0.85s forwards;
+    }
+    @keyframes abrirDiag {
+      to { transform: translate(var(--tx), var(--ty)); }
+    }
+
     .grabado {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 200%;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .izq .grabado { left: 0; }
-    .der .grabado { right: 0; }
     .grabado span {
       font-family: var(--pixel);
       font-size: clamp(1.2rem, 6vw, 3.2rem);
@@ -324,76 +699,87 @@
         -1px -1px 1px rgba(0, 0, 0, 0.95),
         0 0 3px rgba(0, 0, 0, 0.7);
       opacity: 0;
-      animation: aparecer 0.9s ease-out 0.3s forwards;
+    }
+    #intro.activa .grabado span {
+      animation: aparecer 0.3s ease-out 0.08s forwards;
     }
     @keyframes aparecer { to { opacity: 1; } }
 
-    /* Borde incandescente del corte (aparece cuando pasa el láser) */
-    .mitad::after {
-      content: "";
+    .filo-corte {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: #d6ffc9;
-      box-shadow: 0 0 8px 2px #8dff7a, 0 0 26px 7px rgba(125, 255, 106, 0.6);
-      opacity: 0;
-      animation: borde 0.4s ease-out 1.95s forwards;
-    }
-    .izq::after { right: 0; }
-    .der::after { left: 0; }
-    @keyframes borde { to { opacity: 1; } }
-
-    /* El sablazo: una línea verde neón que baja por el centro */
-    .sable {
-      position: absolute;
-      top: 0;
-      bottom: 0;
+      top: -20%;
+      bottom: -20%;
       left: 50%;
-      width: 4px;
-      margin-left: -2px;
+      width: 6px;
+      margin-left: -3px;
       z-index: 3;
-      background: linear-gradient(180deg, #ffffff, #d2ffc4 20%, #a4ff8e 60%, #7dff6a);
+      background: linear-gradient(180deg, #ffffff 0%, #e6ffde 45%, #7dff6a 100%);
       box-shadow:
-        0 0 6px 2px #e0ffd6,
-        0 0 18px 6px #8dff7a,
-        0 0 50px 14px rgba(125, 255, 106, 0.55);
-      transform-origin: top;
-      transform: scaleY(0);
+        0 0 12px 4px #ffffff,
+        0 0 32px 12px #8dff7a,
+        0 0 80px 26px rgba(125, 255, 106, 0.95);
+      transform-origin: top center;
+      transform: rotate(23.8deg) scaleY(0) scaleX(2.8);
       opacity: 0;
-      animation: sablazo 0.9s ease-out 1.6s forwards;
-    }
-    @keyframes sablazo {
-      0%   { opacity: 1; transform: scaleY(0); }
-      40%  { opacity: 1; transform: scaleY(1); }
-      75%  { opacity: 1; transform: scaleY(1); }
-      100% { opacity: 0; transform: scaleY(1); }
     }
 
-    /* Destello al terminar el corte */
+    #intro.activa .filo-corte {
+      animation: sablazoDiag 0.42s cubic-bezier(0.06, 0.94, 0.16, 1) 0.45s forwards;
+    }
+
+    @keyframes sablazoDiag {
+      0%   { opacity: 1; transform: rotate(23.8deg) scaleY(0) scaleX(3.2); }
+      25%  { opacity: 1; transform: rotate(23.8deg) scaleY(1.05) scaleX(2.2); }
+      55%  { opacity: 1; transform: rotate(23.8deg) scaleY(1) scaleX(1); }
+      100% { opacity: 0; transform: rotate(23.8deg) scaleY(1) scaleX(0.15); }
+    }
+
     .destello {
       position: absolute;
       inset: 0;
       z-index: 2;
-      background: radial-gradient(ellipse 30% 75% at 50% 50%, rgba(190, 255, 170, 0.6), transparent 70%);
+      background:
+        linear-gradient(113.8deg,
+          transparent 44%,
+          rgba(125, 255, 106, 0.45) 48.5%,
+          rgba(255, 255, 255, 0.95) 50%,
+          rgba(125, 255, 106, 0.45) 51.5%,
+          transparent 56%);
       opacity: 0;
-      animation: flash 0.5s ease-out 1.9s;
+    }
+    #intro.activa .destello {
+      animation: flash 0.35s ease-out 0.52s forwards;
     }
     @keyframes flash {
       0%   { opacity: 0; }
-      30%  { opacity: 1; }
+      18%  { opacity: 1; }
       100% { opacity: 0; }
+    }
+
+    .intro-hint {
+      position: absolute;
+      bottom: 1.2rem;
+      right: 1.4rem;
+      z-index: 4;
+      font-family: var(--pixel);
+      font-size: 0.45rem;
+      color: var(--acero-claro);
+      background: rgba(7, 7, 10, 0.75);
+      padding: 0.4rem 0.6rem;
+      border: 1px solid var(--acero);
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
 
-  <!-- Intro: pared metálica cortada por un sable láser -->
-  <div id="intro" aria-hidden="true">
+  <!-- Intro: pared metálica cortada en diagonal por un Z-Saber -->
+  <div id="intro" class="activa" aria-hidden="true">
     <div class="mitad izq"><div class="grabado"><span>madvillain42</span></div></div>
     <div class="mitad der"><div class="grabado"><span>madvillain42</span></div></div>
     <div class="destello"></div>
-    <div class="sable"></div>
+    <div class="filo-corte"></div>
+    <div class="intro-hint">[ CLIC PARA SALTAR // AUDIO ]</div>
   </div>
 
   <nav>
@@ -401,26 +787,32 @@
     <ul>
       <li><a class="link" href="#sobre-mi">Misión 01</a></li>
       <li><a class="link" href="#equipo">Misión 02</a></li>
-      <li><a class="link" href="#enlaces">Misión 03</a></li>
+      <li><a class="link" href="#proyectos">Misión 03</a></li>
+      <li><a class="link" href="#enlaces">Misión 04</a></li>
     </ul>
+    <div class="hud-controles">
+      <button type="button" id="btn-sfx" class="hud-btn activo" title="Activar o silenciar efectos de sonido">SFX: ON</button>
+      <button type="button" id="btn-replay" class="hud-btn" title="Repetir corte Z-Saber">Z-SLASH</button>
+    </div>
   </nav>
 
   <header class="hero" id="inicio">
     <span class="etiqueta">ARCHIVO DE OPERADOR</span>
     <h1>madvillain42</h1>
     <p class="sub">
-      Estudiante de Informática enfocado en <strong>ciberseguridad</strong>,
-      redes e infraestructura.
+      Estudiante de 3er año de <strong>Ingeniería en Informática</strong> en Santo Tomás Concepción.
+      Desarrollo multiplataforma, sistemas Linux y aprendizaje en pentesting.
     </p>
 
     <div class="estado">
       <span>OPERADOR</span><span>madvillain42</span>
-      <span>CLASE</span><span>Ciberseguridad</span>
+      <span>RANGO</span><span>3er Año Informática</span>
+      <span>BASE</span><span>Santo Tomás Concepción</span>
       <span>ESTADO</span><span class="en-linea">EN LÍNEA</span>
     </div>
     <br>
     <a href="#sobre-mi" class="btn btn-rojo">Iniciar misión</a>
-    <a href="#enlaces" class="btn btn-acero">Enlaces</a>
+    <a href="#proyectos" class="btn btn-acero">Proyectos</a>
   </header>
 
   <section id="sobre-mi">
@@ -429,9 +821,16 @@
       <h2>Sobre mí</h2>
     </div>
     <div class="panel">
-      Estudio Ingeniería en Informática con especialización en ciberseguridad.
-      Me muevo cómodo en Linux, redes y Docker, y cuento con la certificación CCNA.
-      Mi camino va hacia la infraestructura y la seguridad.
+      <p>
+        Soy estudiante de <span class="destacado">3er año de Ingeniería en Informática</span> en
+        <span class="destacado">Santo Tomás Concepción</span>. Me desenvuelvo en desarrollo de software
+        utilizando lenguajes variados como <span class="destacado">C++, C#, HTML5, CSS, Python y Java</span>.
+      </p>
+      <p>
+        Manejo entornos <span class="destacado">Linux</span> y contenedores <span class="destacado">Docker</span>,
+        tengo conocimientos de <span class="destacado">redes</span> y actualmente me encuentro aprendiendo
+        <span class="destacado">pentesting</span>, aplicando lo aprendido en distintos proyectos universitarios.
+      </p>
     </div>
   </section>
 
@@ -442,34 +841,137 @@
     </div>
     <div class="panel equipo">
       <div>
-        <div class="skill-cab"><span>Redes (CCNA)</span><span>9/10</span></div>
-        <div class="barra"><div style="--n: 9"></div></div>
+        <div class="skill-cab"><span>Python / Java / C# / C++</span><span>8/10</span></div>
+        <div class="barra"><div style="--n: 8"></div></div>
+      </div>
+      <div>
+        <div class="skill-cab"><span>HTML5 &amp; CSS</span><span>8/10</span></div>
+        <div class="barra"><div style="--n: 8"></div></div>
       </div>
       <div>
         <div class="skill-cab"><span>Linux</span><span>8/10</span></div>
         <div class="barra"><div style="--n: 8"></div></div>
       </div>
       <div>
-        <div class="skill-cab"><span>Docker</span><span>8/10</span></div>
-        <div class="barra"><div style="--n: 8"></div></div>
-      </div>
-      <div>
-        <div class="skill-cab"><span>Ciberseguridad</span><span>7/10</span></div>
+        <div class="skill-cab"><span>Docker</span><span>7/10</span></div>
         <div class="barra"><div style="--n: 7"></div></div>
       </div>
       <div>
-        <div class="skill-cab"><span>Python</span><span>6/10</span></div>
+        <div class="skill-cab"><span>Redes</span><span>6/10</span></div>
         <div class="barra"><div style="--n: 6"></div></div>
+      </div>
+      <div>
+        <div class="skill-cab"><span>Pentesting (En curso)</span><span>5/10</span></div>
+        <div class="barra"><div style="--n: 5"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proyectos">
+    <div class="mision-cab">
+      <span class="mision-num">MISIÓN 03</span>
+      <h2>Proyectos Universitarios</h2>
+    </div>
+    <div class="panel">
+      <!-- Barra de Filtros HUD -->
+      <div class="filtros-hud" role="toolbar" aria-label="Filtrar proyectos por tecnología o área">
+        <div class="filtros-grupo">
+          <button type="button" class="filtro-btn activo" data-filtro="all">Todos</button>
+          <button type="button" class="filtro-btn" data-filtro="c#,c++">C# / C++</button>
+          <button type="button" class="filtro-btn" data-filtro="python,java">Python / Java</button>
+          <button type="button" class="filtro-btn" data-filtro="html5,css">Web</button>
+          <button type="button" class="filtro-btn" data-filtro="linux,docker">Linux / Docker</button>
+          <button type="button" class="filtro-btn" data-filtro="redes,pentesting">Redes / Pentesting</button>
+        </div>
+        <span class="filtros-contador" id="filtros-contador">[ EXPEDIENTES: 3/3 ]</span>
+      </div>
+
+      <div class="proyectos-grid" id="proyectos-grid">
+        <!-- Plantilla Proyecto 01 -->
+        <article class="proyecto-card" tabindex="0" role="button"
+          data-codigo="EXPEDIENTE // 01"
+          data-estado="PLANTILLA EN ESPERA"
+          data-titulo="Proyecto Universitario #01"
+          data-descripcion="Espacio reservado para describir el problema resuelto, contexto de la asignatura en Santo Tomás Concepción y el enfoque técnico utilizado."
+          data-detalles="Arquitectura modular implementada desde cero.|Despliegue reproducible mediante contenedores Docker.|Pruebas de rendimiento y validación de datos."
+          data-tech="C#,C++,Docker"
+          data-repo="https://github.com/madvillain42"
+          data-img="">
+          <div>
+            <span class="proyecto-tag">[ REGISTRO 01 // PENDIENTE ]</span>
+            <h3>Proyecto Universitario #01</h3>
+            <p>Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
+          </div>
+          <div class="proyecto-pie">
+            <div class="proyecto-tech">
+              <span>C# / C++</span>
+              <span>DOCKER</span>
+            </div>
+            <span class="proyecto-abrir">▶ BRIEFING</span>
+          </div>
+        </article>
+
+        <!-- Plantilla Proyecto 02 -->
+        <article class="proyecto-card" tabindex="0" role="button"
+          data-codigo="EXPEDIENTE // 02"
+          data-estado="PLANTILLA EN ESPERA"
+          data-titulo="Proyecto Universitario #02"
+          data-descripcion="Espacio reservado para describir el desarrollo de backend, procesamiento de datos o automatización en entornos Linux."
+          data-detalles="Desarrollo orientado a objetos y manejo de estructuras eficientes.|Automatización de tareas y scripts en entorno Linux.|Control de versiones y documentación técnica en GitHub."
+          data-tech="Java,Python,Linux"
+          data-repo="https://github.com/madvillain42"
+          data-img="">
+          <div>
+            <span class="proyecto-tag">[ REGISTRO 02 // PENDIENTE ]</span>
+            <h3>Proyecto Universitario #02</h3>
+            <p>Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
+          </div>
+          <div class="proyecto-pie">
+            <div class="proyecto-tech">
+              <span>JAVA / PYTHON</span>
+              <span>LINUX</span>
+            </div>
+            <span class="proyecto-abrir">▶ BRIEFING</span>
+          </div>
+        </article>
+
+        <!-- Plantilla Proyecto 03 -->
+        <article class="proyecto-card" tabindex="0" role="button"
+          data-codigo="EXPEDIENTE // 03"
+          data-estado="PLANTILLA EN ESPERA"
+          data-titulo="Proyecto Universitario #03"
+          data-descripcion="Espacio reservado para proyectos de desarrollo web, topologías de red o prácticas iniciales de auditoría y pentesting."
+          data-detalles="Interfaz responsiva construida con estándares HTML5 y CSS.|Configuración y análisis de servicios en red.|Documentación de hallazgos y medidas de mitigación."
+          data-tech="HTML5,CSS,Redes,Pentesting"
+          data-repo="https://github.com/madvillain42"
+          data-img="">
+          <div>
+            <span class="proyecto-tag">[ REGISTRO 03 // PENDIENTE ]</span>
+            <h3>Proyecto Universitario #03</h3>
+            <p>Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
+          </div>
+          <div class="proyecto-pie">
+            <div class="proyecto-tech">
+              <span>HTML5 / CSS</span>
+              <span>REDES</span>
+            </div>
+            <span class="proyecto-abrir">▶ BRIEFING</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="sin-resultados" id="sin-resultados">
+        [ SIN EXPEDIENTES REGISTRADOS EN ESTE SECTOR ]
       </div>
     </div>
   </section>
 
   <section id="enlaces" class="enlaces">
     <div class="mision-cab">
-      <span class="mision-num">MISIÓN 03</span>
+      <span class="mision-num">MISIÓN 04</span>
       <h2>Enlaces</h2>
     </div>
-    <p>Aquí puedes encontrar mi código y proyectos.</p>
+    <p>Aquí puedes encontrar mi código y repositorios universitarios.</p>
     <a href="https://github.com/madvillain42" class="btn btn-rojo" target="_blank" rel="noopener">GitHub</a>
   </section>
 
@@ -477,18 +979,439 @@
     <p>© 2026 MADVILLAIN42 · FIN DE LA TRANSMISIÓN</p>
   </footer>
 
+  <!-- Modal Briefing de Misión -->
+  <div id="modal-briefing" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="briefing-titulo">
+    <div class="briefing-box">
+      <div class="briefing-top">
+        <div class="briefing-top-izq">
+          <span class="briefing-badge" id="briefing-codigo">EXPEDIENTE // 01</span>
+          <span class="briefing-status" id="briefing-estado">● EN ESPERA</span>
+        </div>
+        <button type="button" id="briefing-cerrar" class="briefing-cerrar" aria-label="Cerrar briefing">[ X ] CERRAR</button>
+      </div>
+      <div class="briefing-body">
+        <h3 id="briefing-titulo">Título del Proyecto</h3>
+
+        <div class="briefing-media" id="briefing-media">
+          <div class="briefing-placeholder">
+            <span>[ SIN CAPTURA ASIGNADA ]</span>
+            Agrega una ruta en data-img="..." para mostrar vista previa o diagrama de red
+          </div>
+        </div>
+
+        <span class="briefing-subtitulo">// Resumen de Misión</span>
+        <p class="briefing-desc" id="briefing-desc"></p>
+
+        <span class="briefing-subtitulo">// Especificaciones Técnicas</span>
+        <ul class="briefing-lista" id="briefing-lista"></ul>
+
+        <div class="briefing-footer">
+          <div class="proyecto-tech" id="briefing-tech"></div>
+          <a href="https://github.com/madvillain42" id="briefing-repo" class="btn btn-rojo" target="_blank" rel="noopener">Ver Repositorio</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Quita la intro al terminar (o al hacer clic para saltarla) y libera el scroll
     (function () {
       var intro = document.getElementById("intro");
-      if (!intro) return;
-      document.documentElement.classList.add("bloqueado");
-      function fin() {
+      var btnSfx = document.getElementById("btn-sfx");
+      var btnReplay = document.getElementById("btn-replay");
+      var modal = document.getElementById("modal-briefing");
+      var btnCerrarModal = document.getElementById("briefing-cerrar");
+      var sfxActivo = true;
+      var audioCtx = null;
+      var timerFin = null;
+      var timerAudio = null;
+      var ultimoHover = 0;
+
+      function obtenerAudioContext() {
+        var AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return null;
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        return audioCtx;
+      }
+
+      /* Síntesis de sablazo Z-Saber + impacto metálico */
+      function reproducirSablazo() {
+        if (!sfxActivo) return;
+        try {
+          var ctx = obtenerAudioContext();
+          if (!ctx) return;
+
+          var ahora = ctx.currentTime;
+
+          var osc = ctx.createOscillator();
+          var gainOsc = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(1450, ahora);
+          osc.frequency.exponentialRampToValueAtTime(160, ahora + 0.24);
+
+          gainOsc.gain.setValueAtTime(0.001, ahora);
+          gainOsc.gain.linearRampToValueAtTime(0.22, ahora + 0.02);
+          gainOsc.gain.exponentialRampToValueAtTime(0.001, ahora + 0.28);
+
+          var sub = ctx.createOscillator();
+          var gainSub = ctx.createGain();
+          sub.type = "square";
+          sub.frequency.setValueAtTime(520, ahora);
+          sub.frequency.exponentialRampToValueAtTime(75, ahora + 0.26);
+
+          gainSub.gain.setValueAtTime(0.001, ahora);
+          gainSub.gain.linearRampToValueAtTime(0.12, ahora + 0.015);
+          gainSub.gain.exponentialRampToValueAtTime(0.001, ahora + 0.28);
+
+          var bufferSize = Math.floor(ctx.sampleRate * 0.32);
+          var noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          var data = noiseBuffer.getChannelData(0);
+          for (var i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+          var noise = ctx.createBufferSource();
+          noise.buffer = noiseBuffer;
+
+          var filtro = ctx.createBiquadFilter();
+          filtro.type = "bandpass";
+          filtro.frequency.setValueAtTime(3200, ahora);
+          filtro.frequency.exponentialRampToValueAtTime(480, ahora + 0.30);
+          filtro.Q.value = 1.8;
+
+          var gainNoise = ctx.createGain();
+          gainNoise.gain.setValueAtTime(0.001, ahora);
+          gainNoise.gain.linearRampToValueAtTime(0.32, ahora + 0.015);
+          gainNoise.gain.exponentialRampToValueAtTime(0.001, ahora + 0.32);
+
+          osc.connect(gainOsc).connect(ctx.destination);
+          sub.connect(gainSub).connect(ctx.destination);
+          noise.connect(filtro).connect(gainNoise).connect(ctx.destination);
+
+          osc.start(ahora);
+          sub.start(ahora);
+          noise.start(ahora);
+
+          osc.stop(ahora + 0.3);
+          sub.stop(ahora + 0.3);
+          noise.stop(ahora + 0.33);
+        } catch (e) {}
+      }
+
+      /* SFX Cursor de menú Mega Man Zero (Hover) */
+      function reproducirHover() {
+        if (!sfxActivo) return;
+        var ahoraMs = performance.now();
+        if (ahoraMs - ultimoHover < 55) return;
+        ultimoHover = ahoraMs;
+
+        try {
+          var ctx = obtenerAudioContext();
+          if (!ctx || ctx.state !== "running") return;
+
+          var t = ctx.currentTime;
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+
+          osc.type = "square";
+          osc.frequency.setValueAtTime(1180, t);
+          osc.frequency.setValueAtTime(1480, t + 0.022);
+
+          gain.gain.setValueAtTime(0.055, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.055);
+
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.06);
+        } catch (e) {}
+      }
+
+      /* SFX Confirmación de menú Mega Man Zero (Clic) */
+      function reproducirConfirmacion() {
+        if (!sfxActivo) return;
+        try {
+          var ctx = obtenerAudioContext();
+          if (!ctx) return;
+
+          var t = ctx.currentTime;
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+
+          osc.type = "square";
+          osc.frequency.setValueAtTime(987.77, t);
+          osc.frequency.setValueAtTime(1567.98, t + 0.045);
+
+          gain.gain.setValueAtTime(0.085, t);
+          gain.gain.setValueAtTime(0.085, t + 0.045);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.17);
+        } catch (e) {}
+      }
+
+      /* SFX Apertura de terminal / briefing */
+      function reproducirBriefingOpen() {
+        if (!sfxActivo) return;
+        try {
+          var ctx = obtenerAudioContext();
+          if (!ctx) return;
+
+          var t = ctx.currentTime;
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+
+          osc.type = "square";
+          osc.frequency.setValueAtTime(659.25, t);
+          osc.frequency.setValueAtTime(987.77, t + 0.04);
+          osc.frequency.setValueAtTime(1318.51, t + 0.08);
+
+          gain.gain.setValueAtTime(0.085, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.21);
+
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.22);
+        } catch (e) {}
+      }
+
+      /* SFX Cancelar / cerrar ventana */
+      function reproducirCancelar() {
+        if (!sfxActivo) return;
+        try {
+          var ctx = obtenerAudioContext();
+          if (!ctx) return;
+
+          var t = ctx.currentTime;
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+
+          osc.type = "square";
+          osc.frequency.setValueAtTime(740, t);
+          osc.frequency.setValueAtTime(440, t + 0.045);
+
+          gain.gain.setValueAtTime(0.08, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.15);
+        } catch (e) {}
+      }
+
+      function finalizarIntro() {
+        if (!intro) return;
+        clearTimeout(timerFin);
+        clearTimeout(timerAudio);
         intro.style.display = "none";
+        intro.classList.remove("activa");
         document.documentElement.classList.remove("bloqueado");
       }
-      setTimeout(fin, 3500);
-      intro.addEventListener("click", fin);
+
+      function iniciarSecuencia() {
+        if (!intro) return;
+        clearTimeout(timerFin);
+        clearTimeout(timerAudio);
+        document.documentElement.classList.add("bloqueado");
+        intro.style.display = "block";
+        intro.classList.remove("activa");
+        void intro.offsetWidth;
+        intro.classList.add("activa");
+
+        timerAudio = setTimeout(reproducirSablazo, 450);
+        timerFin = setTimeout(finalizarIntro, 1650);
+      }
+
+      iniciarSecuencia();
+
+      function desbloquearAudio() {
+        obtenerAudioContext();
+        window.removeEventListener("pointerdown", desbloquearAudio);
+        window.removeEventListener("keydown", desbloquearAudio);
+      }
+      window.addEventListener("pointerdown", desbloquearAudio);
+      window.addEventListener("keydown", desbloquearAudio);
+
+      if (intro) {
+        intro.addEventListener("click", function () {
+          reproducirSablazo();
+          finalizarIntro();
+        });
+      }
+
+      /* Filtrado HUD de Proyectos */
+      var filtroBtns = document.querySelectorAll(".filtro-btn");
+      var tarjetasProyectos = document.querySelectorAll(".proyecto-card");
+      var contadorEl = document.getElementById("filtros-contador");
+      var sinResultadosEl = document.getElementById("sin-resultados");
+
+      function aplicarFiltroProyectos(filtroValor) {
+        var criterios = filtroValor.toLowerCase().split(",").map(function (c) { return c.trim(); });
+        var total = tarjetasProyectos.length;
+        var visibles = 0;
+
+        tarjetasProyectos.forEach(function (card) {
+          var techsCard = (card.getAttribute("data-tech") || "")
+            .toLowerCase()
+            .split(",")
+            .map(function (t) { return t.trim(); });
+
+          var coincide = filtroValor === "all" || criterios.some(function (crit) {
+            return techsCard.indexOf(crit) !== -1;
+          });
+
+          if (coincide) {
+            card.classList.remove("oculto");
+            card.classList.remove("aparecer-filtro");
+            void card.offsetWidth;
+            card.classList.add("aparecer-filtro");
+            visibles++;
+          } else {
+            card.classList.add("oculto");
+            card.classList.remove("aparecer-filtro");
+          }
+        });
+
+        if (contadorEl) {
+          contadorEl.textContent = "[ EXPEDIENTES: " + visibles + "/" + total + " ]";
+        }
+        if (sinResultadosEl) {
+          sinResultadosEl.classList.toggle("visible", visibles === 0);
+        }
+      }
+
+      filtroBtns.forEach(function (btn) {
+        btn.addEventListener("mouseenter", reproducirHover);
+        btn.addEventListener("focus", reproducirHover);
+        btn.addEventListener("click", function () {
+          reproducirConfirmacion();
+          filtroBtns.forEach(function (b) { b.classList.remove("activo"); });
+          btn.classList.add("activo");
+          aplicarFiltroProyectos(btn.getAttribute("data-filtro") || "all");
+        });
+      });
+
+      /* Abrir y cerrar Modal Briefing de Proyecto */
+      function abrirBriefing(card) {
+        if (!modal) return;
+        reproducirBriefingOpen();
+
+        var codigo = card.getAttribute("data-codigo") || "EXPEDIENTE";
+        var estado = card.getAttribute("data-estado") || "ACTIVO";
+        var titulo = card.getAttribute("data-titulo") || "Proyecto";
+        var desc = card.getAttribute("data-descripcion") || "";
+        var detallesRaw = card.getAttribute("data-detalles") || "";
+        var techRaw = card.getAttribute("data-tech") || "";
+        var repo = card.getAttribute("data-repo") || "https://github.com/madvillain42";
+        var imgSrc = card.getAttribute("data-img") || "";
+
+        document.getElementById("briefing-codigo").textContent = codigo;
+        document.getElementById("briefing-estado").textContent = "● " + estado;
+        document.getElementById("briefing-titulo").textContent = titulo;
+        document.getElementById("briefing-desc").textContent = desc;
+
+        var mediaEl = document.getElementById("briefing-media");
+        mediaEl.innerHTML = "";
+        if (imgSrc.trim() !== "") {
+          var img = document.createElement("img");
+          img.src = imgSrc;
+          img.alt = "Captura de " + titulo;
+          mediaEl.appendChild(img);
+        } else {
+          var placeholder = document.createElement("div");
+          placeholder.className = "briefing-placeholder";
+          placeholder.innerHTML = '<span>[ SIN CAPTURA ASIGNADA ]</span>Agrega una ruta en data-img="..." para mostrar vista previa o diagrama';
+          mediaEl.appendChild(placeholder);
+        }
+
+        var listaEl = document.getElementById("briefing-lista");
+        listaEl.innerHTML = "";
+        detallesRaw.split("|").forEach(function (item) {
+          if (item.trim() !== "") {
+            var li = document.createElement("li");
+            li.textContent = item.trim();
+            listaEl.appendChild(li);
+          }
+        });
+
+        var techEl = document.getElementById("briefing-tech");
+        techEl.innerHTML = "";
+        techRaw.split(",").forEach(function (t) {
+          if (t.trim() !== "") {
+            var span = document.createElement("span");
+            span.textContent = t.trim().toUpperCase();
+            techEl.appendChild(span);
+          }
+        });
+
+        var repoLink = document.getElementById("briefing-repo");
+        repoLink.href = repo;
+
+        modal.classList.add("abierto");
+        document.documentElement.classList.add("bloqueado");
+        btnCerrarModal.focus();
+      }
+
+      function cerrarBriefing() {
+        if (!modal || !modal.classList.contains("abierto")) return;
+        reproducirCancelar();
+        modal.classList.remove("abierto");
+        document.documentElement.classList.remove("bloqueado");
+      }
+
+      tarjetasProyectos.forEach(function (card) {
+        card.addEventListener("click", function () {
+          abrirBriefing(card);
+        });
+        card.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            abrirBriefing(card);
+          }
+        });
+      });
+
+      if (btnCerrarModal) {
+        btnCerrarModal.addEventListener("mouseenter", reproducirHover);
+        btnCerrarModal.addEventListener("click", cerrarBriefing);
+      }
+
+      if (modal) {
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) cerrarBriefing();
+        });
+      }
+
+      window.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") cerrarBriefing();
+      });
+
+      /* Vincular sonidos retro de menú a enlaces, botones y tarjetas */
+      var elementosInteractivos = document.querySelectorAll("nav a, .btn, .hud-btn, .proyecto-card");
+      elementosInteractivos.forEach(function (el) {
+        el.addEventListener("mouseenter", reproducirHover);
+        el.addEventListener("focus", reproducirHover);
+
+        if (el.id !== "btn-sfx" && el.id !== "btn-replay" && !el.classList.contains("proyecto-card")) {
+          el.addEventListener("click", reproducirConfirmacion);
+        }
+      });
+
+      if (btnSfx) {
+        btnSfx.addEventListener("click", function () {
+          sfxActivo = !sfxActivo;
+          btnSfx.textContent = sfxActivo ? "SFX: ON" : "SFX: OFF";
+          btnSfx.classList.toggle("activo", sfxActivo);
+          if (sfxActivo) reproducirConfirmacion();
+        });
+      }
+
+      if (btnReplay) {
+        btnReplay.addEventListener("click", function () {
+          reproducirConfirmacion();
+          iniciarSecuencia();
+        });
+      }
     })();
   </script>
 
