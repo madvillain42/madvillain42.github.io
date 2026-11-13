@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>madvillain42 | Informática y Ciberseguridad</title>
+  <meta name="description" content="Sitio personal de madvillain42: estudiante de Informática, ciberseguridad, redes y Linux.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --negro: #07070a;
+      --panel: #101014;
+      --panel-2: #17171c;
+      --acero: #3a3a42;
+      --acero-claro: #9a9aa4;
+      --rojo: #e3231f;
+      --rojo-brillo: #ff5048;
+      --rojo-oscuro: #7d0d0e;
+      --texto: #ececf0;
+      --pixel: "Press Start 2P", "Courier New", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Courier New", ui-monospace, monospace;
+      font-size: 1.05rem;
+      color: var(--texto);
+      line-height: 1.7;
+      background:
+        linear-gradient(135deg, transparent 0 62%, rgba(227, 35, 31, 0.10) 62% 70%, transparent 70%),
+        linear-gradient(135deg, transparent 0 78%, rgba(227, 35, 31, 0.06) 78% 82%, transparent 82%),
+        radial-gradient(ellipse at 20% 0%, rgba(227, 35, 31, 0.18), transparent 55%),
+        var(--negro);
+      background-attachment: fixed;
+    }
+
+    /* Líneas de escaneo tipo pantalla retro */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+      background: repeating-linear-gradient(180deg, rgba(0,0,0,0.22) 0 1px, transparent 1px 3px);
+    }
+
+    /* ---------- Barra superior (HUD) ---------- */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 0.9rem 1.5rem;
+      background: linear-gradient(180deg, #202026, #0b0b0e);
+      border-bottom: 3px solid var(--rojo);
+      box-shadow: 0 4px 0 #000, 0 8px 24px rgba(0,0,0,0.7);
+    }
+    .logo {
+      font-family: var(--pixel);
+      font-size: 0.7rem;
+      color: var(--rojo-brillo);
+      text-decoration: none;
+      text-shadow: 0 0 10px rgba(227,35,31,0.7);
+    }
+    nav ul { display: flex; gap: 1.4rem; list-style: none; flex-wrap: wrap; }
+    nav a.link {
+      font-family: var(--pixel);
+      font-size: 0.55rem;
+      color: var(--acero-claro);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.15s;
+    }
+    nav a.link:hover { color: var(--rojo-brillo); }
+    nav a.link::before { content: "> "; opacity: 0; }
+    nav a.link:hover::before { opacity: 1; }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 6rem 1.5rem 4rem;
+      text-align: center;
+    }
+    .etiqueta {
+      display: inline-block;
+      font-family: var(--pixel);
+      font-size: 0.6rem;
+      color: #fff;
+      background: var(--rojo);
+      padding: 0.5rem 0.9rem;
+      margin-bottom: 1.8rem;
+      clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    }
+    .hero h1 {
+      font-family: var(--pixel);
+      font-size: clamp(1.3rem, 6.2vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.3;
+      background: linear-gradient(180deg, #ffffff 0%, #c8c8d0 40%, #55555d 52%, #d8d8de 70%, #8a8a92 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(4px 4px 0 var(--rojo-oscuro)) drop-shadow(0 0 18px rgba(227,35,31,0.4));
+      word-break: break-word;
+    }
+    .hero .sub {
+      margin: 2rem auto 2.5rem;
+      max-width: 560px;
+      color: var(--acero-claro);
+    }
+    .hero .sub strong { color: var(--rojo-brillo); }
+
+    /* Panel de estado */
+    .estado {
+      display: inline-grid;
+      grid-template-columns: auto auto;
+      gap: 0.4rem 1.5rem;
+      text-align: left;
+      font-family: var(--pixel);
+      font-size: 0.55rem;
+      line-height: 1.8;
+      padding: 1.2rem 1.6rem;
+      margin-bottom: 2.5rem;
+      background: linear-gradient(180deg, #1a1a20, #0d0d10);
+      border: 2px solid var(--acero);
+      border-left: 6px solid var(--rojo);
+      clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+    }
+    .estado span:nth-child(odd) { color: var(--acero-claro); }
+    .estado span:nth-child(even) { color: var(--texto); }
+    .en-linea { color: var(--rojo-brillo) !important; animation: parpadeo 1.2s steps(2, start) infinite; }
+
+    @keyframes parpadeo { to { visibility: hidden; } }
+
+    /* ---------- Botones ---------- */
+    .btn {
+      display: inline-block;
+      font-family: var(--pixel);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 1rem 1.6rem;
+      margin: 0.4rem;
+      transition: transform 0.1s, filter 0.15s;
+      clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+    }
+    .btn:hover { transform: translateY(-3px); filter: brightness(1.25); }
+    .btn-rojo {
+      color: #fff;
+      background: linear-gradient(180deg, #ff6b62 0%, var(--rojo) 50%, var(--rojo-oscuro) 100%);
+    }
+    .btn-acero {
+      color: var(--texto);
+      background: linear-gradient(180deg, #5a5a64 0%, #2a2a30 50%, #3b3b43 100%);
+    }
+    .btn-rojo::before { content: "▶ "; animation: parpadeo 1s steps(2, start) infinite; }
+
+    /* ---------- Secciones tipo misión ---------- */
+    section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem;
+    }
+    .mision-cab {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .mision-num {
+      font-family: var(--pixel);
+      font-size: 0.6rem;
+      color: #fff;
+      background: var(--rojo);
+      padding: 0.55rem 0.9rem;
+      clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    }
+    h2 {
+      font-family: var(--pixel);
+      font-size: clamp(0.8rem, 2.6vw, 1.2rem);
+      font-weight: 400;
+      text-transform: uppercase;
+      color: var(--texto);
+      text-shadow: 3px 3px 0 var(--rojo-oscuro);
+    }
+    .mision-cab::after {
+      content: "";
+      flex: 1;
+      min-width: 40px;
+      height: 4px;
+      background: repeating-linear-gradient(90deg, var(--rojo) 0 14px, transparent 14px 20px);
+    }
+
+    /* ---------- Paneles ---------- */
+    .panel {
+      padding: 1.8rem;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.06), transparent 35%),
+        linear-gradient(180deg, var(--panel-2), var(--panel));
+      border: 2px solid var(--acero);
+      border-left: 6px solid var(--rojo);
+      clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+      color: #c6c6cc;
+    }
+
+    /* ---------- Barras de nivel (estilo barra de vida) ---------- */
+    .equipo { display: grid; gap: 1.6rem; }
+    .skill-cab {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--pixel);
+      font-size: 0.6rem;
+      margin-bottom: 0.6rem;
+      text-transform: uppercase;
+    }
+    .skill-cab span:last-child { color: var(--rojo-brillo); }
+    .barra {
+      height: 16px;
+      padding: 2px;
+      background: #050507;
+      border: 2px solid var(--acero);
+    }
+    .barra div {
+      height: 100%;
+      width: 100%;
+      background:
+        linear-gradient(90deg, #1d1d22 calc(100% - 3px), transparent 0) 0 0 / 10% 100%;
+      position: relative;
+    }
+    .barra div::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: calc(var(--n) * 10%);
+      background: linear-gradient(90deg, var(--rojo-brillo) calc(100% - 3px), transparent 0) 0 0 / calc(100% / var(--n)) 100%;
+      box-shadow: 0 0 12px rgba(227,35,31,0.5);
+    }
+
+    /* ---------- Enlaces ---------- */
+    .enlaces { text-align: center; }
+    .enlaces p { margin-bottom: 1.5rem; color: var(--acero-claro); }
+
+    /* ---------- Footer ---------- */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem 3rem;
+      font-family: var(--pixel);
+      font-size: 0.5rem;
+      color: #5d5d66;
+      border-top: 3px solid var(--rojo-oscuro);
+      background: linear-gradient(180deg, transparent, #040405);
+    }
+
+    @media (max-width: 600px) {
+      nav { justify-content: center; }
+      .hero { padding: 4rem 1rem 3rem; }
+      .panel { padding: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#inicio" class="logo">MADVILLAIN42</a>
+    <ul>
+      <li><a class="link" href="#sobre-mi">Misión 01</a></li>
+      <li><a class="link" href="#equipo">Misión 02</a></li>
+      <li><a class="link" href="#enlaces">Misión 03</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero" id="inicio">
+    <span class="etiqueta">ARCHIVO DE OPERADOR</span>
+    <h1>madvillain42</h1>
+    <p class="sub">
+      Estudiante de Informática enfocado en <strong>ciberseguridad</strong>,
+      redes e infraestructura.
+    </p>
+
+    <div class="estado">
+      <span>OPERADOR</span><span>madvillain42</span>
+      <span>CLASE</span><span>Ciberseguridad</span>
+      <span>ESTADO</span><span class="en-linea">EN LÍNEA</span>
+    </div>
+    <br>
+    <a href="#sobre-mi" class="btn btn-rojo">Iniciar misión</a>
+    <a href="#enlaces" class="btn btn-acero">Enlaces</a>
+  </header>
+
+  <section id="sobre-mi">
+    <div class="mision-cab">
+      <span class="mision-num">MISIÓN 01</span>
+      <h2>Sobre mí</h2>
+    </div>
+    <div class="panel">
+      Estudio Ingeniería en Informática con especialización en ciberseguridad.
+      Me muevo cómodo en Linux, redes y Docker, y cuento con la certificación CCNA.
+      Mi camino va hacia la infraestructura y la seguridad.
+    </div>
+  </section>
+
+  <section id="equipo">
+    <div class="mision-cab">
+      <span class="mision-num">MISIÓN 02</span>
+      <h2>Equipamiento</h2>
+    </div>
+    <div class="panel equipo">
+      <div>
+        <div class="skill-cab"><span>Redes (CCNA)</span><span>9/10</span></div>
+        <div class="barra"><div style="--n: 9"></div></div>
+      </div>
+      <div>
+        <div class="skill-cab"><span>Linux</span><span>8/10</span></div>
+        <div class="barra"><div style="--n: 8"></div></div>
+      </div>
+      <div>
+        <div class="skill-cab"><span>Docker</span><span>8/10</span></div>
+        <div class="barra"><div style="--n: 8"></div></div>
+      </div>
+      <div>
+        <div class="skill-cab"><span>Ciberseguridad</span><span>7/10</span></div>
+        <div class="barra"><div style="--n: 7"></div></div>
+      </div>
+      <div>
+        <div class="skill-cab"><span>Python</span><span>6/10</span></div>
+        <div class="barra"><div style="--n: 6"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="enlaces" class="enlaces">
+    <div class="mision-cab">
+      <span class="mision-num">MISIÓN 03</span>
+      <h2>Enlaces</h2>
+    </div>
+    <p>Aquí puedes encontrar mi código y proyectos.</p>
+    <a href="https://github.com/madvillain42" class="btn btn-rojo" target="_blank" rel="noopener">GitHub</a>
+  </section>
+
+  <footer>
+    <p>© 2026 MADVILLAIN42 · FIN DE LA TRANSMISIÓN</p>
+  </footer>
+
+</body>
+</html>
