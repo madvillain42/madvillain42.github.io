@@ -929,8 +929,8 @@
 
     #intro.activa {
       animation:
-        sacudida 0.24s linear 0.52s,
-        ocultar 0s linear 1.65s forwards;
+        sacudida 0.24s linear 0.12s,
+        ocultar 0s linear 1.25s forwards;
     }
     @keyframes ocultar { to { visibility: hidden; } }
 
@@ -966,7 +966,7 @@
     }
 
     #intro.activa .mitad {
-      animation: abrirDiag 0.65s cubic-bezier(0.75, 0, 0.9, 0.35) 0.85s forwards;
+      animation: abrirDiag 0.65s cubic-bezier(0.75, 0, 0.9, 0.35) 0.45s forwards;
     }
     @keyframes abrirDiag {
       to { transform: translate(var(--tx), var(--ty)); }
@@ -976,10 +976,12 @@
       position: absolute;
       inset: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 1.8rem;
     }
-    .grabado span {
+    .grabado span.grabado-titulo {
       font-family: var(--pixel);
       font-size: clamp(1.2rem, 6vw, 3.2rem);
       letter-spacing: 2px;
@@ -988,12 +990,37 @@
         1px 1px 0 rgba(255, 255, 255, 0.30),
         -1px -1px 1px rgba(0, 0, 0, 0.95),
         0 0 3px rgba(0, 0, 0, 0.7);
+      opacity: 1;
+    }
+
+    /* Botón de desbloqueo inicial sobre la compuerta cerrada */
+    .intro-start-btn {
+      position: relative;
+      z-index: 5;
+      font-family: var(--pixel);
+      font-size: clamp(0.55rem, 2.2vw, 0.72rem);
+      color: #fff;
+      background: linear-gradient(180deg, #ff6b62 0%, var(--rojo) 50%, var(--rojo-oscuro) 100%);
+      border: 2px solid var(--rojo-brillo);
+      padding: 0.95rem 1.5rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+      box-shadow: 0 0 24px rgba(227, 35, 31, 0.65), 0 6px 0 #000;
+      animation: pulsoBoton 1.4s ease-in-out infinite;
+    }
+    .intro-start-btn:hover {
+      filter: brightness(1.25);
+    }
+    #intro.activa .intro-start-btn {
       opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.1s;
     }
-    #intro.activa .grabado span {
-      animation: aparecer 0.3s ease-out 0.08s forwards;
+    @keyframes pulsoBoton {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
     }
-    @keyframes aparecer { to { opacity: 1; } }
 
     .filo-corte {
       position: absolute;
@@ -1015,7 +1042,7 @@
     }
 
     #intro.activa .filo-corte {
-      animation: sablazoDiag 0.42s cubic-bezier(0.06, 0.94, 0.16, 1) 0.45s forwards;
+      animation: sablazoDiag 0.42s cubic-bezier(0.06, 0.94, 0.16, 1) 0.05s forwards;
     }
 
     @keyframes sablazoDiag {
@@ -1041,7 +1068,7 @@
       opacity: 0;
     }
     #intro.activa .destello {
-      animation: flash 0.35s ease-out 0.52s forwards;
+      animation: flash 0.35s ease-out 0.12s forwards;
     }
     @keyframes flash {
       0%   { opacity: 0; }
@@ -1069,13 +1096,23 @@
   <!-- Elemento de audio oculto para la playlist MP3 -->
   <audio id="bgm-player" preload="auto"></audio>
 
-  <!-- Intro: pared metálica cortada en diagonal por un Z-Saber -->
-  <div id="intro" class="activa" aria-hidden="true">
-    <div class="mitad izq"><div class="grabado"><span>madvillain42</span></div></div>
-    <div class="mitad der"><div class="grabado"><span>madvillain42</span></div></div>
+  <!-- Intro: compuerta metálica cerrada hasta el primer clic para desbloquear audio y ejecutar el corte Z-Saber -->
+  <div id="intro" aria-label="Pantalla de inicio">
+    <div class="mitad izq">
+      <div class="grabado">
+        <span class="grabado-titulo">madvillain42</span>
+        <button type="button" class="intro-start-btn" data-i18n="introStartBtn">▶ INICIAR SISTEMA</button>
+      </div>
+    </div>
+    <div class="mitad der">
+      <div class="grabado">
+        <span class="grabado-titulo">madvillain42</span>
+        <button type="button" class="intro-start-btn" data-i18n="introStartBtn">▶ INICIAR SISTEMA</button>
+      </div>
+    </div>
     <div class="destello"></div>
     <div class="filo-corte"></div>
-    <div class="intro-hint" data-i18n="introHint">[ CLIC PARA SALTAR // AUDIO ]</div>
+    <div class="intro-hint" data-i18n="introHint">[ CLIC PARA CORTAR // AUDIO ON ]</div>
   </div>
 
   <!-- Reproductor / Playlist Rotativa en Esquina Inferior Izquierda -->
@@ -1097,8 +1134,8 @@
     </div>
     <div class="radio-vol-row">
       <span>VOL</span>
-      <input type="range" id="radio-vol" class="radio-vol-slider" min="0" max="100" value="45" aria-label="Volumen de música">
-      <span class="radio-vol-val" id="radio-vol-val">45%</span>
+      <input type="range" id="radio-vol" class="radio-vol-slider" min="0" max="100" value="25" aria-label="Volumen de música">
+      <span class="radio-vol-val" id="radio-vol-val">25%</span>
     </div>
   </div>
 
@@ -1110,7 +1147,7 @@
     <div id="opciones-panel" class="opciones-panel">
       <div class="opciones-titulo">
         <span data-i18n="optHeader">// SISTEMA</span>
-        <small>HUD v2.7</small>
+        <small>HUD v2.9</small>
       </div>
 
       <button type="button" id="btn-sfx" class="opt-btn activo" title="Activar o apagar efectos de sonido">
@@ -1422,13 +1459,23 @@
         hover: new Audio("PasarMouse.mp3")
       };
 
+      var candidatosSable = ["sable.wav", "Sable.wav", "sable.mp3", "Sable.mp3"];
+      var idxSable = 0;
+      sfxArchivos.sable.addEventListener("error", function () {
+        idxSable++;
+        if (idxSable < candidatosSable.length) {
+          sfxArchivos.sable.src = candidatosSable[idxSable];
+          sfxArchivos.sable.load();
+        }
+      });
+
       Object.keys(sfxArchivos).forEach(function (k) {
         sfxArchivos[k].preload = "auto";
         sfxArchivos[k].load();
       });
 
       var indicePista = 0;
-      var volumenMusica = 0.45;
+      var volumenMusica = 0.25; // Volumen por defecto al 25%
       var audioElement = document.getElementById("bgm-player");
       var radioHud = document.getElementById("radio-hud");
       var radioTitulo = document.getElementById("radio-titulo");
@@ -1450,16 +1497,16 @@
       var sfxActivo = true;
       var bgmActiva = false;
       var usuarioPausoManual = false;
-      var sableYaSonoEnIntro = false;
+      var introIniciada = false;
       var idioma = "es";
       var timerFin = null;
-      var timerAudio = null;
       var ultimoHover = 0;
 
       /* Diccionario ES / EN */
       var textos = {
         es: {
-          introHint: "[ CLIC PARA SALTAR // AUDIO ]",
+          introStartBtn: "▶ INICIAR SISTEMA",
+          introHint: "[ CLIC PARA CORTAR // AUDIO ON ]",
           optTab: "OPCIONES",
           optHeader: "// SISTEMA",
           optSfx: "SFX",
@@ -1516,7 +1563,8 @@
           noImgDesc: 'Agrega una ruta en data-img="..." para mostrar vista previa o diagrama'
         },
         en: {
-          introHint: "[ CLICK TO SKIP // AUDIO ]",
+          introStartBtn: "▶ INITIALIZE SYSTEM",
+          introHint: "[ CLICK TO SLASH // AUDIO ON ]",
           optTab: "OPTIONS",
           optHeader: "// SYSTEM",
           optSfx: "SFX",
@@ -1587,7 +1635,7 @@
       /* =====================================================
          REPRODUCTOR DE SFX REALES CON ADELANTO DE INICIO
          ===================================================== */
-      function dispararSfx(tipo, volumen, offsetSegundos, onSuccess) {
+      function dispararSfx(tipo, volumen, offsetSegundos) {
         if (!sfxActivo) return;
         var base = sfxArchivos[tipo];
         if (!base) return;
@@ -1603,14 +1651,7 @@
                 }
               } catch (err) {}
             }
-            var promesa = clon.play();
-            if (promesa !== undefined) {
-              promesa.then(function () {
-                if (typeof onSuccess === "function") onSuccess();
-              }).catch(function () {});
-            } else if (typeof onSuccess === "function") {
-              onSuccess();
-            }
+            clon.play().catch(function () {});
           };
 
           if (clon.readyState >= 1) {
@@ -1623,25 +1664,31 @@
       }
 
       function reproducirSablazo() {
-        dispararSfx("sable", 0.7, 0, function () {
-          sableYaSonoEnIntro = true;
-        });
+        if (!sfxActivo) return;
+        var audioSable = sfxArchivos.sable;
+        try {
+          audioSable.pause();
+          audioSable.currentTime = 0;
+          audioSable.volume = 0.7;
+          audioSable.play().catch(function () {});
+        } catch (e) {}
       }
 
+      /* BarritaDerecha adelantado 0.3s */
       function reproducirBarraDerecha() {
-        dispararSfx("barra", 0.6, 0);
+        dispararSfx("barra", 0.6, 0.3);
       }
 
-      /* Adelantados 0.12s (120ms) para eliminar el silencio inicial sin cortar el ataque */
+      /* PasarMouse y Seleccionar adelantados 0.22s */
       function reproducirHover() {
         var ahoraMs = performance.now();
         if (ahoraMs - ultimoHover < 65) return;
         ultimoHover = ahoraMs;
-        dispararSfx("hover", 0.45, 0.12);
+        dispararSfx("hover", 0.45, 0.22);
       }
 
       function reproducirSeleccionar() {
-        dispararSfx("seleccionar", 0.6, 0.12);
+        dispararSfx("seleccionar", 0.6, 0.22);
       }
 
       /* =====================================================
@@ -1756,6 +1803,7 @@
 
       if (radioVolSlider) {
         radioVolSlider.value = Math.round(volumenMusica * 100);
+        if (radioVolVal) radioVolVal.textContent = Math.round(volumenMusica * 100) + "%";
         radioVolSlider.addEventListener("input", function () {
           var val = parseInt(radioVolSlider.value, 10);
           volumenMusica = Math.max(0, Math.min(1, val / 100));
@@ -1824,59 +1872,55 @@
       cargarPista(0, false);
 
       /* =====================================================
-         SECUENCIA DE INTRO Y ARRANQUE AUTOMÁTICO DE DEPARTURE
+         SECUENCIA DE INTRO INTERACTIVA (Sablazo + Departure al instante)
          ===================================================== */
+      document.documentElement.classList.add("bloqueado");
+
       function finalizarIntro() {
         if (!intro) return;
         clearTimeout(timerFin);
-        clearTimeout(timerAudio);
         intro.style.display = "none";
         intro.classList.remove("activa");
         document.documentElement.classList.remove("bloqueado");
-
-        if (!bgmActiva && !usuarioPausoManual) {
-          activarMusica();
-        }
       }
 
       function iniciarSecuencia() {
         if (!intro) return;
         ajustarAnguloCorte();
         clearTimeout(timerFin);
-        clearTimeout(timerAudio);
-        sableYaSonoEnIntro = false;
+        introIniciada = true;
         document.documentElement.classList.add("bloqueado");
         intro.style.display = "block";
         intro.classList.remove("activa");
         void intro.offsetWidth;
         intro.classList.add("activa");
 
-        timerAudio = setTimeout(reproducirSablazo, 450);
-        timerFin = setTimeout(finalizarIntro, 1650);
-      }
-
-      iniciarSecuencia();
-
-      /* Respaldo por si el navegador bloqueó el autoplay antes de la primera interacción */
-      function desbloquearAudioPrimerToque() {
-        if (!sableYaSonoEnIntro && intro && intro.style.display !== "none") {
-          reproducirSablazo();
-        }
+        /* Disparo inmediato dentro del evento de clic del usuario:
+           garantiza 100% que el navegador reproduzca sable.wav y departuremmz.mp3 */
+        reproducirSablazo();
         if (!bgmActiva && !usuarioPausoManual) {
           activarMusica();
         }
-        window.removeEventListener("pointerdown", desbloquearAudioPrimerToque);
-        window.removeEventListener("keydown", desbloquearAudioPrimerToque);
+
+        timerFin = setTimeout(finalizarIntro, 1250);
       }
-      window.addEventListener("pointerdown", desbloquearAudioPrimerToque);
-      window.addEventListener("keydown", desbloquearAudioPrimerToque);
 
       if (intro) {
         intro.addEventListener("click", function () {
-          reproducirSablazo();
-          finalizarIntro();
+          if (!introIniciada) {
+            iniciarSecuencia();
+          } else {
+            finalizarIntro();
+          }
         });
       }
+
+      window.addEventListener("keydown", function (e) {
+        if (!introIniciada && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          iniciarSecuencia();
+        }
+      });
 
       /* Panel lateral desplegable de Opciones con sonido BarritaDerecha.mp3 */
       if (opcionesToggle && opcionesDock) {
