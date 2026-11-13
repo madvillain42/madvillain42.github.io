@@ -384,10 +384,6 @@
       30%  { opacity: 1; }
       100% { opacity: 0; }
     }
-
-    @media (prefers-reduced-motion: reduce) {
-      #intro { display: none; }
-    }
   </style>
 </head>
 <body>
@@ -486,10 +482,6 @@
     (function () {
       var intro = document.getElementById("intro");
       if (!intro) return;
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        intro.style.display = "none";
-        return;
-      }
       document.documentElement.classList.add("bloqueado");
       function fin() {
         intro.style.display = "none";
