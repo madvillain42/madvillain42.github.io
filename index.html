@@ -5,10 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>madvillain42 | Ingeniería en Informática</title>
   <meta name="description" content="Sitio personal de madvillain42: estudiante de 3er año de Ingeniería en Informática en Santo Tomás Concepción.">
+  <meta name="theme-color" content="#7d0d0e">
+  <meta property="og:title" content="madvillain42 | Ingeniería en Informática">
+  <meta property="og:description" content="Portafolio de madvillain42: informática, Linux, redes y ciberseguridad.">
+  <meta property="og:type" content="website">
+
+  <!-- Ícono de la pestaña: una Z roja en pixel art -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%230a0a0b'/%3E%3Cpath fill='%23e3231f' d='M3 3h10v2H3zM10 5h2v1h-2zM9 6h2v1H9zM8 7h2v1H8zM7 8h2v1H7zM6 9h2v1H6zM5 10h2v1H5zM3 11h10v2H3z'/%3E%3C/svg%3E">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
+    /* Colores de acento que cambian según el apartado (con transición suave) */
+    @property --acento   { syntax: "<color>"; inherits: true; initial-value: #e3231f; }
+    @property --acento-b { syntax: "<color>"; inherits: true; initial-value: #ff5048; }
+    @property --acento-o { syntax: "<color>"; inherits: true; initial-value: #7d0d0e; }
+
     :root {
       --negro: #07070a;
       --panel: #101014;
@@ -19,9 +32,22 @@
       --rojo-brillo: #ff5048;
       --rojo-oscuro: #7d0d0e;
       --verde-sable: #7dff6a;
+      --oro: #ffd35c;
+      --cian: #6fdcff;
       --texto: #ececf0;
       --pixel: "Press Start 2P", "Courier New", monospace;
+
+      --acento: #e3231f;
+      --acento-b: #ff5048;
+      --acento-o: #7d0d0e;
     }
+
+    /* HOME & BIO = rojo (Zero) | HERRAMIENTAS = cian (Resistencia) | PROYECTOS = dorado (rango S) | CONTACTO = verde (sable) */
+    body[data-vista="herramientas"] { --acento: #18b6e8; --acento-b: #6fdcff; --acento-o: #07526e; }
+    body[data-vista="proyectos"]    { --acento: #f2a921; --acento-b: #ffd35c; --acento-o: #7a4d05; }
+    body[data-vista="contacto"]     { --acento: #34d65a; --acento-b: #8dff7a; --acento-o: #0f5a24; }
+
+    [hidden] { display: none !important; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -31,10 +57,16 @@
       font-size: 1.05rem;
       color: var(--texto);
       line-height: 1.7;
+      transition: --acento 0.45s, --acento-b 0.45s, --acento-o 0.45s;
       background:
         linear-gradient(135deg, transparent 0 62%, rgba(227, 35, 31, 0.10) 62% 70%, transparent 70%),
         linear-gradient(135deg, transparent 0 78%, rgba(227, 35, 31, 0.06) 78% 82%, transparent 82%),
         radial-gradient(ellipse at 20% 0%, rgba(227, 35, 31, 0.18), transparent 55%),
+        var(--negro);
+      background:
+        linear-gradient(135deg, transparent 0 62%, color-mix(in srgb, var(--acento) 10%, transparent) 62% 70%, transparent 70%),
+        linear-gradient(135deg, transparent 0 78%, color-mix(in srgb, var(--acento) 6%, transparent) 78% 82%, transparent 82%),
+        radial-gradient(ellipse at 20% 0%, color-mix(in srgb, var(--acento) 20%, transparent), transparent 55%),
         var(--negro);
       background-attachment: fixed;
     }
@@ -47,6 +79,24 @@
       pointer-events: none;
       z-index: 120;
       background: repeating-linear-gradient(180deg, rgba(0,0,0,0.22) 0 1px, transparent 1px 3px);
+    }
+
+    /* Barrido de pantalla al cambiar de apartado */
+    #barrido {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 16vh;
+      z-index: 100;
+      pointer-events: none;
+      opacity: 0;
+      background: linear-gradient(180deg, transparent, var(--acento-b));
+    }
+    #barrido.activo { animation: barrer 0.5s ease-in forwards; }
+    @keyframes barrer {
+      0%   { transform: translateY(-100%); opacity: 0.85; }
+      100% { transform: translateY(105vh); opacity: 0; }
     }
 
     /* ---------- Placa de título (cambia según el apartado) ---------- */
@@ -65,7 +115,7 @@
       padding: 0.95rem 1.5rem;
       background: linear-gradient(180deg, #34343c, #17171c);
       border: 3px solid var(--acero-claro);
-      box-shadow: inset 0 0 0 2px #000, 0 6px 0 #000, 0 0 22px rgba(227, 35, 31, 0.25);
+      box-shadow: inset 0 0 0 2px #000, 0 6px 0 #000, 0 0 24px var(--acento-o);
     }
     .remache {
       flex-shrink: 0;
@@ -80,7 +130,7 @@
       font-size: clamp(0.8rem, 3.4vw, 1.45rem);
       color: var(--texto);
       text-transform: uppercase;
-      text-shadow: 3px 3px 0 var(--rojo-oscuro);
+      text-shadow: 3px 3px 0 var(--acento-o);
       line-height: 1.4;
     }
 
@@ -91,7 +141,7 @@
       z-index: 50;
       background: linear-gradient(180deg, rgba(20, 20, 26, 0.97), rgba(8, 8, 11, 0.97));
       border-top: 2px solid #000;
-      border-bottom: 3px solid var(--rojo);
+      border-bottom: 3px solid var(--acento);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
     }
     .tabs {
@@ -119,14 +169,14 @@
     }
     .tab-btn:hover {
       color: var(--texto);
-      border-color: var(--rojo-brillo);
+      border-color: var(--acento-b);
     }
     .tab-btn.activo {
       color: #fff;
-      background: linear-gradient(180deg, var(--rojo), var(--rojo-oscuro));
-      border-color: var(--rojo-brillo);
+      background: linear-gradient(180deg, var(--acento-b), var(--acento) 45%, var(--acento-o));
+      border-color: var(--acento-b);
       transform: translateY(3px);
-      box-shadow: 0 2px 0 #000, 0 0 16px rgba(227, 35, 31, 0.55);
+      box-shadow: 0 2px 0 #000, 0 0 16px var(--acento);
     }
 
     /* ---------- Vistas (cada apartado) ---------- */
@@ -483,15 +533,43 @@
     .hero {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 3.5rem 1.5rem 3rem;
+      padding: 3rem 1.5rem 3rem;
       text-align: center;
     }
+
+    /* Línea de comandos que se teclea sola */
+    .prompt {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.3rem 0.8ch;
+      margin-bottom: 1.6rem;
+      font-family: var(--pixel);
+      font-size: 0.52rem;
+      line-height: 1.6;
+      color: var(--acero-claro);
+    }
+    .prompt .usuario { color: var(--verde-sable); }
+    .prompt .cmd {
+      display: inline-block;
+      width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      color: var(--texto);
+      border-right: 2px solid var(--verde-sable);
+      animation:
+        teclearPrompt 1.8s steps(37, end) 0.3s forwards,
+        cursorBorde 0.8s steps(2, start) infinite;
+    }
+    @keyframes teclearPrompt { to { width: 37ch; } }
+    @keyframes cursorBorde { 50% { border-right-color: transparent; } }
+
     .etiqueta {
       display: inline-block;
       font-family: var(--pixel);
       font-size: 0.6rem;
       color: #fff;
-      background: var(--rojo);
+      background: var(--acento);
       padding: 0.5rem 0.9rem;
       margin-bottom: 1.8rem;
       clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
@@ -505,7 +583,7 @@
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      filter: drop-shadow(4px 4px 0 var(--rojo-oscuro)) drop-shadow(0 0 18px rgba(227,35,31,0.4));
+      filter: drop-shadow(4px 4px 0 var(--acento-o)) drop-shadow(0 0 18px var(--acento-o));
       word-break: break-word;
     }
     .hero .sub {
@@ -513,7 +591,7 @@
       max-width: 600px;
       color: var(--acero-claro);
     }
-    .hero .sub strong { color: var(--rojo-brillo); }
+    .hero .sub strong { color: var(--acento-b); }
 
     /* Panel de estado */
     .estado {
@@ -528,12 +606,12 @@
       margin-bottom: 2.5rem;
       background: linear-gradient(180deg, #1a1a20, #0d0d10);
       border: 2px solid var(--acero);
-      border-left: 6px solid var(--rojo);
+      border-left: 6px solid var(--acento);
       clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
     }
     .estado span:nth-child(odd) { color: var(--acero-claro); }
     .estado span:nth-child(even) { color: var(--texto); }
-    .en-linea { color: var(--rojo-brillo) !important; animation: parpadeo 1.2s steps(2, start) infinite; }
+    .en-linea { color: var(--verde-sable) !important; text-shadow: 0 0 8px rgba(125, 255, 106, 0.6); animation: parpadeo 1.2s steps(2, start) infinite; }
 
     @keyframes parpadeo { to { visibility: hidden; } }
 
@@ -554,7 +632,7 @@
     .btn:hover { transform: translateY(-3px); filter: brightness(1.25); }
     .btn-rojo {
       color: #fff;
-      background: linear-gradient(180deg, #ff6b62 0%, var(--rojo) 50%, var(--rojo-oscuro) 100%);
+      background: linear-gradient(180deg, var(--acento-b) 0%, var(--acento) 50%, var(--acento-o) 100%);
     }
     .btn-acero {
       color: var(--texto);
@@ -579,7 +657,7 @@
       font-family: var(--pixel);
       font-size: 0.6rem;
       color: #fff;
-      background: var(--rojo);
+      background: var(--acento);
       padding: 0.55rem 0.9rem;
       clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
     }
@@ -589,14 +667,29 @@
       font-weight: 400;
       text-transform: uppercase;
       color: var(--texto);
-      text-shadow: 3px 3px 0 var(--rojo-oscuro);
+      text-shadow: 3px 3px 0 var(--acento-o);
+    }
+    /* Cursor de consola al final de cada título */
+    h2::after {
+      content: "_";
+      margin-left: 0.15em;
+      color: var(--acento-b);
+      animation: parpadeo 1s steps(2, start) infinite;
+    }
+    /* Los títulos se "teclean" al abrir un apartado */
+    .vista.activa h2 {
+      animation: revelarTitulo 0.8s steps(16, end) both;
+    }
+    @keyframes revelarTitulo {
+      from { clip-path: inset(-12px 100% -12px 0); }
+      to   { clip-path: inset(-12px -24px -12px 0); }
     }
     .mision-cab::after {
       content: "";
       flex: 1;
       min-width: 40px;
       height: 4px;
-      background: repeating-linear-gradient(90deg, var(--rojo) 0 14px, transparent 14px 20px);
+      background: repeating-linear-gradient(90deg, var(--acento) 0 14px, transparent 14px 20px);
     }
 
     /* ---------- Paneles ---------- */
@@ -605,13 +698,135 @@
       background:
         linear-gradient(135deg, rgba(255,255,255,0.06), transparent 35%),
         linear-gradient(180deg, var(--panel-2), var(--panel));
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--acento) 12%, transparent), transparent 38%),
+        linear-gradient(180deg, var(--panel-2), var(--panel));
       border: 2px solid var(--acero);
-      border-left: 6px solid var(--rojo);
+      border-left: 6px solid var(--acento);
       clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
       color: #c6c6cc;
     }
     .panel p + p { margin-top: 1rem; }
     .destacado { color: var(--texto); font-weight: bold; }
+
+    /* ---------- Cuadro de diálogo con mugshot (Acerca de mí) ---------- */
+    .dialogo {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 1.6rem;
+      align-items: start;
+    }
+    .mugshot {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .mugshot-marco {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background:
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 6px, transparent 6px 12px),
+        linear-gradient(180deg, #2a1416, #0a0a0e);
+      background:
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 6px, transparent 6px 12px),
+        linear-gradient(180deg, color-mix(in srgb, var(--acento) 28%, #0a0a0e), #0a0a0e);
+      border: 3px solid var(--acero-claro);
+      box-shadow: inset 0 0 0 2px #000, 0 0 0 2px #000, 0 6px 0 #000;
+    }
+    .mugshot-marco::before,
+    .mugshot-marco::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      z-index: 3;
+      border: 3px solid var(--acento-b);
+    }
+    .mugshot-marco::before { top: 6px; left: 6px; border-right: none; border-bottom: none; }
+    .mugshot-marco::after { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+    .mugshot-silueta {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .mugshot-vacio {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0.7rem;
+      text-align: center;
+      font-family: var(--pixel);
+      font-size: 0.4rem;
+      color: var(--acero-claro);
+      line-height: 1.6;
+    }
+    .mugshot-img {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .mugshot-nombre {
+      font-family: var(--pixel);
+      font-size: 0.5rem;
+      text-align: center;
+      color: #fff;
+      background: var(--acento);
+      padding: 0.5rem 0.3rem;
+      clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+    }
+
+    .dialogo-caja {
+      position: relative;
+      min-height: 190px;
+      padding: 2rem 1.5rem 2rem;
+      cursor: pointer;
+      background: linear-gradient(180deg, #14161f, #0a0b10);
+      border: 3px solid var(--acento-b);
+      box-shadow: inset 0 0 0 3px #000, inset 0 0 0 5px var(--acento-o), 0 0 22px var(--acento-o);
+    }
+    .dialogo-nombre {
+      position: absolute;
+      top: -0.95rem;
+      left: 1rem;
+      font-family: var(--pixel);
+      font-size: 0.55rem;
+      color: #fff;
+      background: var(--acento);
+      padding: 0.45rem 0.8rem;
+      clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+    }
+    .dialogo-texto p {
+      color: #d6d6de;
+      font-size: 1rem;
+    }
+    .dialogo-texto p + p { margin-top: 1rem; }
+    .dialogo-texto p.escribiendo::after {
+      content: "█";
+      margin-left: 2px;
+      color: var(--acento-b);
+      animation: parpadeo 0.7s steps(2, start) infinite;
+    }
+    .dialogo-flecha {
+      position: absolute;
+      right: 1rem;
+      bottom: 0.6rem;
+      font-family: var(--pixel);
+      font-size: 0.6rem;
+      color: var(--acento-b);
+      opacity: 0;
+    }
+    .dialogo-caja.terminado .dialogo-flecha {
+      opacity: 1;
+      animation: flechaDialogo 0.8s steps(2, start) infinite;
+    }
+    @keyframes flechaDialogo {
+      50% { transform: translateY(4px); }
+    }
 
     /* ---------- Barras de nivel (estilo barra de vida) ---------- */
     .equipo {
@@ -627,7 +842,7 @@
       margin-bottom: 0.6rem;
       text-transform: uppercase;
     }
-    .skill-cab span:last-child { color: var(--rojo-brillo); }
+    .skill-cab span:last-child { color: var(--acento-b); }
     .barra {
       height: 16px;
       padding: 2px;
@@ -646,8 +861,17 @@
       position: absolute;
       inset: 0;
       width: calc(var(--n) * 10%);
-      background: linear-gradient(90deg, var(--rojo-brillo) calc(100% - 3px), transparent 0) 0 0 / calc(100% / var(--n)) 100%;
-      box-shadow: 0 0 12px rgba(227,35,31,0.5);
+      background: linear-gradient(90deg, var(--acento-b) calc(100% - 3px), transparent 0) 0 0 / calc(100% / var(--n)) 100%;
+      box-shadow: 0 0 12px var(--acento);
+    }
+    /* La barra se llena segmento por segmento al abrir el apartado */
+    .vista.activa .barra div::after {
+      animation: llenarBarra 0.9s linear both;
+      animation-timing-function: steps(var(--n), end);
+    }
+    @keyframes llenarBarra {
+      from { clip-path: inset(-14px 100% -14px 0); }
+      to   { clip-path: inset(-14px -14px -14px 0); }
     }
 
     /* ---------- Frameworks y tecnologías (chips) ---------- */
@@ -656,7 +880,7 @@
       display: block;
       font-family: var(--pixel);
       font-size: 0.55rem;
-      color: var(--rojo-brillo);
+      color: var(--acento-b);
       text-transform: uppercase;
       margin-bottom: 0.8rem;
     }
@@ -672,7 +896,7 @@
       color: var(--texto);
       background: linear-gradient(180deg, #25252d, #121217);
       border: 2px solid var(--acero);
-      border-bottom: 4px solid #000;
+      border-bottom: 4px solid var(--acento-o);
       clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
     }
 
@@ -705,15 +929,15 @@
       transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
     }
     .filtro-btn:hover {
-      border-color: var(--rojo-brillo);
+      border-color: var(--acento-b);
       color: var(--texto);
       transform: translateY(-2px);
     }
     .filtro-btn.activo {
       color: #fff;
-      background: linear-gradient(180deg, var(--rojo) 0%, var(--rojo-oscuro) 100%);
-      border-color: var(--rojo-brillo);
-      box-shadow: 0 0 12px rgba(227, 35, 31, 0.4);
+      background: linear-gradient(180deg, var(--acento) 0%, var(--acento-o) 100%);
+      border-color: var(--acento-b);
+      box-shadow: 0 0 12px var(--acento-o);
     }
     .filtro-btn.activo::before {
       content: "▶ ";
@@ -757,22 +981,54 @@
     }
     .proyecto-card:hover,
     .proyecto-card:focus-visible {
-      border-color: var(--rojo);
-      border-left-color: var(--rojo-brillo);
-      background: linear-gradient(180deg, #21191d, #0f0d11);
+      border-color: var(--acento);
+      border-left-color: var(--acento-b);
+      background: linear-gradient(180deg, #1d1d26, #0f0f14);
       transform: translateY(-3px);
       outline: none;
+    }
+    .proyecto-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 0.9rem;
     }
     .proyecto-tag {
       display: inline-block;
       font-family: var(--pixel);
       font-size: 0.5rem;
       color: #fff;
-      background: var(--rojo);
+      background: var(--acento);
       padding: 0.4rem 0.7rem;
-      margin-bottom: 0.9rem;
       clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
     }
+
+    /* Rango de misión (S a F, como en la pantalla de resultados de Zero) */
+    .rango {
+      flex-shrink: 0;
+      width: 2.3rem;
+      height: 2.3rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--pixel);
+      font-size: 0.95rem;
+      line-height: 1;
+      color: #62626b;
+      background: #07070a;
+      border: 2px solid currentColor;
+      text-shadow: 0 0 10px currentColor;
+    }
+    .rango.r-s { color: var(--oro); }
+    .rango.r-a { color: var(--rojo-brillo); }
+    .rango.r-b { color: var(--cian); }
+    .rango.r-c { color: var(--verde-sable); }
+    .rango.r-d { color: #c4c4cc; }
+    .rango.r-e { color: #8a8a92; }
+    .rango.r-f { color: #62626b; }
+    .rango.r-x { color: #62626b; border-style: dashed; text-shadow: none; }
+
     .proyecto-card h3 {
       font-family: var(--pixel);
       font-size: 0.72rem;
@@ -854,9 +1110,9 @@
       background:
         linear-gradient(135deg, rgba(227, 35, 31, 0.08), transparent 40%),
         linear-gradient(180deg, #1b1b22, #0c0c10);
-      border: 2px solid var(--rojo);
-      border-left: 8px solid var(--rojo);
-      box-shadow: 0 0 35px rgba(227, 35, 31, 0.35), inset 0 0 25px rgba(0, 0, 0, 0.8);
+      border: 2px solid var(--acento);
+      border-left: 8px solid var(--acento);
+      box-shadow: 0 0 35px var(--acento-o), inset 0 0 25px rgba(0, 0, 0, 0.8);
       clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
       animation: abrirBriefing 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
@@ -871,8 +1127,8 @@
       align-items: center;
       gap: 1rem;
       padding: 0.9rem 1.4rem;
-      background: linear-gradient(90deg, var(--rojo-oscuro), #1a1a22);
-      border-bottom: 2px solid var(--rojo);
+      background: linear-gradient(90deg, var(--acento-o), #1a1a22);
+      border-bottom: 2px solid var(--acento);
     }
     .briefing-top-izq {
       display: flex;
@@ -884,7 +1140,7 @@
       font-family: var(--pixel);
       font-size: 0.52rem;
       color: #fff;
-      background: var(--rojo);
+      background: var(--acento);
       padding: 0.35rem 0.6rem;
     }
     .briefing-status {
@@ -902,21 +1158,36 @@
       cursor: pointer;
     }
     .briefing-cerrar:hover {
-      border-color: var(--rojo-brillo);
-      color: var(--rojo-brillo);
+      border-color: var(--acento-b);
+      color: var(--acento-b);
     }
 
     .briefing-body {
       padding: 1.6rem;
+    }
+    .briefing-titulo-fila {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
     }
     .briefing-body h3 {
       font-family: var(--pixel);
       font-size: clamp(0.85rem, 2.5vw, 1.15rem);
       font-weight: 400;
       color: var(--texto);
-      text-shadow: 2px 2px 0 var(--rojo-oscuro);
-      margin-bottom: 1.2rem;
+      text-shadow: 2px 2px 0 var(--acento-o);
       line-height: 1.5;
+    }
+    .briefing-rango-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-shrink: 0;
+      font-family: var(--pixel);
+      font-size: 0.45rem;
+      color: var(--acero-claro);
     }
 
     .briefing-media {
@@ -958,7 +1229,7 @@
     .briefing-subtitulo {
       font-family: var(--pixel);
       font-size: 0.55rem;
-      color: var(--rojo-brillo);
+      color: var(--acento-b);
       text-transform: uppercase;
       margin-bottom: 0.6rem;
       display: block;
@@ -985,6 +1256,8 @@
       content: "▸ ";
       color: var(--verde-sable);
     }
+    .briefing-lista.aprendido { border-left-color: var(--oro); }
+    .briefing-lista.aprendido li::before { color: var(--oro); }
 
     .briefing-footer {
       display: flex;
@@ -1012,8 +1285,14 @@
       font-family: var(--pixel);
       font-size: 0.5rem;
       color: #5d5d66;
-      border-top: 3px solid var(--rojo-oscuro);
+      border-top: 3px solid var(--acento-o);
       background: linear-gradient(180deg, transparent, #040405);
+    }
+    footer p::after {
+      content: "_";
+      margin-left: 0.2em;
+      color: var(--verde-sable);
+      animation: parpadeo 1s steps(2, start) infinite;
     }
 
     @media (max-width: 600px) {
@@ -1022,9 +1301,15 @@
       .tabs { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; padding: 0.8rem 0.8rem 0.9rem; }
       .tab-btn { padding: 0.95rem 0.3rem; font-size: 0.55rem; }
       .placa { padding: 0.75rem 1rem; gap: 0.7rem; }
-      .hero { padding: 2.5rem 1rem 2rem; }
+      .hero { padding: 2.2rem 1rem 2rem; }
       .panel { padding: 1.3rem; }
       .briefing-body { padding: 1.2rem; }
+      .briefing-titulo-fila { flex-direction: column; align-items: flex-start; }
+
+      /* Cuadro de diálogo en una sola columna */
+      .dialogo { grid-template-columns: 1fr; gap: 1.4rem; }
+      .mugshot { width: 130px; margin: 0 auto; }
+      .dialogo-caja { min-height: 0; padding: 1.8rem 1.1rem 1.8rem; }
 
       /* Reproductor compacto: ocupa el ancho y sin fila de volumen */
       .radio-corner {
@@ -1106,7 +1391,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1.8rem;
+      gap: 1.4rem;
     }
     .grabado span.grabado-titulo {
       font-family: var(--pixel);
@@ -1118,6 +1403,31 @@
         -1px -1px 1px rgba(0, 0, 0, 0.95),
         0 0 3px rgba(0, 0, 0, 0.7);
       opacity: 1;
+    }
+
+    /* Registro de arranque tipo consola sobre la compuerta */
+    .boot-log {
+      width: max-content;
+      max-width: 92vw;
+      font-family: var(--pixel);
+      font-size: clamp(0.4rem, 1.6vw, 0.52rem);
+      line-height: 2.1;
+      color: var(--verde-sable);
+      text-shadow: 0 0 8px rgba(125, 255, 106, 0.55);
+    }
+    .boot-log span {
+      display: block;
+      white-space: nowrap;
+      animation: teclearBoot 0.7s steps(34, end) var(--d, 0s) both;
+    }
+    .boot-log span:last-child::after {
+      content: "█";
+      margin-left: 3px;
+      animation: parpadeo 0.7s steps(2, start) infinite;
+    }
+    @keyframes teclearBoot {
+      from { clip-path: inset(0 100% 0 0); }
+      to   { clip-path: inset(0 0 0 0); }
     }
 
     /* Botón de desbloqueo inicial sobre la compuerta cerrada */
@@ -1218,22 +1528,35 @@
     }
   </style>
 </head>
-<body>
+<body data-vista="bio">
 
   <!-- Elemento de audio oculto para la playlist MP3 -->
   <audio id="bgm-player" preload="auto"></audio>
+
+  <!-- Barrido de pantalla al cambiar de apartado -->
+  <div id="barrido" aria-hidden="true"></div>
 
   <!-- Intro: compuerta metálica cerrada hasta el primer clic para desbloquear audio y ejecutar el corte Z-Saber -->
   <div id="intro" aria-label="Pantalla de inicio">
     <div class="mitad izq">
       <div class="grabado">
         <span class="grabado-titulo">madvillain42</span>
+        <div class="boot-log" aria-hidden="true">
+          <span style="--d: 0.2s">&gt; ENLACE CON LA RESISTENCIA... OK</span>
+          <span style="--d: 0.9s">&gt; SINCRONIZANDO E-CRYSTALS... OK</span>
+          <span style="--d: 1.6s">&gt; Z-SABER LISTO</span>
+        </div>
         <button type="button" class="intro-start-btn" data-i18n="introStartBtn">▶ INICIAR SISTEMA</button>
       </div>
     </div>
     <div class="mitad der">
       <div class="grabado">
         <span class="grabado-titulo">madvillain42</span>
+        <div class="boot-log" aria-hidden="true">
+          <span style="--d: 0.2s">&gt; ENLACE CON LA RESISTENCIA... OK</span>
+          <span style="--d: 0.9s">&gt; SINCRONIZANDO E-CRYSTALS... OK</span>
+          <span style="--d: 1.6s">&gt; Z-SABER LISTO</span>
+        </div>
         <button type="button" class="intro-start-btn" data-i18n="introStartBtn">▶ INICIAR SISTEMA</button>
       </div>
     </div>
@@ -1252,7 +1575,7 @@
       </span>
     </div>
     <div class="radio-visor">
-      <span class="radio-titulo" id="radio-titulo">Departure - Megaman Zero 2</span>
+      <span class="radio-titulo" id="radio-titulo">E-Crystal for My Heart - Megaman Zero/ZX Legacy Collection</span>
     </div>
     <div class="radio-controles">
       <button type="button" id="radio-prev" class="radio-btn" title="Pista anterior" aria-label="Pista anterior">◄◄</button>
@@ -1264,8 +1587,8 @@
     </div>
     <div class="radio-vol-row">
       <span>VOL</span>
-      <input type="range" id="radio-vol" class="radio-vol-slider" min="0" max="100" value="25" aria-label="Volumen de música">
-      <span class="radio-vol-val" id="radio-vol-val">25%</span>
+      <input type="range" id="radio-vol" class="radio-vol-slider" min="0" max="100" value="10" aria-label="Volumen de música">
+      <span class="radio-vol-val" id="radio-vol-val">10%</span>
     </div>
   </div>
 
@@ -1287,7 +1610,7 @@
 
       <!-- Mini-módulo compacto de música junto a SFX (nombre, retroceder, pausa/play y siguiente) -->
       <div class="opt-mini-radio" aria-label="Control rápido de música">
-        <div class="opt-mini-nombre" id="opt-mini-nombre">Departure - Megaman Zero 2</div>
+        <div class="opt-mini-nombre" id="opt-mini-nombre">E-Crystal for My Heart - Megaman Zero/ZX Legacy Collection</div>
         <div class="opt-mini-controles">
           <button type="button" id="opt-mini-prev" class="opt-mini-btn" title="Canción anterior" aria-label="Canción anterior">◄◄</button>
           <button type="button" id="opt-mini-play" class="opt-mini-btn" title="Reproducir o pausar música" aria-label="Reproducir o pausar">▶</button>
@@ -1339,6 +1662,10 @@
   <!-- ===================== APARTADO 1: HOME & BIO ===================== -->
   <div class="vista activa" id="vista-bio">
     <header class="hero" id="inicio">
+      <p class="prompt" aria-hidden="true">
+        <span class="usuario">operador@resistencia:~$</span>
+        <span class="cmd">iniciar_sesion --usuario madvillain42</span>
+      </p>
       <span class="etiqueta" data-i18n="heroBadge">ARCHIVO DE OPERADOR</span>
       <h1>madvillain42</h1>
       <p class="sub" data-i18n-html="heroSub">
@@ -1362,17 +1689,32 @@
         <span class="mision-num" data-i18n="m1Num">MISIÓN 01</span>
         <h2 data-i18n="m1Title">Acerca de mí</h2>
       </div>
-      <div class="panel">
-        <p data-i18n-html="aboutP1">
-          Soy estudiante de <span class="destacado">3er año de Ingeniería en Informática</span> en
-          <span class="destacado">Santo Tomás Concepción</span>. Me desenvuelvo en desarrollo de software
-          utilizando lenguajes variados como <span class="destacado">C++, C#, HTML5, CSS, Python y Java</span>.
-        </p>
-        <p data-i18n-html="aboutP2">
-          Manejo entornos <span class="destacado">Linux</span> y contenedores <span class="destacado">Docker</span>,
-          tengo conocimientos de <span class="destacado">redes</span> y actualmente me encuentro aprendiendo
-          <span class="destacado">pentesting</span>, aplicando lo aprendido en distintos proyectos universitarios.
-        </p>
+
+      <!-- Cuadro de diálogo con mugshot.
+           Para tu foto o ilustración: sube una imagen a la carpeta img/ de tu repo con el nombre mugshot.png
+           (proporción vertical 3:4 se ve mejor). Mientras no exista, se muestra una silueta. -->
+      <div class="dialogo">
+        <div class="mugshot">
+          <div class="mugshot-marco">
+            <svg class="mugshot-silueta" viewBox="0 0 48 64" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+              <circle cx="24" cy="25" r="10" fill="#2b2b33"/>
+              <path d="M5 64c0-15 8-21 19-21s19 6 19 21z" fill="#2b2b33"/>
+              <circle cx="24" cy="25" r="10" fill="none" stroke="#4a4a54" stroke-width="1"/>
+            </svg>
+            <span class="mugshot-vacio">img/mugshot.png</span>
+            <img class="mugshot-img" src="img/mugshot.png" alt="Retrato de madvillain42" onerror="this.remove()">
+          </div>
+          <div class="mugshot-nombre">madvillain42</div>
+        </div>
+
+        <div class="dialogo-caja" id="dialogo-caja" title="Clic para saltar la animación">
+          <span class="dialogo-nombre">MADVILLAIN42 //</span>
+          <div class="dialogo-texto">
+            <p data-tipeo="aboutP1">Soy estudiante de <span class="destacado">3er año de Ingeniería en Informática</span> en <span class="destacado">Santo Tomás Concepción</span>. Me desenvuelvo en desarrollo de software utilizando lenguajes variados como <span class="destacado">C++, C#, HTML5, CSS, Python y Java</span>.</p>
+            <p data-tipeo="aboutP2">Manejo entornos <span class="destacado">Linux</span> y contenedores <span class="destacado">Docker</span>, tengo conocimientos de <span class="destacado">redes</span> y actualmente me encuentro aprendiendo <span class="destacado">pentesting</span>, aplicando lo aprendido en distintos proyectos universitarios.</p>
+          </div>
+          <span class="dialogo-flecha" aria-hidden="true">▼</span>
+        </div>
       </div>
     </section>
   </div>
@@ -1384,13 +1726,30 @@
         <span class="mision-num" data-i18n="t1Num">MISIÓN 01</span>
         <h2 data-i18n="t1Title">Habilidades</h2>
       </div>
+      <!-- Para ajustar un nivel: cambia el número de --n (de 1 a 10) y el texto de la derecha -->
       <div class="panel equipo">
         <div>
-          <div class="skill-cab"><span>Python / Java / C# / C++</span><span>8/10</span></div>
+          <div class="skill-cab"><span>Python</span><span>8/10</span></div>
           <div class="barra"><div style="--n: 8"></div></div>
         </div>
         <div>
-          <div class="skill-cab"><span>HTML5 &amp; CSS</span><span>8/10</span></div>
+          <div class="skill-cab"><span>Java</span><span>8/10</span></div>
+          <div class="barra"><div style="--n: 8"></div></div>
+        </div>
+        <div>
+          <div class="skill-cab"><span>C#</span><span>8/10</span></div>
+          <div class="barra"><div style="--n: 8"></div></div>
+        </div>
+        <div>
+          <div class="skill-cab"><span>C++</span><span>8/10</span></div>
+          <div class="barra"><div style="--n: 8"></div></div>
+        </div>
+        <div>
+          <div class="skill-cab"><span>HTML5</span><span>8/10</span></div>
+          <div class="barra"><div style="--n: 8"></div></div>
+        </div>
+        <div>
+          <div class="skill-cab"><span>CSS</span><span>8/10</span></div>
           <div class="barra"><div style="--n: 8"></div></div>
         </div>
         <div>
@@ -1459,6 +1818,8 @@
           <span class="filtros-contador" id="filtros-contador">[ EXPEDIENTES: 3/3 ]</span>
         </div>
 
+        <!-- Cada tarjeta tiene un RANGO (S, A, B, C, D, E, F o ? si aún no se califica) en data-rango.
+             Como en Mega Man Zero: S = excelente ... F = por mejorar. -->
         <div class="proyectos-grid" id="proyectos-grid">
           <!-- Misión 01 -->
           <article class="proyecto-card" tabindex="0" role="button"
@@ -1466,17 +1827,23 @@
             data-codigo-en="MISSION 01"
             data-estado="PLANTILLA EN ESPERA"
             data-estado-en="TEMPLATE STANDBY"
+            data-rango="?"
             data-titulo="Proyecto Re-Eko"
             data-titulo-en="Re-Eko Project"
             data-descripcion="Espacio reservado para describir el proyecto Re-Eko: el problema que resuelve, el contexto en Santo Tomás Concepción y el enfoque técnico utilizado."
             data-descripcion-en="Reserved slot to describe the Re-Eko project: the problem it solves, the course context at Santo Tomás Concepción, and the technical approach used."
             data-detalles="Arquitectura modular implementada desde cero.|Despliegue reproducible mediante contenedores Docker.|Pruebas de rendimiento y validación de datos."
             data-detalles-en="Modular architecture built from scratch.|Reproducible deployment using Docker containers.|Performance benchmarking and data validation."
+            data-aprendido="Escribe aquí lo más importante que aprendiste con este proyecto.|Agrega una segunda lección si quieres."
+            data-aprendido-en="Write here the most important thing you learned from this project.|Add a second lesson if you like."
             data-tech="C#,C++,Docker"
             data-repo="https://github.com/madvillain42"
             data-img="">
             <div>
-              <span class="proyecto-tag" data-i18n="p1Tag">MISIÓN 01</span>
+              <div class="proyecto-top">
+                <span class="proyecto-tag" data-i18n="p1Tag">MISIÓN 01</span>
+                <span class="rango r-x" title="Rango">?</span>
+              </div>
               <h3 data-i18n="p1Title">Proyecto Re-Eko</h3>
               <p data-i18n="p1Desc">Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
             </div>
@@ -1495,17 +1862,23 @@
             data-codigo-en="MISSION 02"
             data-estado="PLANTILLA EN ESPERA"
             data-estado-en="TEMPLATE STANDBY"
+            data-rango="?"
             data-titulo="Proyecto 02"
             data-titulo-en="Project 02"
             data-descripcion="Espacio reservado para describir el desarrollo de backend, procesamiento de datos o automatización en entornos Linux."
             data-descripcion-en="Reserved slot to describe backend development, data processing, or automation in Linux environments."
             data-detalles="Desarrollo orientado a objetos y manejo de estructuras eficientes.|Automatización de tareas y scripts en entorno Linux.|Control de versiones y documentación técnica en GitHub."
             data-detalles-en="Object-oriented development and efficient data structures.|Task automation and shell scripting in Linux.|Version control and technical documentation on GitHub."
+            data-aprendido="Escribe aquí lo más importante que aprendiste con este proyecto.|Agrega una segunda lección si quieres."
+            data-aprendido-en="Write here the most important thing you learned from this project.|Add a second lesson if you like."
             data-tech="Java,Python,Linux"
             data-repo="https://github.com/madvillain42"
             data-img="">
             <div>
-              <span class="proyecto-tag" data-i18n="p2Tag">MISIÓN 02</span>
+              <div class="proyecto-top">
+                <span class="proyecto-tag" data-i18n="p2Tag">MISIÓN 02</span>
+                <span class="rango r-x" title="Rango">?</span>
+              </div>
               <h3 data-i18n="p2Title">Proyecto 02</h3>
               <p data-i18n="p2Desc">Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
             </div>
@@ -1524,17 +1897,23 @@
             data-codigo-en="MISSION 03"
             data-estado="PLANTILLA EN ESPERA"
             data-estado-en="TEMPLATE STANDBY"
+            data-rango="?"
             data-titulo="Proyecto 03"
             data-titulo-en="Project 03"
             data-descripcion="Espacio reservado para proyectos de desarrollo web, topologías de red o prácticas iniciales de auditoría y pentesting."
             data-descripcion-en="Reserved slot for web development projects, network topologies, or introductory auditing and pentesting labs."
             data-detalles="Interfaz responsiva construida con estándares HTML5 y CSS.|Configuración y análisis de servicios en red.|Documentación de hallazgos y medidas de mitigación."
             data-detalles-en="Responsive interface built with HTML5 and CSS standards.|Network service configuration and traffic analysis.|Documentation of findings and mitigation steps."
+            data-aprendido="Escribe aquí lo más importante que aprendiste con este proyecto.|Agrega una segunda lección si quieres."
+            data-aprendido-en="Write here the most important thing you learned from this project.|Add a second lesson if you like."
             data-tech="HTML5,CSS,Redes,Pentesting"
             data-repo="https://github.com/madvillain42"
             data-img="">
             <div>
-              <span class="proyecto-tag" data-i18n="p3Tag">MISIÓN 03</span>
+              <div class="proyecto-top">
+                <span class="proyecto-tag" data-i18n="p3Tag">MISIÓN 03</span>
+                <span class="rango r-x" title="Rango">?</span>
+              </div>
               <h3 data-i18n="p3Title">Proyecto 03</h3>
               <p data-i18n="p3Desc">Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
             </div>
@@ -1564,6 +1943,14 @@
       </div>
       <p data-i18n="linksDesc">Aquí puedes encontrar mi código y repositorios universitarios.</p>
       <a href="https://github.com/madvillain42" class="btn btn-rojo" target="_blank" rel="noopener">GitHub</a>
+
+      <!-- El botón de CV aparece solo si subes un archivo llamado cv.pdf a la raíz del repo -->
+      <a href="cv.pdf" id="btn-cv" class="btn btn-acero" download hidden data-i18n="btnCv">Descargar CV</a>
+
+      <!-- Cuando quieras publicar más formas de contacto, quita los comentarios y pon tus datos:
+      <a href="mailto:TU-CORREO@ejemplo.com" class="btn btn-acero">Correo</a>
+      <a href="https://www.linkedin.com/in/TU-USUARIO" class="btn btn-acero" target="_blank" rel="noopener">LinkedIn</a>
+      -->
     </section>
   </div>
 
@@ -1582,7 +1969,13 @@
         <button type="button" id="briefing-cerrar" class="briefing-cerrar" aria-label="Cerrar briefing" data-i18n="modalClose">[ X ] CERRAR</button>
       </div>
       <div class="briefing-body">
-        <h3 id="briefing-titulo">Título del Proyecto</h3>
+        <div class="briefing-titulo-fila">
+          <h3 id="briefing-titulo">Título del Proyecto</h3>
+          <div class="briefing-rango-wrap">
+            <span data-i18n="rankLabel">RANGO</span>
+            <span class="rango r-x" id="briefing-rango">?</span>
+          </div>
+        </div>
 
         <div class="briefing-media" id="briefing-media">
           <div class="briefing-placeholder">
@@ -1596,6 +1989,9 @@
 
         <span class="briefing-subtitulo" data-i18n="modalSpecs">// Especificaciones Técnicas</span>
         <ul class="briefing-lista" id="briefing-lista"></ul>
+
+        <span class="briefing-subtitulo" data-i18n="modalLearned">// Lo aprendido</span>
+        <ul class="briefing-lista aprendido" id="briefing-aprendido"></ul>
 
         <div class="briefing-footer">
           <div class="proyecto-tech" id="briefing-tech"></div>
@@ -1619,11 +2015,11 @@
       var btnCerrarModal = document.getElementById("briefing-cerrar");
 
       /* =====================================================================
-         PLAYLIST OFICIAL (Departure primero como tema base de la página)
+         PLAYLIST OFICIAL (E-Crystal for My Heart abre la página)
          ===================================================================== */
       var playlist = [
-        { titulo: "Departure - Megaman Zero 2", src: "departuremmz.mp3" },
         { titulo: "E-Crystal for My Heart - Megaman Zero/ZX Legacy Collection", src: "Galeriammz.mp3" },
+        { titulo: "Departure - Megaman Zero 2", src: "departuremmz.mp3" },
         { titulo: "Green Grass Gradation - Megaman ZX", src: "GreenGrassGradation.mp3" },
         { titulo: "GALLERY (Relaxed) - Mega Man X Legacy Collection", src: "gallerymmxlc.mp3" },
         { titulo: "Holy land - Megaman Zero 4", src: "holyland.mp3" },
@@ -1657,7 +2053,7 @@
       });
 
       var indicePista = 0;
-      var volumenMusica = 0.25; // Volumen por defecto al 25%
+      var volumenMusica = 0.10; // Volumen por defecto al 10%
       var audioElement = document.getElementById("bgm-player");
       var radioHud = document.getElementById("radio-hud");
       var radioTitulo = document.getElementById("radio-titulo");
@@ -1680,7 +2076,9 @@
       var sfxActivo = true;
       var bgmActiva = false;
       var usuarioPausoManual = false;
+      var reanudarAlVolver = false;
       var introIniciada = false;
+      var introTerminada = false;
       var idioma = "es";
       var vistaActual = "bio";
       var radioVisible = true;
@@ -1743,11 +2141,14 @@
           c1Num: "MISIÓN 01",
           c1Title: "Enlaces",
           linksDesc: "Aquí puedes encontrar mi código y repositorios universitarios.",
+          btnCv: "Descargar CV",
           footerText: "© 2026 MADVILLAIN42 · FIN DE LA TRANSMISIÓN",
           modalClose: "[ X ] CERRAR",
           modalSummary: "// Resumen de Misión",
           modalSpecs: "// Especificaciones Técnicas",
+          modalLearned: "// Lo aprendido",
           modalRepo: "Ver Repositorio",
+          rankLabel: "RANGO",
           counterLabel: "EXPEDIENTES",
           noImgTitle: "[ SIN CAPTURA ASIGNADA ]",
           noImgDesc: 'Agrega una ruta en data-img="..." para mostrar vista previa o diagrama'
@@ -1804,11 +2205,14 @@
           c1Num: "MISSION 01",
           c1Title: "Links",
           linksDesc: "Here you can find my source code and university repositories.",
+          btnCv: "Download CV",
           footerText: "© 2026 MADVILLAIN42 · END OF TRANSMISSION",
           modalClose: "[ X ] CLOSE",
           modalSummary: "// Mission Briefing",
           modalSpecs: "// Technical Specs",
+          modalLearned: "// Lessons learned",
           modalRepo: "View Repository",
+          rankLabel: "RANK",
           counterLabel: "FILES",
           noImgTitle: "[ NO CAPTURE ASSIGNED ]",
           noImgDesc: 'Add an image path in data-img="..." to display a preview or diagram'
@@ -1867,19 +2271,20 @@
         } catch (e) {}
       }
 
-      /* BarritaDerecha: sonido opaco, se usa para abrir/cerrar paneles y para CERRAR cualquier cosa */
+      /* BarritaDerecha: sonido opaco para abrir/cerrar paneles y CERRAR cualquier cosa.
+         Adelantado 0.4 s para que coincida con la acción. */
       function reproducirBarraDerecha() {
         ultimoClickSfx = performance.now();
-        dispararSfx("barra", 0.6, 0.3);
+        dispararSfx("barra", 0.6, 0.4);
       }
 
-      /* Seleccionar: se usa para elegir apartados, botones y filtros */
+      /* Seleccionar: para elegir apartados, botones y filtros */
       function reproducirSeleccionar() {
         ultimoClickSfx = performance.now();
         dispararSfx("seleccionar", 0.6, 0.22);
       }
 
-      /* PasarMouse: NO suena durante 700 ms después de cualquier clic o toque,
+      /* PasarMouse adelantado 0.32 s. NO suena durante 700 ms después de cualquier clic o toque,
          ni cuando un botón recibe foco por un clic (solo por teclado). */
       function reproducirHover(e) {
         var ahoraMs = performance.now();
@@ -1902,17 +2307,16 @@
 
         ultimoHover = ahoraMs;
         ultimoElementoHover = objetivo;
-        dispararSfx("hover", 0.45, 0.22);
+        dispararSfx("hover", 0.45, 0.32);
       }
 
-      /* Cualquier presión (mouse o toque) abre la ventana de silencio para el hover,
-         así el hover nunca se acopla con el sonido de seleccionar */
+      /* Cualquier presión (mouse o toque) abre la ventana de silencio para el hover */
       document.addEventListener("pointerdown", function () {
         ultimoClickSfx = performance.now();
       }, true);
 
       /* =====================================================
-         SISTEMA DE PLAYLIST ROTATIVA (Departure por defecto)
+         SISTEMA DE PLAYLIST ROTATIVA (E-Crystal por defecto)
          ===================================================== */
       function actualizarUIPlaylist() {
         var pista = playlist[indicePista];
@@ -1992,6 +2396,7 @@
       function pausarMusica() {
         usuarioPausoManual = true;
         bgmActiva = false;
+        reanudarAlVolver = false;
         if (audioElement) audioElement.pause();
         actualizarUIPlaylist();
       }
@@ -2019,6 +2424,22 @@
           if (radioProgresoBar) radioProgresoBar.style.width = pct + "%";
         });
       }
+
+      /* La música se pausa al cambiar de pestaña o minimizar, y sigue al volver */
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+          if (bgmActiva && audioElement && !audioElement.paused) {
+            audioElement.pause();
+            reanudarAlVolver = true;
+          }
+        } else if (reanudarAlVolver) {
+          reanudarAlVolver = false;
+          if (audioElement && !usuarioPausoManual) {
+            var p = audioElement.play();
+            if (p && p.catch) p.catch(function () {});
+          }
+        }
+      });
 
       if (radioVolSlider) {
         radioVolSlider.value = Math.round(volumenMusica * 100);
@@ -2113,11 +2534,87 @@
         optMiniNext.addEventListener("click", function () { siguientePista(false); });
       }
 
-      /* Precargar Departure (pista 0) desde el inicio */
+      /* Precargar E-Crystal for My Heart (pista 0) desde el inicio */
       cargarPista(0, false);
 
       /* =====================================================
-         SECUENCIA DE INTRO INTERACTIVA (Sablazo + Departure al instante)
+         CUADRO DE DIÁLOGO: texto que se escribe letra por letra
+         ===================================================== */
+      var dialogoCaja = document.getElementById("dialogo-caja");
+      var dialogoParrafos = document.querySelectorAll("[data-tipeo]");
+      var timerTipeo = null;
+      var colaTipeo = [];
+      var dialogoEscritoEn = null;
+
+      function prepararParrafos() {
+        var dict = textos[idioma];
+        colaTipeo = [];
+        dialogoParrafos.forEach(function (p) {
+          p.classList.remove("escribiendo");
+          p.innerHTML = dict[p.getAttribute("data-tipeo")];
+          var walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT, null);
+          while (walker.nextNode()) {
+            colaTipeo.push({ nodo: walker.currentNode, texto: walker.currentNode.nodeValue, p: p });
+          }
+        });
+      }
+
+      /* Texto completo al instante (sin animación) */
+      function rellenarDialogo() {
+        clearInterval(timerTipeo);
+        prepararParrafos();
+        if (dialogoCaja) dialogoCaja.classList.add("terminado");
+      }
+
+      function terminarTipeo() {
+        clearInterval(timerTipeo);
+        colaTipeo.forEach(function (o) { o.nodo.nodeValue = o.texto; });
+        dialogoParrafos.forEach(function (p) { p.classList.remove("escribiendo"); });
+        if (dialogoCaja) dialogoCaja.classList.add("terminado");
+      }
+
+      function escribirDialogo() {
+        clearInterval(timerTipeo);
+        prepararParrafos();
+        colaTipeo.forEach(function (o) { o.nodo.nodeValue = ""; });
+        if (dialogoCaja) dialogoCaja.classList.remove("terminado");
+        dialogoEscritoEn = idioma;
+
+        var i = 0;
+        var c = 0;
+        var porPaso = 3;
+
+        timerTipeo = setInterval(function () {
+          if (i >= colaTipeo.length) {
+            terminarTipeo();
+            return;
+          }
+          var o = colaTipeo[i];
+          dialogoParrafos.forEach(function (p) { p.classList.remove("escribiendo"); });
+          o.p.classList.add("escribiendo");
+          c += porPaso;
+          o.nodo.nodeValue = o.texto.slice(0, c);
+          if (c >= o.texto.length) {
+            i++;
+            c = 0;
+          }
+        }, 22);
+      }
+
+      function actualizarDialogo() {
+        if (introTerminada && vistaActual === "bio") {
+          if (dialogoEscritoEn !== idioma) escribirDialogo();
+        } else if (dialogoEscritoEn !== idioma) {
+          rellenarDialogo();
+        }
+      }
+
+      if (dialogoCaja) {
+        dialogoCaja.addEventListener("click", terminarTipeo);
+      }
+
+      /* =====================================================
+         SECUENCIA DE INTRO INTERACTIVA (Sablazo + música al instante)
          ===================================================== */
       document.documentElement.classList.add("bloqueado");
 
@@ -2127,6 +2624,8 @@
         intro.style.display = "none";
         intro.classList.remove("activa");
         document.documentElement.classList.remove("bloqueado");
+        introTerminada = true;
+        actualizarDialogo();
       }
 
       function iniciarSecuencia() {
@@ -2189,6 +2688,7 @@
       var vistas = document.querySelectorAll(".vista");
       var tabBtns = document.querySelectorAll(".tab-btn");
       var placaTitulo = document.getElementById("placa-titulo");
+      var barrido = document.getElementById("barrido");
 
       function actualizarPlaca() {
         if (placaTitulo) {
@@ -2196,9 +2696,17 @@
         }
       }
 
-      function mostrarVista(nombre) {
+      function barrer() {
+        if (!barrido) return;
+        barrido.classList.remove("activo");
+        void barrido.offsetWidth;
+        barrido.classList.add("activo");
+      }
+
+      function mostrarVista(nombre, animar) {
         var destino = document.getElementById("vista-" + nombre);
         if (!destino) return;
+        var cambio = nombre !== vistaActual;
         vistaActual = nombre;
 
         vistas.forEach(function (v) {
@@ -2210,15 +2718,19 @@
           t.setAttribute("aria-selected", activo ? "true" : "false");
         });
 
+        document.body.setAttribute("data-vista", nombre);
         actualizarPlaca();
         window.scrollTo({ top: 0, behavior: "auto" });
         try { history.replaceState(null, "", "#" + nombre); } catch (err) {}
+
+        if (animar && cambio) barrer();
+        if (nombre === "bio") actualizarDialogo();
       }
 
       document.querySelectorAll("[data-vista-ir]").forEach(function (el) {
         el.addEventListener("click", function (e) {
           e.preventDefault();
-          mostrarVista(el.getAttribute("data-vista-ir"));
+          mostrarVista(el.getAttribute("data-vista-ir"), true);
         });
       });
 
@@ -2242,6 +2754,7 @@
         if (estadoLang) estadoLang.textContent = idioma.toUpperCase();
 
         actualizarPlaca();
+        actualizarDialogo();
 
         var btnActivo = document.querySelector(".filtro-btn.activo");
         aplicarFiltroProyectos(btnActivo ? btnActivo.getAttribute("data-filtro") : "all");
@@ -2300,6 +2813,12 @@
         });
       });
 
+      /* Rango de misión: S, A, B, C, D, E, F (o ? si aún no tiene) */
+      function claseRango(letra) {
+        var l = (letra || "?").toString().trim().toLowerCase();
+        return "r-" + (/^[sabcdef]$/.test(l) ? l : "x");
+      }
+
       /* Abrir y cerrar Modal Briefing de Proyecto */
       function abrirBriefing(card) {
         if (!modal) return;
@@ -2313,14 +2832,20 @@
         var titulo = (esIngles ? card.getAttribute("data-titulo-en") : card.getAttribute("data-titulo")) || "Proyecto";
         var desc = (esIngles ? card.getAttribute("data-descripcion-en") : card.getAttribute("data-descripcion")) || "";
         var detallesRaw = (esIngles ? card.getAttribute("data-detalles-en") : card.getAttribute("data-detalles")) || "";
+        var aprendidoRaw = (esIngles ? card.getAttribute("data-aprendido-en") : card.getAttribute("data-aprendido")) || "";
         var techRaw = card.getAttribute("data-tech") || "";
         var repo = card.getAttribute("data-repo") || "https://github.com/madvillain42";
         var imgSrc = card.getAttribute("data-img") || "";
+        var rango = card.getAttribute("data-rango") || "?";
 
         document.getElementById("briefing-codigo").textContent = codigo;
         document.getElementById("briefing-estado").textContent = "● " + estado;
         document.getElementById("briefing-titulo").textContent = titulo;
         document.getElementById("briefing-desc").textContent = desc;
+
+        var rangoEl = document.getElementById("briefing-rango");
+        rangoEl.textContent = rango.toUpperCase();
+        rangoEl.className = "rango " + claseRango(rango);
 
         var mediaEl = document.getElementById("briefing-media");
         mediaEl.innerHTML = "";
@@ -2336,15 +2861,19 @@
           mediaEl.appendChild(placeholder);
         }
 
-        var listaEl = document.getElementById("briefing-lista");
-        listaEl.innerHTML = "";
-        detallesRaw.split("|").forEach(function (item) {
-          if (item.trim() !== "") {
-            var li = document.createElement("li");
-            li.textContent = item.trim();
-            listaEl.appendChild(li);
-          }
-        });
+        function llenarLista(idLista, textoRaw) {
+          var lista = document.getElementById(idLista);
+          lista.innerHTML = "";
+          textoRaw.split("|").forEach(function (item) {
+            if (item.trim() !== "") {
+              var li = document.createElement("li");
+              li.textContent = item.trim();
+              lista.appendChild(li);
+            }
+          });
+        }
+        llenarLista("briefing-lista", detallesRaw);
+        llenarLista("briefing-aprendido", aprendidoRaw);
 
         var techEl = document.getElementById("briefing-tech");
         techEl.innerHTML = "";
@@ -2470,9 +2999,17 @@
         });
       }
 
+      /* El botón de CV solo aparece si existe el archivo cv.pdf en el sitio */
+      var btnCv = document.getElementById("btn-cv");
+      if (btnCv && window.fetch) {
+        fetch("cv.pdf", { method: "HEAD" }).then(function (r) {
+          if (r.ok) btnCv.hidden = false;
+        }).catch(function () {});
+      }
+
       /* Apartado inicial según el enlace (#herramientas, #proyectos, #contacto) */
       var hashInicial = (location.hash || "").replace("#", "");
-      mostrarVista(nombresVista.indexOf(hashInicial) !== -1 ? hashInicial : "bio");
+      mostrarVista(nombresVista.indexOf(hashInicial) !== -1 ? hashInicial : "bio", false);
     })();
   </script>
 
