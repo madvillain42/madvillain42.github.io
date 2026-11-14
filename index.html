@@ -99,39 +99,73 @@
       100% { transform: translateY(105vh); opacity: 0; }
     }
 
-    /* ---------- Placa de título (cambia según el apartado) ---------- */
-    .placa-cab {
+    /* ---------- Consola de código (muestra el apartado actual y se reescribe al cambiar) ---------- */
+    .consola-wrap {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 1.6rem 1rem 1.2rem;
-      text-align: center;
+      padding: 1.4rem 1rem 1.2rem;
     }
-    .placa {
-      display: inline-flex;
+    .consola {
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 0%, #0b2412 0%, #040e08 70%);
+      border: 3px solid #8d8d98;
+      outline: 3px solid #000;
+      box-shadow:
+        inset 0 0 24px rgba(0, 0, 0, 0.85),
+        inset 0 0 8px rgba(125, 255, 106, 0.2),
+        0 0 22px rgba(125, 255, 106, 0.12),
+        0 6px 0 #000;
+    }
+    /* Líneas de escaneo y reflejo del cristal */
+    .consola::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 35%),
+        repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0 1px, transparent 1px 3px);
+    }
+    .consola-barra {
+      display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 1.1rem;
-      max-width: 100%;
-      padding: 0.95rem 1.5rem;
-      background: linear-gradient(180deg, #34343c, #17171c);
-      border: 3px solid var(--acero-claro);
-      box-shadow: inset 0 0 0 2px #000, 0 6px 0 #000, 0 0 24px var(--acento-o);
-    }
-    .remache {
-      flex-shrink: 0;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 2px solid #000;
-      background: radial-gradient(circle at 35% 35%, #d8d8e0, #5a5a64 60%, #111);
-    }
-    #placa-titulo {
+      gap: 0.45rem;
+      padding: 0.5rem 0.8rem;
+      background: linear-gradient(180deg, #2b2b33, #16161b);
+      border-bottom: 2px solid #000;
       font-family: var(--pixel);
-      font-size: clamp(0.8rem, 3.4vw, 1.45rem);
-      color: var(--texto);
-      text-transform: uppercase;
-      text-shadow: 3px 3px 0 var(--acento-o);
-      line-height: 1.4;
+      font-size: 0.42rem;
+      color: var(--acero-claro);
+    }
+    .consola-barra i {
+      width: 9px;
+      height: 9px;
+      border: 1px solid #000;
+      background: var(--acero);
+    }
+    .consola-barra i:nth-child(1) { background: var(--rojo); }
+    .consola-barra i:nth-child(2) { background: var(--oro); }
+    .consola-barra i:nth-child(3) { background: var(--verde-sable); }
+    .consola-barra span { margin-left: auto; }
+    .consola-cuerpo {
+      min-height: 5.6rem;
+      padding: 0.9rem 1.1rem 1rem;
+      font-family: var(--pixel);
+      font-size: clamp(0.48rem, 1.5vw, 0.6rem);
+      line-height: 2.2;
+      color: var(--verde-sable);
+      text-shadow: 0 0 8px rgba(125, 255, 106, 0.55);
+    }
+    .consola-prompt { color: #3aa84a; }
+    .consola-linea {
+      min-height: 2.2em;
+      word-break: break-word;
+    }
+    .consola-linea.con-cursor::after {
+      content: "█";
+      margin-left: 2px;
+      animation: parpadeo 0.8s steps(2, start) infinite;
     }
 
     /* ---------- Botones grandes de apartados ---------- */
@@ -537,33 +571,6 @@
       text-align: center;
     }
 
-    /* Línea de comandos que se teclea sola */
-    .prompt {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.3rem 0.8ch;
-      margin-bottom: 1.6rem;
-      font-family: var(--pixel);
-      font-size: 0.52rem;
-      line-height: 1.6;
-      color: var(--acero-claro);
-    }
-    .prompt .usuario { color: var(--verde-sable); }
-    .prompt .cmd {
-      display: inline-block;
-      width: 0;
-      overflow: hidden;
-      white-space: nowrap;
-      color: var(--texto);
-      border-right: 2px solid var(--verde-sable);
-      animation:
-        teclearPrompt 1.8s steps(37, end) 0.3s forwards,
-        cursorBorde 0.8s steps(2, start) infinite;
-    }
-    @keyframes teclearPrompt { to { width: 37ch; } }
-    @keyframes cursorBorde { 50% { border-right-color: transparent; } }
-
     .etiqueta {
       display: inline-block;
       font-family: var(--pixel);
@@ -723,7 +730,7 @@
     }
     .mugshot-marco {
       position: relative;
-      aspect-ratio: 3 / 4;
+      min-height: 120px;
       overflow: hidden;
       background:
         repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 6px, transparent 6px 12px),
@@ -762,13 +769,18 @@
       color: var(--acero-claro);
       line-height: 1.6;
     }
+    /* La imagen manda: el marco toma exactamente sus proporciones */
     .mugshot-img {
-      position: absolute;
-      inset: 0;
+      position: relative;
       z-index: 2;
+      display: block;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
+    }
+    /* Si la imagen no existe, el marco vuelve a formato vertical con la silueta */
+    .mugshot-marco.sin-imagen {
+      aspect-ratio: 3 / 4;
+      min-height: 0;
     }
     .mugshot-nombre {
       font-family: var(--pixel);
@@ -1295,12 +1307,68 @@
       animation: parpadeo 1s steps(2, start) infinite;
     }
 
+    /* ---------- Luz que recorre el contorno (estilo casino) ----------
+       Un haz con estela suave gira por el borde. Es un degradado cónico que solo se ve en el anillo
+       del borde (máscara), así que nunca se sale de la tarjeta ni empuja nada de la página.
+       El anillo fino es el haz nítido; el anillo ancho y tenue, su resplandor. */
+    @property --giro {
+      syntax: "<angle>";
+      inherits: false;
+      initial-value: 0deg;
+    }
+    @keyframes girarLuz { to { --giro: 360deg; } }
+
+    .panel, .proyecto-card, .estado, .dialogo-caja { position: relative; --bw: 2px; }
+    .dialogo-caja { --bw: 3px; }
+
+    .panel         { --dur: 9s; }
+    .dialogo-caja  { --dur: 7s; }
+    .proyecto-card { --dur: 6s; }
+    .estado        { --dur: 5s; }
+    /* Cada tarjeta arranca en un punto distinto para que no giren todas a la vez */
+    .proyecto-card:nth-child(2) { --delay: -2s; }
+    .proyecto-card:nth-child(3) { --delay: -4s; }
+
+    .panel::before, .panel::after,
+    .dialogo-caja::before, .dialogo-caja::after,
+    .proyecto-card::before, .proyecto-card::after,
+    .estado::before, .estado::after {
+      content: "";
+      position: absolute;
+      inset: calc(var(--bw) * -1);
+      z-index: 3;
+      pointer-events: none;
+      padding: calc(var(--bw) + 1px);
+      background: conic-gradient(from var(--giro),
+        transparent 0deg 232deg,
+        color-mix(in srgb, var(--acento) 30%, transparent) 280deg,
+        var(--acento) 330deg,
+        var(--acento-b) 349deg,
+        #ffffff 355deg,
+        transparent 360deg);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      animation: girarLuz var(--dur, 8s) linear infinite;
+      animation-delay: var(--delay, 0s);
+    }
+    /* Resplandor: mismo haz, anillo más ancho y tenue */
+    .panel::after,
+    .dialogo-caja::after,
+    .proyecto-card::after,
+    .estado::after {
+      padding: calc(var(--bw) + 6px);
+      opacity: 0.28;
+    }
+
     @media (max-width: 600px) {
       /* Apartados: cuadrícula 2x2 y sin barra pegajosa para ahorrar pantalla */
       .tabs-barra { position: static; }
       .tabs { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; padding: 0.8rem 0.8rem 0.9rem; }
       .tab-btn { padding: 0.95rem 0.3rem; font-size: 0.55rem; }
-      .placa { padding: 0.75rem 1rem; gap: 0.7rem; }
+      .consola-wrap { padding: 1rem 0.8rem 0.9rem; }
+      .consola-cuerpo { min-height: 7.6rem; padding: 0.8rem 0.9rem; }
       .hero { padding: 2.2rem 1rem 2rem; }
       .panel { padding: 1.3rem; }
       .briefing-body { padding: 1.2rem; }
@@ -1405,32 +1473,76 @@
       opacity: 1;
     }
 
-    /* Registro de arranque tipo consola sobre la compuerta */
-    .boot-log {
-      width: max-content;
-      max-width: 92vw;
+    /* Pantalla de arranque: un monitor incrustado en el metal, encima del botón.
+       El texto se escribe DENTRO de la pantalla, solo la primera vez que se abre la página. */
+    .boot-pantalla {
+      position: relative;
+      width: min(86vw, 410px);
+      padding: 0.65rem 0.9rem 0.85rem;
+      overflow: hidden;
+      text-align: left;
       font-family: var(--pixel);
-      font-size: clamp(0.4rem, 1.6vw, 0.52rem);
-      line-height: 2.1;
+      background: radial-gradient(ellipse at 50% 40%, #0d2c16 0%, #05140b 65%, #020906 100%);
+      border: 4px solid #8d8d98;
+      border-radius: 8px;
+      outline: 3px solid #000;
+      box-shadow:
+        inset 0 0 26px rgba(0, 0, 0, 0.9),
+        inset 0 0 10px rgba(125, 255, 106, 0.28),
+        0 0 26px rgba(125, 255, 106, 0.16),
+        0 6px 0 #000;
+      animation: encenderPantalla 0.4s ease-out both;
+      transition: opacity 0.12s;
+    }
+    /* Líneas de escaneo y reflejo del cristal */
+    .boot-pantalla::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.07), transparent 38%),
+        repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.32) 0 1px, transparent 1px 3px);
+    }
+    @keyframes encenderPantalla {
+      0%   { transform: scaleY(0.03) scaleX(0.35); filter: brightness(3); }
+      55%  { transform: scaleY(0.03) scaleX(1);    filter: brightness(2.2); }
+      100% { transform: scale(1);                  filter: brightness(1); }
+    }
+    .boot-cab {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 1px dashed #1c5a27;
+      font-size: 0.4rem;
+      color: #2f8f3b;
+    }
+    .boot-cuerpo {
+      font-size: clamp(0.4rem, 1.7vw, 0.52rem);
+      line-height: 2.3;
       color: var(--verde-sable);
-      text-shadow: 0 0 8px rgba(125, 255, 106, 0.55);
+      text-shadow: 0 0 6px rgba(125, 255, 106, 0.7);
     }
-    .boot-log span {
+    /* Cada línea se escribe letra por letra (--n = cantidad de caracteres, --d = cuándo empieza) */
+    .bl {
       display: block;
+      width: 0;
+      overflow: hidden;
       white-space: nowrap;
-      animation: teclearBoot 0.7s steps(34, end) var(--d, 0s) both;
+      animation: tecleoBoot 0.42s steps(var(--n), end) var(--d, 0s) forwards;
     }
-    .boot-log span:last-child::after {
-      content: "█";
-      margin-left: 3px;
-      animation: parpadeo 0.7s steps(2, start) infinite;
+    @keyframes tecleoBoot { to { width: calc(var(--n) * 1ch); } }
+    .boot-cursor {
+      display: block;
+      opacity: 0;
+      animation:
+        mostrarCursor 0.01s linear 2.1s forwards,
+        parpadeo 0.8s steps(2, start) 2.1s infinite;
     }
-    @keyframes teclearBoot {
-      from { clip-path: inset(0 100% 0 0); }
-      to   { clip-path: inset(0 0 0 0); }
-    }
+    @keyframes mostrarCursor { to { opacity: 1; } }
 
-    /* Botón de desbloqueo inicial sobre la compuerta cerrada */
+    /* Botón de desbloqueo: aparece cuando la pantalla termina de escribir */
     .intro-start-btn {
       position: relative;
       z-index: 5;
@@ -1444,15 +1556,32 @@
       text-transform: uppercase;
       clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
       box-shadow: 0 0 24px rgba(227, 35, 31, 0.65), 0 6px 0 #000;
-      animation: pulsoBoton 1.4s ease-in-out infinite;
+      opacity: 0;
+      animation:
+        aparecerBoton 0.3s ease-out 2.15s forwards,
+        pulsoBoton 1.4s ease-in-out 2.45s infinite;
     }
+    @keyframes aparecerBoton { to { opacity: 1; } }
     .intro-start-btn:hover {
       filter: brightness(1.25);
     }
+
+    /* Al empezar el corte: la pantalla y el botón se apagan y no se escribe nada más */
     #intro.activa .intro-start-btn {
+      animation: none;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.1s;
+    }
+    #intro.activa .boot-pantalla {
+      opacity: 0;
+    }
+    #intro.activa .intro-hint {
+      opacity: 0;
+    }
+    /* En las repeticiones (Z-Slash) no vuelve a aparecer la pantalla ni el botón */
+    #intro.repetida .boot-pantalla,
+    #intro.repetida .intro-start-btn {
+      display: none;
     }
     @keyframes pulsoBoton {
       0%, 100% { transform: scale(1); }
@@ -1541,10 +1670,15 @@
     <div class="mitad izq">
       <div class="grabado">
         <span class="grabado-titulo">madvillain42</span>
-        <div class="boot-log" aria-hidden="true">
-          <span style="--d: 0.2s">&gt; ENLACE CON LA RESISTENCIA... OK</span>
-          <span style="--d: 0.9s">&gt; SINCRONIZANDO E-CRYSTALS... OK</span>
-          <span style="--d: 1.6s">&gt; Z-SABER LISTO</span>
+        <div class="boot-pantalla" aria-hidden="true">
+          <div class="boot-cab"><span>// ENLACE.SYS</span><span>■ ■ ■</span></div>
+          <div class="boot-cuerpo">
+            <span class="bl" style="--n: 34; --d: 0.3s">&gt; ENLACE CON LA RESISTENCIA... OK</span>
+            <span class="bl" style="--n: 33; --d: 0.75s">&gt; SINCRONIZANDO E-CRYSTALS... OK</span>
+            <span class="bl" style="--n: 25; --d: 1.2s">&gt; CARGANDO Z-SABER... OK</span>
+            <span class="bl" style="--n: 16; --d: 1.65s">&gt; SISTEMA LISTO</span>
+            <span class="boot-cursor">█</span>
+          </div>
         </div>
         <button type="button" class="intro-start-btn" data-i18n="introStartBtn">▶ INICIAR SISTEMA</button>
       </div>
@@ -1552,10 +1686,15 @@
     <div class="mitad der">
       <div class="grabado">
         <span class="grabado-titulo">madvillain42</span>
-        <div class="boot-log" aria-hidden="true">
-          <span style="--d: 0.2s">&gt; ENLACE CON LA RESISTENCIA... OK</span>
-          <span style="--d: 0.9s">&gt; SINCRONIZANDO E-CRYSTALS... OK</span>
-          <span style="--d: 1.6s">&gt; Z-SABER LISTO</span>
+        <div class="boot-pantalla" aria-hidden="true">
+          <div class="boot-cab"><span>// ENLACE.SYS</span><span>■ ■ ■</span></div>
+          <div class="boot-cuerpo">
+            <span class="bl" style="--n: 34; --d: 0.3s">&gt; ENLACE CON LA RESISTENCIA... OK</span>
+            <span class="bl" style="--n: 33; --d: 0.75s">&gt; SINCRONIZANDO E-CRYSTALS... OK</span>
+            <span class="bl" style="--n: 25; --d: 1.2s">&gt; CARGANDO Z-SABER... OK</span>
+            <span class="bl" style="--n: 16; --d: 1.65s">&gt; SISTEMA LISTO</span>
+            <span class="boot-cursor">█</span>
+          </div>
         </div>
         <button type="button" class="intro-start-btn" data-i18n="introStartBtn">▶ INICIAR SISTEMA</button>
       </div>
@@ -1640,12 +1779,14 @@
     </div>
   </aside>
 
-  <!-- Placa con el nombre del apartado actual -->
-  <div class="placa-cab">
-    <div class="placa">
-      <i class="remache"></i>
-      <div id="placa-titulo">HOME &amp; BIO</div>
-      <i class="remache"></i>
+  <!-- Consola de código: escribe el apartado actual y se borra y reescribe al cambiar de apartado -->
+  <div class="consola-wrap" aria-hidden="true">
+    <div class="consola">
+      <div class="consola-barra"><i></i><i></i><i></i><span>TERMINAL // RESISTENCIA</span></div>
+      <div class="consola-cuerpo">
+        <p class="consola-linea con-cursor" id="consola-l1"><span class="consola-prompt">operador@resistencia:~$</span> <span id="consola-cmd"></span></p>
+        <p class="consola-linea" id="consola-l2"><span id="consola-out"></span></p>
+      </div>
     </div>
   </div>
 
@@ -1662,10 +1803,6 @@
   <!-- ===================== APARTADO 1: HOME & BIO ===================== -->
   <div class="vista activa" id="vista-bio">
     <header class="hero" id="inicio">
-      <p class="prompt" aria-hidden="true">
-        <span class="usuario">operador@resistencia:~$</span>
-        <span class="cmd">iniciar_sesion --usuario madvillain42</span>
-      </p>
       <span class="etiqueta" data-i18n="heroBadge">ARCHIVO DE OPERADOR</span>
       <h1>madvillain42</h1>
       <p class="sub" data-i18n-html="heroSub">
@@ -1691,8 +1828,8 @@
       </div>
 
       <!-- Cuadro de diálogo con mugshot.
-           Para tu foto o ilustración: sube una imagen a la carpeta img/ de tu repo con el nombre mugshot.png
-           (proporción vertical 3:4 se ve mejor). Mientras no exista, se muestra una silueta. -->
+           La imagen es Mugshotz.jpg, en la raíz del repo junto a este archivo (igual que las pistas de música).
+           El marco se ajusta a sus dimensiones. Si el archivo no existe, se muestra una silueta. -->
       <div class="dialogo">
         <div class="mugshot">
           <div class="mugshot-marco">
@@ -1701,8 +1838,8 @@
               <path d="M5 64c0-15 8-21 19-21s19 6 19 21z" fill="#2b2b33"/>
               <circle cx="24" cy="25" r="10" fill="none" stroke="#4a4a54" stroke-width="1"/>
             </svg>
-            <span class="mugshot-vacio">img/mugshot.png</span>
-            <img class="mugshot-img" src="img/mugshot.png" alt="Retrato de madvillain42" onerror="this.remove()">
+            <span class="mugshot-vacio">Mugshotz.jpg</span>
+            <img class="mugshot-img" src="Mugshotz.jpg" alt="Retrato de madvillain42" onerror="this.parentNode.classList.add('sin-imagen');this.remove()">
           </div>
           <div class="mugshot-nombre">madvillain42</div>
         </div>
@@ -1785,6 +1922,8 @@
             <span>C#</span>
             <span>Java</span>
             <span>Python</span>
+            <span>JavaScript</span>
+            <span>SQL</span>
             <span>HTML5</span>
             <span>CSS</span>
           </div>
@@ -1795,6 +1934,23 @@
             <span>Linux</span>
             <span>Docker</span>
             <span>GitHub</span>
+          </div>
+        </div>
+        <div class="fw-grupo">
+          <span class="fw-titulo" data-i18n="fwFrame">Frameworks y plataformas</span>
+          <div class="chips">
+            <span>React</span>
+            <span>Unity</span>
+            <span>Firebase</span>
+          </div>
+        </div>
+        <div class="fw-grupo">
+          <span class="fw-titulo" data-i18n="fwIde">Editores e IDEs</span>
+          <div class="chips">
+            <span>VS Code</span>
+            <span>Visual Studio</span>
+            <span>Android Studio</span>
+            <span>NetBeans</span>
           </div>
         </div>
       </div>
@@ -2124,6 +2280,8 @@
           t2Title: "Frameworks y tecnologías",
           fwLang: "Lenguajes y web",
           fwSys: "Sistemas y herramientas",
+          fwFrame: "Frameworks y plataformas",
+          fwIde: "Editores e IDEs",
           skillNet: "Redes",
           skillPen: "Pentesting (En curso)",
           filterAll: "Todos",
@@ -2188,6 +2346,8 @@
           t2Title: "Frameworks & technologies",
           fwLang: "Languages & web",
           fwSys: "Systems & tools",
+          fwFrame: "Frameworks & platforms",
+          fwIde: "Editors & IDEs",
           skillNet: "Networking",
           skillPen: "Pentesting (In progress)",
           filterAll: "All",
@@ -2626,12 +2786,19 @@
         document.documentElement.classList.remove("bloqueado");
         introTerminada = true;
         actualizarDialogo();
+        /* La consola se escribe una sola vez al terminar la primera intro; después solo cambia con los apartados */
+        if (!consolaIniciada) {
+          consolaIniciada = true;
+          consolaEscribir(vistaActual);
+        }
       }
 
       function iniciarSecuencia() {
         if (!intro) return;
         ajustarAnguloCorte();
         clearTimeout(timerFin);
+        /* Desde la segunda vez (Z-Slash) no vuelve a aparecer la pantalla de arranque con su texto */
+        if (introIniciada) intro.classList.add("repetida");
         introIniciada = true;
         ultimoClickSfx = performance.now();
         document.documentElement.classList.add("bloqueado");
@@ -2679,21 +2846,106 @@
          APARTADOS (HOME & BIO / HERRAMIENTAS / PROYECTOS / CONTACTO)
          ===================================================== */
       var nombresVista = ["bio", "herramientas", "proyectos", "contacto"];
-      var claveVista = {
-        bio: "tabBio",
-        herramientas: "tabTools",
-        proyectos: "tabProj",
-        contacto: "tabContact"
-      };
       var vistas = document.querySelectorAll(".vista");
       var tabBtns = document.querySelectorAll(".tab-btn");
-      var placaTitulo = document.getElementById("placa-titulo");
       var barrido = document.getElementById("barrido");
 
-      function actualizarPlaca() {
-        if (placaTitulo) {
-          placaTitulo.textContent = textos[idioma][claveVista[vistaActual]];
+      /* =====================================================
+         CONSOLA DE CÓDIGO: borra y reescribe al cambiar de apartado
+         ===================================================== */
+      var consola = {
+        es: {
+          bio:          { cmd: "cd ~/home_bio",      out: "[OK] archivo de operador cargado" },
+          herramientas: { cmd: "ls ~/herramientas",  out: "[OK] habilidades y tecnologías detectadas" },
+          proyectos:    { cmd: "cd ~/proyectos",     out: "[OK] {n} expedientes localizados" },
+          contacto:     { cmd: "ping contacto",      out: "[OK] canal de comunicación abierto" }
+        },
+        en: {
+          bio:          { cmd: "cd ~/home_bio",      out: "[OK] operator file loaded" },
+          herramientas: { cmd: "ls ~/tools",         out: "[OK] skills and technologies detected" },
+          proyectos:    { cmd: "cd ~/projects",      out: "[OK] {n} files located" },
+          contacto:     { cmd: "ping contact",       out: "[OK] communication channel open" }
         }
+      };
+      var consolaL1 = document.getElementById("consola-l1");
+      var consolaL2 = document.getElementById("consola-l2");
+      var consolaCmdEl = document.getElementById("consola-cmd");
+      var consolaOutEl = document.getElementById("consola-out");
+      var consolaToken = 0;
+      var consolaIniciada = false;
+
+      function consolaTextos(vista) {
+        var c = consola[idioma][vista];
+        return {
+          cmd: c.cmd,
+          out: c.out.replace("{n}", document.querySelectorAll(".proyecto-card").length)
+        };
+      }
+
+      function consolaCursor(linea) {
+        if (!consolaL1 || !consolaL2) return;
+        consolaL1.classList.toggle("con-cursor", linea === 1);
+        consolaL2.classList.toggle("con-cursor", linea === 2);
+      }
+
+      /* Texto completo al instante (cambio de idioma) */
+      function consolaFijar(vista) {
+        if (!consolaCmdEl || !consolaOutEl) return;
+        consolaToken++;
+        var t = consolaTextos(vista);
+        consolaCmdEl.textContent = t.cmd;
+        consolaOutEl.textContent = t.out;
+        consolaCursor(2);
+      }
+
+      /* Borra lo que hay y escribe el apartado nuevo; si se cambia de apartado a mitad, se cancela y empieza el nuevo */
+      function consolaEscribir(vista) {
+        if (!consolaCmdEl || !consolaOutEl) return;
+        var mi = ++consolaToken;
+        var t = consolaTextos(vista);
+        var iCmd = 0;
+        var iOut = 0;
+
+        function vivo() { return mi === consolaToken; }
+
+        function borrar() {
+          if (!vivo()) return;
+          var out = consolaOutEl.textContent;
+          var cmd = consolaCmdEl.textContent;
+          if (out.length) {
+            consolaOutEl.textContent = out.slice(0, -4);
+            consolaCursor(2);
+            setTimeout(borrar, 10);
+          } else if (cmd.length) {
+            consolaCmdEl.textContent = cmd.slice(0, -2);
+            consolaCursor(1);
+            setTimeout(borrar, 14);
+          } else {
+            setTimeout(teclearCmd, 140);
+          }
+        }
+
+        function teclearCmd() {
+          if (!vivo()) return;
+          consolaCursor(1);
+          iCmd++;
+          consolaCmdEl.textContent = t.cmd.slice(0, iCmd);
+          if (iCmd < t.cmd.length) {
+            setTimeout(teclearCmd, 30 + Math.random() * 40);
+          } else {
+            setTimeout(teclearOut, 260);
+          }
+        }
+
+        function teclearOut() {
+          if (!vivo()) return;
+          consolaCursor(2);
+          iOut++;
+          consolaOutEl.textContent = t.out.slice(0, iOut);
+          if (iOut < t.out.length) setTimeout(teclearOut, 16);
+        }
+
+        borrar();
       }
 
       function barrer() {
@@ -2719,11 +2971,11 @@
         });
 
         document.body.setAttribute("data-vista", nombre);
-        actualizarPlaca();
         window.scrollTo({ top: 0, behavior: "auto" });
         try { history.replaceState(null, "", "#" + nombre); } catch (err) {}
 
         if (animar && cambio) barrer();
+        if (cambio && consolaIniciada) consolaEscribir(nombre);
         if (nombre === "bio") actualizarDialogo();
       }
 
@@ -2753,7 +3005,7 @@
         var estadoLang = document.getElementById("estado-lang");
         if (estadoLang) estadoLang.textContent = idioma.toUpperCase();
 
-        actualizarPlaca();
+        if (consolaIniciada) consolaFijar(vistaActual);
         actualizarDialogo();
 
         var btnActivo = document.querySelector(".filtro-btn.activo");
