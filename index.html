@@ -398,7 +398,50 @@
       box-shadow: 0 8px 26px rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(4px);
     }
-    .radio-corner.oculto { display: none; }
+    /* Al cerrarlo, el reproductor se desliza hacia la izquierda y deja una pestaña para volver a sacarlo */
+    .radio-corner {
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0s;
+    }
+    .radio-corner.oculto {
+      transform: translateX(calc(-100% - 2rem));
+      visibility: hidden;
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.32s;
+    }
+    .radio-tab {
+      position: fixed;
+      left: 0;
+      bottom: 1.1rem;
+      z-index: 75;
+      width: 38px;
+      padding: 1rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(180deg, #34c957 0%, #145a24 100%);
+      border: 2px solid var(--verde-sable);
+      border-left: none;
+      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+      box-shadow: 4px 0 16px rgba(0, 0, 0, 0.75);
+      transform: translateX(-110%);
+      visibility: hidden;
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.32s, filter 0.15s;
+    }
+    .radio-tab.visible {
+      transform: translateX(0);
+      visibility: visible;
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.12s, visibility 0s linear 0s, filter 0.15s;
+    }
+    .radio-tab:hover { filter: brightness(1.2); }
+    .radio-tab span {
+      writing-mode: vertical-rl;
+      font-family: var(--pixel);
+      font-size: 0.52rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
     .radio-top {
       display: flex;
       justify-content: space-between;
@@ -803,6 +846,7 @@
     }
     .dialogo-nombre {
       position: absolute;
+      z-index: 4; /* por encima del anillo de luz (z-index 3): la luz pasa por debajo de la etiqueta */
       top: -0.95rem;
       left: 1rem;
       font-family: var(--pixel);
@@ -911,6 +955,109 @@
       border-bottom: 4px solid var(--acento-o);
       clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
     }
+
+
+    /* ---------- Tarjetas de habilidades blandas / metodologías / creatividad ---------- */
+    .soft-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+    }
+    .soft-card {
+      padding: 1rem 1.1rem 1.1rem;
+      background: linear-gradient(180deg, #1c1c24, #101015);
+      border: 2px solid var(--acero);
+      border-left: 5px solid var(--acento);
+      clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .soft-card:hover { transform: translateY(-3px); border-color: var(--acento-b); }
+    .soft-card h4 {
+      font-family: var(--pixel);
+      font-size: 0.55rem;
+      line-height: 1.6;
+      font-weight: 400;
+      text-transform: uppercase;
+      color: var(--acento-b);
+      margin-bottom: 0.55rem;
+    }
+    .soft-card p {
+      font-size: 0.9rem;
+      line-height: 1.45;
+      color: var(--acero-claro);
+    }
+
+    /* ---------- Selector de misión (botón "Iniciar misión") ---------- */
+    .mision-box { max-width: 640px; }
+    .mision-intro {
+      font-family: var(--pixel);
+      font-size: 0.62rem;
+      line-height: 1.8;
+      color: var(--texto);
+      margin-bottom: 1.2rem;
+    }
+    .mision-ops {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+    }
+    .mision-op {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.9rem 1rem;
+      text-align: left;
+      color: var(--texto);
+      cursor: pointer;
+      background: linear-gradient(180deg, #25252d, #121217);
+      border: 2px solid var(--acero);
+      border-left: 5px solid var(--acento);
+      clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+      transition: transform 0.12s, border-color 0.12s, filter 0.12s;
+    }
+    .mision-op:hover, .mision-op:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--acento-b);
+      filter: brightness(1.2);
+      outline: none;
+    }
+    .mision-op b {
+      font-family: var(--pixel);
+      font-size: 0.5rem;
+      font-weight: 400;
+      color: var(--acento-b);
+    }
+    .mision-op span {
+      font-family: var(--pixel);
+      font-size: 0.58rem;
+      line-height: 1.6;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Panel de CV ---------- */
+    .cv-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      align-items: center;
+      text-align: center;
+    }
+    .cv-estado {
+      font-family: var(--pixel);
+      font-size: 0.6rem;
+      line-height: 1.8;
+      color: var(--acero-claro);
+    }
+    .cv-estado.ok { color: var(--verde-sable); }
+    .cv-acciones { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+    .cv-visor {
+      width: 100%;
+      height: 520px;
+      border: 2px solid var(--acero);
+      background: #050507;
+    }
+    .cv-visor[hidden], .cv-acciones[hidden] { display: none; }
 
     /* ---------- Barra de Filtros HUD (Proyectos) ---------- */
     .filtros-hud {
@@ -1340,10 +1487,12 @@
       pointer-events: none;
       padding: calc(var(--bw) + 1px);
       background: conic-gradient(from var(--giro),
-        transparent 0deg 232deg,
-        color-mix(in srgb, var(--acento) 30%, transparent) 280deg,
-        var(--acento) 330deg,
-        var(--acento-b) 349deg,
+        transparent 0deg 190deg,
+        color-mix(in srgb, var(--acento) 8%, transparent) 225deg,
+        color-mix(in srgb, var(--acento) 22%, transparent) 262deg,
+        color-mix(in srgb, var(--acento) 48%, transparent) 298deg,
+        var(--acento) 328deg,
+        var(--acento-b) 346deg,
         #ffffff 355deg,
         transparent 360deg);
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -1358,9 +1507,11 @@
     .dialogo-caja::after,
     .proyecto-card::after,
     .estado::after {
-      padding: calc(var(--bw) + 6px);
-      opacity: 0.28;
+      padding: calc(var(--bw) + 8px);
+      opacity: 0.4;
     }
+    /* El borde en reposo va apagado para que la luz se note al pasar, como las bombillas de un casino */
+    .dialogo-caja { border-color: var(--acento-o); }
 
     @media (max-width: 600px) {
       /* Apartados: cuadrícula 2x2 y sin barra pegajosa para ahorrar pantalla */
@@ -1368,7 +1519,7 @@
       .tabs { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; padding: 0.8rem 0.8rem 0.9rem; }
       .tab-btn { padding: 0.95rem 0.3rem; font-size: 0.55rem; }
       .consola-wrap { padding: 1rem 0.8rem 0.9rem; }
-      .consola-cuerpo { min-height: 7.6rem; padding: 0.8rem 0.9rem; }
+      .consola-cuerpo { min-height: 5.8rem; padding: 0.8rem 0.9rem; }
       .hero { padding: 2.2rem 1rem 2rem; }
       .panel { padding: 1.3rem; }
       .briefing-body { padding: 1.2rem; }
@@ -1392,6 +1543,8 @@
       .radio-visor { margin-bottom: 0.4rem; padding: 0.3rem 0.5rem; }
       .radio-controles { margin-bottom: 0; }
       .radio-vol-row { display: none; }
+      .mision-ops { grid-template-columns: 1fr; }
+      .cv-visor { height: 380px; }
     }
 
     /* =====================================================
@@ -1731,6 +1884,11 @@
     </div>
   </div>
 
+  <!-- Pestaña para volver a sacar el reproductor cuando está oculto a la izquierda -->
+  <button type="button" id="radio-tab" class="radio-tab" aria-label="Mostrar reproductor de música">
+    <span data-i18n="radioTab">MÚSICA</span>
+  </button>
+
   <!-- Tarjeta flotante de Opciones a la derecha -->
   <aside id="hud-opciones" class="opciones-dock" aria-label="Opciones del sistema">
     <button type="button" id="opciones-toggle" class="opciones-tab" aria-expanded="false" aria-controls="opciones-panel">
@@ -1793,14 +1951,14 @@
   <!-- Botones grandes de apartados -->
   <div class="tabs-barra">
     <nav class="tabs" role="tablist" aria-label="Apartados del sitio">
-      <button type="button" class="tab-btn activo" role="tab" aria-selected="true" data-vista-ir="bio" data-i18n="tabBio">HOME &amp; BIO</button>
+      <button type="button" class="tab-btn activo" role="tab" aria-selected="true" data-vista-ir="bio" data-i18n="tabBio">ABOUT ME</button>
       <button type="button" class="tab-btn" role="tab" aria-selected="false" data-vista-ir="herramientas" data-i18n="tabTools">HERRAMIENTAS</button>
       <button type="button" class="tab-btn" role="tab" aria-selected="false" data-vista-ir="proyectos" data-i18n="tabProj">PROYECTOS</button>
       <button type="button" class="tab-btn" role="tab" aria-selected="false" data-vista-ir="contacto" data-i18n="tabContact">CONTACTO</button>
     </nav>
   </div>
 
-  <!-- ===================== APARTADO 1: HOME & BIO ===================== -->
+  <!-- ===================== APARTADO 1: ABOUT ME ===================== -->
   <div class="vista activa" id="vista-bio">
     <header class="hero" id="inicio">
       <span class="etiqueta" data-i18n="heroBadge">ARCHIVO DE OPERADOR</span>
@@ -1817,7 +1975,7 @@
         <span data-i18n="stStatus">ESTADO</span><span class="en-linea" data-i18n="stOnline">EN LÍNEA</span>
       </div>
       <br>
-      <a href="#sobre-mi" class="btn btn-rojo" data-i18n="btnStart">Iniciar misión</a>
+      <button type="button" id="btn-mision" class="btn btn-rojo" data-i18n="btnStart">Iniciar misión</button>
       <button type="button" class="btn btn-acero" data-vista-ir="proyectos" data-i18n="btnProjects">Proyectos</button>
     </header>
 
@@ -1844,7 +2002,7 @@
           <div class="mugshot-nombre">madvillain42</div>
         </div>
 
-        <div class="dialogo-caja" id="dialogo-caja" title="Clic para saltar la animación">
+        <div class="dialogo-caja" id="dialogo-caja">
           <span class="dialogo-nombre">MADVILLAIN42 //</span>
           <div class="dialogo-texto">
             <p data-tipeo="aboutP1">Soy estudiante de <span class="destacado">3er año de Ingeniería en Informática</span> en <span class="destacado">Santo Tomás Concepción</span>. Me desenvuelvo en desarrollo de software utilizando lenguajes variados como <span class="destacado">C++, C#, HTML5, CSS, Python y Java</span>.</p>
@@ -1858,7 +2016,7 @@
 
   <!-- ===================== APARTADO 2: HERRAMIENTAS ===================== -->
   <div class="vista" id="vista-herramientas">
-    <section>
+    <section id="sec-habilidades">
       <div class="mision-cab">
         <span class="mision-num" data-i18n="t1Num">MISIÓN 01</span>
         <h2 data-i18n="t1Title">Habilidades</h2>
@@ -1905,10 +2063,18 @@
           <div class="skill-cab"><span data-i18n="skillPen">Pentesting (En curso)</span><span>5/10</span></div>
           <div class="barra"><div style="--n: 5"></div></div>
         </div>
+        <div>
+          <div class="skill-cab"><span>MQTT + Node-RED</span><span>6/10</span></div>
+          <div class="barra"><div style="--n: 6"></div></div>
+        </div>
+        <div>
+          <div class="skill-cab"><span>Arduino / ESP32</span><span>6/10</span></div>
+          <div class="barra"><div style="--n: 6"></div></div>
+        </div>
       </div>
     </section>
 
-    <section>
+    <section id="sec-frameworks">
       <div class="mision-cab">
         <span class="mision-num" data-i18n="t2Num">MISIÓN 02</span>
         <h2 data-i18n="t2Title">Frameworks y tecnologías</h2>
@@ -1924,6 +2090,7 @@
             <span>Python</span>
             <span>JavaScript</span>
             <span>SQL</span>
+            <span>SQL Server</span>
             <span>HTML5</span>
             <span>CSS</span>
           </div>
@@ -1933,7 +2100,24 @@
           <div class="chips">
             <span>Linux</span>
             <span>Docker</span>
+            <span>Docker Compose</span>
             <span>GitHub</span>
+          </div>
+        </div>
+        <div class="fw-grupo">
+          <span class="fw-titulo" data-es="Nube y servidores" data-en="Cloud and servers">Nube y servidores</span>
+          <div class="chips">
+            <span>Azure</span>
+            <span>Windows Server</span>
+          </div>
+        </div>
+        <div class="fw-grupo">
+          <span class="fw-titulo" data-es="IoT y sistemas embebidos" data-en="IoT and embedded systems">IoT y sistemas embebidos</span>
+          <div class="chips">
+            <span>ESP32</span>
+            <span>Arduino IDE</span>
+            <span>MQTT</span>
+            <span>Node-RED</span>
           </div>
         </div>
         <div class="fw-grupo">
@@ -1955,6 +2139,113 @@
         </div>
       </div>
     </section>
+
+    <section id="sec-blandas">
+      <div class="mision-cab">
+        <span class="mision-num" data-es="MISIÓN 03" data-en="MISSION 03">MISIÓN 03</span>
+        <h2 data-es="Habilidades blandas" data-en="Soft skills">Habilidades blandas</h2>
+      </div>
+      <div class="panel soft-grid">
+        <div class="soft-card">
+          <h4 data-es="Intercomunicación" data-en="Intercommunication">Intercomunicación</h4>
+          <p data-es="Transmito información clara entre personas, equipos y áreas." data-en="I share clear information across people, teams and areas.">Transmito información clara entre personas, equipos y áreas.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Proactividad" data-en="Proactivity">Proactividad</h4>
+          <p data-es="Propongo y avanzo sin esperar a que me lo pidan." data-en="I propose ideas and move forward without waiting to be asked.">Propongo y avanzo sin esperar a que me lo pidan.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Trabajo en equipo" data-en="Teamwork">Trabajo en equipo</h4>
+          <p data-es="Colaboro y sumo al objetivo común del grupo." data-en="I collaborate and contribute to the group's shared goal.">Colaboro y sumo al objetivo común del grupo.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Moldeable" data-en="Adaptability">Moldeable</h4>
+          <p data-es="Me adapto rápido a nuevos contextos, roles y herramientas." data-en="I adapt quickly to new contexts, roles and tools.">Me adapto rápido a nuevos contextos, roles y herramientas.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Enfoque" data-en="Focus">Enfoque</h4>
+          <p data-es="Mantengo la atención en el objetivo hasta cerrarlo." data-en="I keep my attention on the goal until it is done.">Mantengo la atención en el objetivo hasta cerrarlo.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Empatía y trato" data-en="Empathy and people skills">Empatía y trato</h4>
+          <p data-es="Escucho y trato a las personas con respeto y cercanía." data-en="I listen to people and treat them with respect and warmth.">Escucho y trato a las personas con respeto y cercanía.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Resolución de problemas" data-en="Problem solving">Resolución de problemas</h4>
+          <p data-es="Descompongo los problemas y busco soluciones prácticas." data-en="I break problems down and look for practical solutions.">Descompongo los problemas y busco soluciones prácticas.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Inglés comunicativo y verbal" data-en="Communicative and spoken English">Inglés comunicativo y verbal</h4>
+          <p data-es="Me comunico en inglés de forma oral y escrita." data-en="I communicate in English, both spoken and written.">Me comunico en inglés de forma oral y escrita.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-ingenieria">
+      <div class="mision-cab">
+        <span class="mision-num" data-es="MISIÓN 04" data-en="MISSION 04">MISIÓN 04</span>
+        <h2 data-es="Metodologías e ingeniería" data-en="Methodologies and engineering">Metodologías e ingeniería</h2>
+      </div>
+      <div class="panel soft-grid">
+        <div class="soft-card">
+          <h4 data-es="Scrum" data-en="Scrum">Scrum</h4>
+          <p data-es="Trabajo en sprints, con roles definidos y entregas incrementales." data-en="Sprint-based work with defined roles and incremental deliveries.">Trabajo en sprints, con roles definidos y entregas incrementales.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Kanban" data-en="Kanban">Kanban</h4>
+          <p data-es="Flujo visual de tareas y control del trabajo en curso." data-en="Visual task flow and control of work in progress.">Flujo visual de tareas y control del trabajo en curso.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="XP (Extreme Programming)" data-en="XP (Extreme Programming)">XP (Extreme Programming)</h4>
+          <p data-es="Ciclos cortos, pruebas y mejora continua del código." data-en="Short cycles, testing and continuous code improvement.">Ciclos cortos, pruebas y mejora continua del código.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Documentación de proyectos" data-en="Project documentation">Documentación de proyectos</h4>
+          <p data-es="Registro técnico claro para que otros puedan continuar el trabajo." data-en="Clear technical records so others can pick up the work.">Registro técnico claro para que otros puedan continuar el trabajo.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Patrones de diseño" data-en="Design patterns">Patrones de diseño</h4>
+          <p data-es="Soluciones reutilizables para problemas comunes de diseño." data-en="Reusable solutions to common design problems.">Soluciones reutilizables para problemas comunes de diseño.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Arquitectura de software" data-en="Software architecture">Arquitectura de software</h4>
+          <p data-es="Estructuro sistemas modulares, mantenibles y escalables." data-en="I structure modular, maintainable and scalable systems.">Estructuro sistemas modulares, mantenibles y escalables.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Integración de APIs" data-en="API integration">Integración de APIs</h4>
+          <p data-es="Conecto servicios y datos externos a mis aplicaciones." data-en="I connect external services and data to my applications.">Conecto servicios y datos externos a mis aplicaciones.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-creativo">
+      <div class="mision-cab">
+        <span class="mision-num" data-es="MISIÓN 05" data-en="MISSION 05">MISIÓN 05</span>
+        <h2 data-es="Creatividad y videojuegos" data-en="Creativity and game dev">Creatividad y videojuegos</h2>
+      </div>
+      <div class="panel soft-grid">
+        <div class="soft-card">
+          <h4 data-es="Mecánicas de juego" data-en="Game mechanics">Mecánicas de juego</h4>
+          <p data-es="Diseño reglas y sistemas que hacen divertido un juego." data-en="I design the rules and systems that make a game fun.">Diseño reglas y sistemas que hacen divertido un juego.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Diseño de niveles" data-en="Level design">Diseño de niveles</h4>
+          <p data-es="Estructuro niveles con ritmo, dificultad y progresión." data-en="I build levels with pacing, difficulty and progression.">Estructuro niveles con ritmo, dificultad y progresión.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Pixel art" data-en="Pixel art">Pixel art</h4>
+          <p data-es="Creo gráficos retro píxel a píxel." data-en="I create retro graphics pixel by pixel.">Creo gráficos retro píxel a píxel.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Creatividad narrativa" data-en="Narrative creativity">Creatividad narrativa</h4>
+          <p data-es="Construyo historias, mundos y personajes." data-en="I build stories, worlds and characters.">Construyo historias, mundos y personajes.</p>
+        </div>
+        <div class="soft-card">
+          <h4 data-es="Edición de videos" data-en="Video editing">Edición de videos</h4>
+          <p data-es="Monto y edito material audiovisual." data-en="I cut and edit audiovisual material.">Monto y edito material audiovisual.</p>
+        </div>
+      </div>
+    </section>
   </div>
 
   <!-- ===================== APARTADO 3: PROYECTOS ===================== -->
@@ -1967,9 +2258,10 @@
             <button type="button" class="filtro-btn activo" data-filtro="all" data-i18n="filterAll">Todos</button>
             <button type="button" class="filtro-btn" data-filtro="c#,c++">C# / C++</button>
             <button type="button" class="filtro-btn" data-filtro="python,java">Python / Java</button>
-            <button type="button" class="filtro-btn" data-filtro="html5,css">Web</button>
+            <button type="button" class="filtro-btn" data-filtro="web,html5,css">Web</button>
             <button type="button" class="filtro-btn" data-filtro="linux,docker">Linux / Docker</button>
             <button type="button" class="filtro-btn" data-filtro="redes,pentesting" data-i18n="filterNet">Redes / Pentesting</button>
+            <button type="button" class="filtro-btn" data-filtro="iot,esp32,arduino,mqtt,node-red" data-i18n="filterIot">IoT / Embebidos</button>
           </div>
           <span class="filtros-contador" id="filtros-contador">[ EXPEDIENTES: 3/3 ]</span>
         </div>
@@ -1981,18 +2273,18 @@
           <article class="proyecto-card" tabindex="0" role="button"
             data-codigo="MISIÓN 01"
             data-codigo-en="MISSION 01"
-            data-estado="PLANTILLA EN ESPERA"
-            data-estado-en="TEMPLATE STANDBY"
+            data-estado="ACTIVO"
+            data-estado-en="ACTIVE"
             data-rango="?"
-            data-titulo="Proyecto Re-Eko"
-            data-titulo-en="Re-Eko Project"
-            data-descripcion="Espacio reservado para describir el proyecto Re-Eko: el problema que resuelve, el contexto en Santo Tomás Concepción y el enfoque técnico utilizado."
-            data-descripcion-en="Reserved slot to describe the Re-Eko project: the problem it solves, the course context at Santo Tomás Concepción, and the technical approach used."
-            data-detalles="Arquitectura modular implementada desde cero.|Despliegue reproducible mediante contenedores Docker.|Pruebas de rendimiento y validación de datos."
-            data-detalles-en="Modular architecture built from scratch.|Reproducible deployment using Docker containers.|Performance benchmarking and data validation."
-            data-aprendido="Escribe aquí lo más importante que aprendiste con este proyecto.|Agrega una segunda lección si quieres."
-            data-aprendido-en="Write here the most important thing you learned from this project.|Add a second lesson if you like."
-            data-tech="C#,C++,Docker"
+            data-titulo="Re-Eko"
+            data-titulo-en="Re-Eko"
+            data-descripcion="Plataforma web de compra, venta y permuta de objetos adaptada a entornos locales. Busca potenciar el desarrollo de la economía en zonas rurales y urbanas y, a la vez, fomentar la economía circular para reducir la huella de carbono dándole una nueva vida a objetos abandonados."
+            data-descripcion-en="Web platform for buying, selling and bartering (permuta) objects, adapted to local environments. It aims to boost the economy in both rural and urban areas while promoting a circular economy that reduces the carbon footprint by giving new life to abandoned objects."
+            data-detalles="Compra, venta y permuta (trueque) de objetos en un mismo lugar.|Adaptada a entornos locales, tanto rurales como urbanos.|Impulsa la economía local y la economía circular.|Reduce la huella de carbono reutilizando objetos en desuso."
+            data-detalles-en="Buying, selling and bartering of objects in one place.|Adapted to local environments, both rural and urban.|Boosts the local economy and the circular economy.|Reduces the carbon footprint by reusing unused objects."
+            data-aprendido="Diseñar una solución con impacto social y ambiental.|Agrega aquí lo técnico que aprendiste construyéndola."
+            data-aprendido-en="Designing a solution with social and environmental impact.|Add here the technical lessons you learned building it."
+            data-tech="Web"
             data-repo="https://github.com/madvillain42"
             data-img="">
             <div>
@@ -2000,13 +2292,13 @@
                 <span class="proyecto-tag" data-i18n="p1Tag">MISIÓN 01</span>
                 <span class="rango r-x" title="Rango">?</span>
               </div>
-              <h3 data-i18n="p1Title">Proyecto Re-Eko</h3>
-              <p data-i18n="p1Desc">Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
+              <h3 data-i18n="p1Title">Re-Eko</h3>
+              <p data-i18n="p1Desc">Plataforma de compra, venta y permuta de objetos para entornos locales y economía circular.</p>
             </div>
             <div class="proyecto-pie">
               <div class="proyecto-tech">
-                <span>C# / C++</span>
-                <span>DOCKER</span>
+                <span>WEB</span>
+                <span>CIRCULAR</span>
               </div>
               <span class="proyecto-abrir">▶ BRIEFING</span>
             </div>
@@ -2016,18 +2308,18 @@
           <article class="proyecto-card" tabindex="0" role="button"
             data-codigo="MISIÓN 02"
             data-codigo-en="MISSION 02"
-            data-estado="PLANTILLA EN ESPERA"
-            data-estado-en="TEMPLATE STANDBY"
+            data-estado="ACTIVO"
+            data-estado-en="ACTIVE"
             data-rango="?"
-            data-titulo="Proyecto 02"
-            data-titulo-en="Project 02"
-            data-descripcion="Espacio reservado para describir el desarrollo de backend, procesamiento de datos o automatización en entornos Linux."
-            data-descripcion-en="Reserved slot to describe backend development, data processing, or automation in Linux environments."
-            data-detalles="Desarrollo orientado a objetos y manejo de estructuras eficientes.|Automatización de tareas y scripts en entorno Linux.|Control de versiones y documentación técnica en GitHub."
-            data-detalles-en="Object-oriented development and efficient data structures.|Task automation and shell scripting in Linux.|Version control and technical documentation on GitHub."
-            data-aprendido="Escribe aquí lo más importante que aprendiste con este proyecto.|Agrega una segunda lección si quieres."
-            data-aprendido-en="Write here the most important thing you learned from this project.|Add a second lesson if you like."
-            data-tech="Java,Python,Linux"
+            data-titulo="Eko-red"
+            data-titulo-en="Eko-red"
+            data-descripcion="Sistema desarrollado en el IDE de Arduino sobre una ESP32, pensado para ser de bajo costo y altamente replicable. Detecta anomalías de temperatura y niveles irregulares de CO2 y dispara una alerta digital (dashboard con MQTT + Node-RED) y física (aviso sonoro). Incluye una pantalla integrada para monitorear en tiempo real los estándares ambientales, y es amigable con personas mayores o con discapacidad auditiva u olfativa."
+            data-descripcion-en="System built in the Arduino IDE on an ESP32, designed to be low cost and highly replicable. It detects temperature anomalies and irregular CO2 levels and triggers both a digital alert (dashboard over MQTT + Node-RED) and a physical one (audible warning). An integrated screen lets users monitor environmental standards in real time, and it is friendly to elderly people and to people with hearing or smell disabilities."
+            data-detalles="Microcontrolador ESP32 programado desde el IDE de Arduino.|Detección de anomalías de temperatura y niveles irregulares de CO2.|Alerta digital: dashboard en Node-RED mediante MQTT.|Alerta física: aviso sonoro para el usuario.|Pantalla integrada con monitoreo ambiental en tiempo real.|Accesible para personas mayores y con discapacidad auditiva u olfativa.|Áreas de enfoque: minería, cocina y laboratorios."
+            data-detalles-en="ESP32 programmed from the Arduino IDE.|Detection of temperature anomalies and irregular CO2 levels.|Digital alert: Node-RED dashboard over MQTT.|Physical alert: audible warning for the user.|Integrated screen with real-time environmental monitoring.|Accessible for elderly people and people with hearing or smell disabilities.|Focus areas: mining, kitchens and laboratories."
+            data-aprendido="Integrar hardware, MQTT y un dashboard en un solo flujo.|Diseñar soluciones de bajo costo y fáciles de replicar."
+            data-aprendido-en="Integrating hardware, MQTT and a dashboard into a single flow.|Designing low-cost solutions that are easy to replicate."
+            data-tech="IoT,ESP32,Arduino,MQTT,Node-RED"
             data-repo="https://github.com/madvillain42"
             data-img="">
             <div>
@@ -2035,13 +2327,13 @@
                 <span class="proyecto-tag" data-i18n="p2Tag">MISIÓN 02</span>
                 <span class="rango r-x" title="Rango">?</span>
               </div>
-              <h3 data-i18n="p2Title">Proyecto 02</h3>
-              <p data-i18n="p2Desc">Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
+              <h3 data-i18n="p2Title">Eko-red</h3>
+              <p data-i18n="p2Desc">Monitoreo ambiental con ESP32: alertas de temperatura y CO2, dashboard MQTT + Node-RED y aviso sonoro.</p>
             </div>
             <div class="proyecto-pie">
               <div class="proyecto-tech">
-                <span>JAVA / PYTHON</span>
-                <span>LINUX</span>
+                <span>ESP32</span>
+                <span>MQTT / NODE-RED</span>
               </div>
               <span class="proyecto-abrir">▶ BRIEFING</span>
             </div>
@@ -2056,13 +2348,13 @@
             data-rango="?"
             data-titulo="Proyecto 03"
             data-titulo-en="Project 03"
-            data-descripcion="Espacio reservado para proyectos de desarrollo web, topologías de red o prácticas iniciales de auditoría y pentesting."
-            data-descripcion-en="Reserved slot for web development projects, network topologies, or introductory auditing and pentesting labs."
-            data-detalles="Interfaz responsiva construida con estándares HTML5 y CSS.|Configuración y análisis de servicios en red.|Documentación de hallazgos y medidas de mitigación."
-            data-detalles-en="Responsive interface built with HTML5 and CSS standards.|Network service configuration and traffic analysis.|Documentation of findings and mitigation steps."
+            data-descripcion="Espacio reservado para describir el desarrollo de backend, procesamiento de datos o automatización en entornos Linux."
+            data-descripcion-en="Reserved slot to describe backend development, data processing, or automation in Linux environments."
+            data-detalles="Desarrollo orientado a objetos y manejo de estructuras eficientes.|Automatización de tareas y scripts en entorno Linux.|Control de versiones y documentación técnica en GitHub."
+            data-detalles-en="Object-oriented development and efficient data structures.|Task automation and shell scripting in Linux.|Version control and technical documentation on GitHub."
             data-aprendido="Escribe aquí lo más importante que aprendiste con este proyecto.|Agrega una segunda lección si quieres."
             data-aprendido-en="Write here the most important thing you learned from this project.|Add a second lesson if you like."
-            data-tech="HTML5,CSS,Redes,Pentesting"
+            data-tech="Java,Python,Linux"
             data-repo="https://github.com/madvillain42"
             data-img="">
             <div>
@@ -2075,12 +2367,13 @@
             </div>
             <div class="proyecto-pie">
               <div class="proyecto-tech">
-                <span>HTML5 / CSS</span>
-                <span>REDES</span>
+                <span>JAVA / PYTHON</span>
+                <span>LINUX</span>
               </div>
               <span class="proyecto-abrir">▶ BRIEFING</span>
             </div>
           </article>
+
         </div>
 
         <div class="sin-resultados" id="sin-resultados" data-i18n="noResults">
@@ -2100,19 +2393,56 @@
       <p data-i18n="linksDesc">Aquí puedes encontrar mi código y repositorios universitarios.</p>
       <a href="https://github.com/madvillain42" class="btn btn-rojo" target="_blank" rel="noopener">GitHub</a>
 
-      <!-- El botón de CV aparece solo si subes un archivo llamado cv.pdf a la raíz del repo -->
-      <a href="cv.pdf" id="btn-cv" class="btn btn-acero" download hidden data-i18n="btnCv">Descargar CV</a>
-
       <!-- Cuando quieras publicar más formas de contacto, quita los comentarios y pon tus datos:
       <a href="mailto:TU-CORREO@ejemplo.com" class="btn btn-acero">Correo</a>
       <a href="https://www.linkedin.com/in/TU-USUARIO" class="btn btn-acero" target="_blank" rel="noopener">LinkedIn</a>
       -->
+    </section>
+
+    <!-- El CV aparece solo si subes un archivo llamado cv.pdf a la raíz del repo -->
+    <section id="sec-cv">
+      <div class="mision-cab">
+        <span class="mision-num" data-es="MISIÓN 02" data-en="MISSION 02">MISIÓN 02</span>
+        <h2 data-es="Currículum" data-en="Résumé">Currículum</h2>
+      </div>
+      <div class="panel cv-panel">
+        <p class="cv-estado" id="cv-estado" data-es="[ BUSCANDO ARCHIVO cv.pdf... ]" data-en="[ LOOKING FOR cv.pdf... ]">[ BUSCANDO ARCHIVO cv.pdf... ]</p>
+        <div class="cv-acciones" id="cv-acciones" hidden>
+          <a href="cv.pdf" id="btn-cv-ver" class="btn btn-rojo" target="_blank" rel="noopener" data-es="Ver CV" data-en="View résumé">Ver CV</a>
+          <a href="cv.pdf" id="btn-cv" class="btn btn-acero" download data-i18n="btnCv">Descargar CV</a>
+        </div>
+        <iframe class="cv-visor" id="cv-visor" title="CV" hidden></iframe>
+      </div>
     </section>
   </div>
 
   <footer>
     <p data-i18n="footerText">© 2026 MADVILLAIN42 · FIN DE LA TRANSMISIÓN</p>
   </footer>
+
+  <!-- Selector de misión (botón "Iniciar misión") -->
+  <div id="modal-mision" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="mision-titulo">
+    <div class="briefing-box mision-box">
+      <div class="briefing-top">
+        <div class="briefing-top-izq">
+          <span class="briefing-badge" data-es="SELECCIÓN DE MISIÓN" data-en="MISSION SELECT">SELECCIÓN DE MISIÓN</span>
+          <span class="briefing-status">● LISTO</span>
+        </div>
+        <button type="button" id="mision-cerrar" class="briefing-cerrar" aria-label="Cerrar" data-i18n="modalClose">[ X ] CERRAR</button>
+      </div>
+      <div class="briefing-body">
+        <p class="mision-intro" id="mision-titulo" data-es="¿QUÉ MISIÓN QUIERES INICIAR, OPERADOR?" data-en="WHICH MISSION DO YOU WANT TO START, OPERATOR?">¿QUÉ MISIÓN QUIERES INICIAR, OPERADOR?</p>
+        <div class="mision-ops">
+          <button type="button" class="mision-op" data-destino="bio" data-ancla="sobre-mi"><b>01</b><span data-es="Acerca de mí" data-en="About me">Acerca de mí</span></button>
+          <button type="button" class="mision-op" data-destino="herramientas" data-ancla="sec-habilidades"><b>02</b><span data-es="Habilidades" data-en="Skills">Habilidades</span></button>
+          <button type="button" class="mision-op" data-destino="herramientas" data-ancla="sec-frameworks"><b>03</b><span data-es="Frameworks y tecnologías" data-en="Frameworks and tech">Frameworks y tecnologías</span></button>
+          <button type="button" class="mision-op" data-destino="herramientas" data-ancla="sec-blandas"><b>04</b><span data-es="Habilidades blandas" data-en="Soft skills">Habilidades blandas</span></button>
+          <button type="button" class="mision-op" data-destino="proyectos" data-ancla=""><b>05</b><span data-es="Proyectos" data-en="Projects">Proyectos</span></button>
+          <button type="button" class="mision-op" data-destino="contacto" data-ancla="sec-cv"><b>06</b><span data-es="Currículum y contacto" data-en="Résumé and contact">Currículum y contacto</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal Briefing de Misión -->
   <div id="modal-briefing" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="briefing-titulo">
@@ -2255,7 +2585,7 @@
           optLang: "IDIOMA",
           optSlash: "Z-SLASH",
           optHome: "HOME",
-          tabBio: "HOME & BIO",
+          tabBio: "ABOUT ME",
           tabTools: "HERRAMIENTAS",
           tabProj: "PROYECTOS",
           tabContact: "CONTACTO",
@@ -2287,11 +2617,13 @@
           filterAll: "Todos",
           filterNet: "Redes / Pentesting",
           p1Tag: "MISIÓN 01",
-          p1Title: "Proyecto Re-Eko",
-          p1Desc: "Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.",
+          p1Title: "Re-Eko",
+          p1Desc: "Plataforma de compra, venta y permuta de objetos para entornos locales y economía circular.",
+          filterIot: "IoT / Embebidos",
+          radioTab: "MÚSICA",
           p2Tag: "MISIÓN 02",
-          p2Title: "Proyecto 02",
-          p2Desc: "Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.",
+          p2Title: "Eko-red",
+          p2Desc: "Monitoreo ambiental con ESP32: alertas de temperatura y CO2, dashboard MQTT + Node-RED y aviso sonoro.",
           p3Tag: "MISIÓN 03",
           p3Title: "Proyecto 03",
           p3Desc: "Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.",
@@ -2321,7 +2653,7 @@
           optLang: "LANGUAGE",
           optSlash: "Z-SLASH",
           optHome: "HOME",
-          tabBio: "HOME & BIO",
+          tabBio: "ABOUT ME",
           tabTools: "TOOLS",
           tabProj: "PROJECTS",
           tabContact: "CONTACT",
@@ -2353,11 +2685,13 @@
           filterAll: "All",
           filterNet: "Networking / Pentesting",
           p1Tag: "MISSION 01",
-          p1Title: "Re-Eko Project",
-          p1Desc: "Reserved slot for documentation, system architecture, and repository link.",
+          p1Title: "Re-Eko",
+          p1Desc: "Platform to buy, sell and barter objects for local environments and the circular economy.",
+          filterIot: "IoT / Embedded",
+          radioTab: "MUSIC",
           p2Tag: "MISSION 02",
-          p2Title: "Project 02",
-          p2Desc: "Reserved slot for documentation, system architecture, and repository link.",
+          p2Title: "Eko-red",
+          p2Desc: "ESP32 environmental monitoring: temperature and CO2 alerts, MQTT + Node-RED dashboard and audible warning.",
           p3Tag: "MISSION 03",
           p3Title: "Project 03",
           p3Desc: "Reserved slot for documentation, system architecture, and repository link.",
@@ -2616,6 +2950,8 @@
       function ocultarRadio() {
         radioVisible = false;
         if (radioHud) radioHud.classList.add("oculto");
+        var rtab = document.getElementById("radio-tab");
+        if (rtab) rtab.classList.add("visible");
         var est = document.getElementById("estado-radio");
         if (est) est.textContent = "OFF";
         if (btnRadio) btnRadio.classList.remove("activo");
@@ -2624,6 +2960,8 @@
       function mostrarRadio() {
         radioVisible = true;
         if (radioHud) radioHud.classList.remove("oculto");
+        var rtab = document.getElementById("radio-tab");
+        if (rtab) rtab.classList.remove("visible");
         var est = document.getElementById("estado-radio");
         if (est) est.textContent = "ON";
         if (btnRadio) btnRadio.classList.add("activo");
@@ -2855,13 +3193,13 @@
          ===================================================== */
       var consola = {
         es: {
-          bio:          { cmd: "cd ~/home_bio",      out: "[OK] archivo de operador cargado" },
+          bio:          { cmd: "cd ~/about_me",      out: "[OK] archivo de operador cargado" },
           herramientas: { cmd: "ls ~/herramientas",  out: "[OK] habilidades y tecnologías detectadas" },
           proyectos:    { cmd: "cd ~/proyectos",     out: "[OK] {n} expedientes localizados" },
           contacto:     { cmd: "ping contacto",      out: "[OK] canal de comunicación abierto" }
         },
         en: {
-          bio:          { cmd: "cd ~/home_bio",      out: "[OK] operator file loaded" },
+          bio:          { cmd: "cd ~/about_me",      out: "[OK] operator file loaded" },
           herramientas: { cmd: "ls ~/tools",         out: "[OK] skills and technologies detected" },
           proyectos:    { cmd: "cd ~/projects",      out: "[OK] {n} files located" },
           contacto:     { cmd: "ping contact",       out: "[OK] communication channel open" }
@@ -3002,8 +3340,14 @@
           if (dict[key]) el.innerHTML = dict[key];
         });
 
+        document.querySelectorAll("[data-es]").forEach(function (el) {
+          var v = el.getAttribute("data-" + idioma);
+          if (v !== null) el.textContent = v;
+        });
+
         var estadoLang = document.getElementById("estado-lang");
         if (estadoLang) estadoLang.textContent = idioma.toUpperCase();
+        actualizarCv();
 
         if (consolaIniciada) consolaFijar(vistaActual);
         actualizarDialogo();
@@ -3178,8 +3522,57 @@
         });
       }
 
+      /* Selector de misión: lleva al apartado elegido y se desplaza hasta su sección */
+      var modalMision = document.getElementById("modal-mision");
+      var btnMision = document.getElementById("btn-mision");
+      var btnMisionCerrar = document.getElementById("mision-cerrar");
+
+      function abrirMision() {
+        if (!modalMision) return;
+        reproducirSeleccionar();
+        modalMision.classList.add("abierto");
+        document.documentElement.classList.add("bloqueado");
+        var primero = modalMision.querySelector(".mision-op");
+        if (primero) primero.focus();
+      }
+
+      function cerrarMision(conSonido) {
+        if (!modalMision || !modalMision.classList.contains("abierto")) return;
+        if (conSonido) reproducirBarraDerecha();
+        modalMision.classList.remove("abierto");
+        document.documentElement.classList.remove("bloqueado");
+      }
+
+      if (btnMision) btnMision.addEventListener("click", abrirMision);
+      if (btnMisionCerrar) {
+        btnMisionCerrar.addEventListener("mouseenter", reproducirHover);
+        btnMisionCerrar.addEventListener("click", function () { cerrarMision(true); });
+      }
+      if (modalMision) {
+        modalMision.addEventListener("click", function (e) {
+          if (e.target === modalMision) cerrarMision(true);
+        });
+        modalMision.querySelectorAll(".mision-op").forEach(function (op) {
+          op.addEventListener("mouseenter", reproducirHover);
+          op.addEventListener("click", function () {
+            reproducirSeleccionar();
+            cerrarMision(false);
+            mostrarVista(op.getAttribute("data-destino"), true);
+            var ancla = op.getAttribute("data-ancla");
+            var objetivo = ancla ? document.getElementById(ancla) : null;
+            if (objetivo) {
+              setTimeout(function () {
+                var y = objetivo.getBoundingClientRect().top + window.pageYOffset - 70;
+                window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+              }, 80);
+            }
+          });
+        });
+      }
+
       window.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
+          cerrarMision(true);
           cerrarBriefing();
           if (opcionesDock && opcionesDock.classList.contains("abierto")) {
             reproducirBarraDerecha();
@@ -3191,7 +3584,7 @@
 
       /* Vincular PasarMouse y Seleccionar a apartados, botones y opciones.
          Se excluyen los botones que manejan su propio sonido (SFX, Z-Slash y Reproductor). */
-      var sonidoPropio = ["btn-sfx", "btn-replay", "btn-radio"];
+      var sonidoPropio = ["btn-sfx", "btn-replay", "btn-radio", "btn-mision"];
       var elementosInteractivos = document.querySelectorAll(".tab-btn, .btn, .opt-btn");
       elementosInteractivos.forEach(function (el) {
         el.addEventListener("mouseenter", reproducirHover);
@@ -3220,9 +3613,19 @@
             reproducirBarraDerecha();
             ocultarRadio();
           } else {
-            reproducirSeleccionar();
+            reproducirBarraDerecha();
             mostrarRadio();
           }
+        });
+      }
+
+      /* Pestaña lateral: vuelve a sacar el reproductor oculto a la izquierda */
+      var radioTabBtn = document.getElementById("radio-tab");
+      if (radioTabBtn) {
+        radioTabBtn.addEventListener("mouseenter", reproducirHover);
+        radioTabBtn.addEventListener("click", function () {
+          reproducirBarraDerecha();
+          mostrarRadio();
         });
       }
 
@@ -3252,12 +3655,35 @@
       }
 
       /* El botón de CV solo aparece si existe el archivo cv.pdf en el sitio */
-      var btnCv = document.getElementById("btn-cv");
-      if (btnCv && window.fetch) {
-        fetch("cv.pdf", { method: "HEAD" }).then(function (r) {
-          if (r.ok) btnCv.hidden = false;
-        }).catch(function () {});
+      var cvExiste = null; /* null = comprobando, true / false */
+      function actualizarCv() {
+        var estadoCv = document.getElementById("cv-estado");
+        var accionesCv = document.getElementById("cv-acciones");
+        var visorCv = document.getElementById("cv-visor");
+        if (!estadoCv) return;
+        if (cvExiste === true) {
+          estadoCv.textContent = idioma === "en" ? "[ FILE FOUND: cv.pdf ]" : "[ ARCHIVO ENCONTRADO: cv.pdf ]";
+          estadoCv.classList.add("ok");
+          accionesCv.hidden = false;
+          if (visorCv.hidden) { visorCv.src = "cv.pdf"; visorCv.hidden = false; }
+        } else if (cvExiste === false) {
+          estadoCv.textContent = idioma === "en"
+            ? "[ NO RÉSUMÉ YET // UPLOAD A FILE NAMED cv.pdf TO THE REPO ROOT ]"
+            : "[ AÚN SIN CV // SUBE UN ARCHIVO LLAMADO cv.pdf A LA RAÍZ DEL REPO ]";
+          estadoCv.classList.remove("ok");
+          accionesCv.hidden = true;
+        }
       }
+      if (window.fetch) {
+        fetch("cv.pdf", { method: "HEAD" }).then(function (r) {
+          cvExiste = r.ok;
+          actualizarCv();
+        }).catch(function () { cvExiste = false; actualizarCv(); });
+      } else {
+        cvExiste = false;
+        actualizarCv();
+      }
+      document.querySelectorAll("#btn-cv-ver").forEach(function (el) { el.addEventListener("mouseenter", reproducirHover); });
 
       /* Apartado inicial según el enlace (#herramientas, #proyectos, #contacto) */
       var hashInicial = (location.hash || "").replace("#", "");
