@@ -49,40 +49,96 @@
       background: repeating-linear-gradient(180deg, rgba(0,0,0,0.22) 0 1px, transparent 1px 3px);
     }
 
-    /* ---------- Barra superior (HUD) ---------- */
-    nav {
+    /* ---------- Placa de título (cambia según el apartado) ---------- */
+    .placa-cab {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1.6rem 1rem 1.2rem;
+      text-align: center;
+    }
+    .placa {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      max-width: 100%;
+      padding: 0.95rem 1.5rem;
+      background: linear-gradient(180deg, #34343c, #17171c);
+      border: 3px solid var(--acero-claro);
+      box-shadow: inset 0 0 0 2px #000, 0 6px 0 #000, 0 0 22px rgba(227, 35, 31, 0.25);
+    }
+    .remache {
+      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #000;
+      background: radial-gradient(circle at 35% 35%, #d8d8e0, #5a5a64 60%, #111);
+    }
+    #placa-titulo {
+      font-family: var(--pixel);
+      font-size: clamp(0.8rem, 3.4vw, 1.45rem);
+      color: var(--texto);
+      text-transform: uppercase;
+      text-shadow: 3px 3px 0 var(--rojo-oscuro);
+      line-height: 1.4;
+    }
+
+    /* ---------- Botones grandes de apartados ---------- */
+    .tabs-barra {
       position: sticky;
       top: 0;
       z-index: 50;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      padding: 0.9rem 1.5rem;
-      background: linear-gradient(180deg, #202026, #0b0b0e);
+      background: linear-gradient(180deg, rgba(20, 20, 26, 0.97), rgba(8, 8, 11, 0.97));
+      border-top: 2px solid #000;
       border-bottom: 3px solid var(--rojo);
-      box-shadow: 0 4px 0 #000, 0 8px 24px rgba(0,0,0,0.7);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
     }
-    .logo {
-      font-family: var(--pixel);
-      font-size: 0.7rem;
-      color: var(--rojo-brillo);
-      text-decoration: none;
-      text-shadow: 0 0 10px rgba(227,35,31,0.7);
+    .tabs {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0.85rem 1rem 1rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
     }
-    nav ul { display: flex; gap: 1.4rem; list-style: none; flex-wrap: wrap; align-items: center; }
-    nav a.link {
+    .tab-btn {
       font-family: var(--pixel);
-      font-size: 0.55rem;
-      color: var(--acero-claro);
-      text-decoration: none;
+      font-size: clamp(0.5rem, 1.5vw, 0.7rem);
+      line-height: 1.4;
       text-transform: uppercase;
-      transition: color 0.15s;
+      color: var(--acero-claro);
+      background: linear-gradient(180deg, #2d2d35, #16161b);
+      border: 3px solid var(--acero);
+      outline: 3px solid #000;
+      outline-offset: 0;
+      padding: 1.1rem 0.4rem;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #000;
+      transition: color 0.12s, border-color 0.12s, transform 0.08s, box-shadow 0.08s;
     }
-    nav a.link:hover { color: var(--rojo-brillo); }
-    nav a.link::before { content: "> "; opacity: 0; }
-    nav a.link:hover::before { opacity: 1; }
+    .tab-btn:hover {
+      color: var(--texto);
+      border-color: var(--rojo-brillo);
+    }
+    .tab-btn.activo {
+      color: #fff;
+      background: linear-gradient(180deg, var(--rojo), var(--rojo-oscuro));
+      border-color: var(--rojo-brillo);
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #000, 0 0 16px rgba(227, 35, 31, 0.55);
+    }
+
+    /* ---------- Vistas (cada apartado) ---------- */
+    .vista { display: none; }
+    .vista.activa {
+      display: block;
+      animation: entrarVista 0.25s ease-out;
+    }
+    @keyframes entrarVista {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     /* ---------- Tarjeta lateral de Opciones (Derecha) ---------- */
     .opciones-dock {
@@ -258,6 +314,7 @@
       box-shadow: 0 8px 26px rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(4px);
     }
+    .radio-corner.oculto { display: none; }
     .radio-top {
       display: flex;
       justify-content: space-between;
@@ -284,8 +341,32 @@
       box-shadow: 0 0 8px var(--verde-sable);
       animation: parpadeo 0.8s steps(2, start) infinite;
     }
+    .radio-derecha {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
     .radio-indice {
       color: var(--acero-claro);
+    }
+    .radio-cerrar {
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--pixel);
+      font-size: 0.45rem;
+      line-height: 1;
+      color: var(--texto);
+      background: #101014;
+      border: 1px solid var(--acero);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .radio-cerrar:hover {
+      border-color: var(--rojo-brillo);
+      color: var(--rojo-brillo);
     }
     .radio-visor {
       background: #060609;
@@ -402,7 +483,7 @@
     .hero {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 6rem 1.5rem 4rem;
+      padding: 3.5rem 1.5rem 3rem;
       text-align: center;
     }
     .etiqueta {
@@ -485,7 +566,7 @@
     section {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 3.5rem 1.5rem;
+      padding: 2.5rem 1.5rem;
     }
     .mision-cab {
       display: flex;
@@ -567,6 +648,32 @@
       width: calc(var(--n) * 10%);
       background: linear-gradient(90deg, var(--rojo-brillo) calc(100% - 3px), transparent 0) 0 0 / calc(100% / var(--n)) 100%;
       box-shadow: 0 0 12px rgba(227,35,31,0.5);
+    }
+
+    /* ---------- Frameworks y tecnologías (chips) ---------- */
+    .fw-grupo + .fw-grupo { margin-top: 1.6rem; }
+    .fw-titulo {
+      display: block;
+      font-family: var(--pixel);
+      font-size: 0.55rem;
+      color: var(--rojo-brillo);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .chips span {
+      font-family: var(--pixel);
+      font-size: 0.55rem;
+      padding: 0.6rem 0.9rem;
+      color: var(--texto);
+      background: linear-gradient(180deg, #25252d, #121217);
+      border: 2px solid var(--acero);
+      border-bottom: 4px solid #000;
+      clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
     }
 
     /* ---------- Barra de Filtros HUD (Proyectos) ---------- */
@@ -657,11 +764,14 @@
       outline: none;
     }
     .proyecto-tag {
+      display: inline-block;
       font-family: var(--pixel);
       font-size: 0.5rem;
-      color: var(--rojo-brillo);
-      margin-bottom: 0.8rem;
-      display: block;
+      color: #fff;
+      background: var(--rojo);
+      padding: 0.4rem 0.7rem;
+      margin-bottom: 0.9rem;
+      clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
     }
     .proyecto-card h3 {
       font-family: var(--pixel);
@@ -907,11 +1017,28 @@
     }
 
     @media (max-width: 600px) {
-      nav { justify-content: center; }
-      .hero { padding: 4rem 1rem 3rem; }
+      /* Apartados: cuadrícula 2x2 y sin barra pegajosa para ahorrar pantalla */
+      .tabs-barra { position: static; }
+      .tabs { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; padding: 0.8rem 0.8rem 0.9rem; }
+      .tab-btn { padding: 0.95rem 0.3rem; font-size: 0.55rem; }
+      .placa { padding: 0.75rem 1rem; gap: 0.7rem; }
+      .hero { padding: 2.5rem 1rem 2rem; }
       .panel { padding: 1.3rem; }
       .briefing-body { padding: 1.2rem; }
-      .radio-corner { width: 275px; bottom: 0.7rem; left: 0.7rem; }
+
+      /* Reproductor compacto: ocupa el ancho y sin fila de volumen */
+      .radio-corner {
+        left: 0.5rem;
+        right: 0.5rem;
+        bottom: 0.5rem;
+        width: auto;
+        max-width: none;
+        padding: 0.5rem 0.65rem;
+      }
+      .radio-top { margin-bottom: 0.3rem; }
+      .radio-visor { margin-bottom: 0.4rem; padding: 0.3rem 0.5rem; }
+      .radio-controles { margin-bottom: 0; }
+      .radio-vol-row { display: none; }
     }
 
     /* =====================================================
@@ -1119,7 +1246,10 @@
   <div id="radio-hud" class="radio-corner" aria-label="Reproductor de música rotativo">
     <div class="radio-top">
       <span class="radio-badge"><i class="radio-led"></i> <span data-i18n="radioLabel">BGM STREAM</span></span>
-      <span class="radio-indice" id="radio-indice">01/07</span>
+      <span class="radio-derecha">
+        <span class="radio-indice" id="radio-indice">01/07</span>
+        <button type="button" id="radio-cerrar" class="radio-cerrar" title="Cerrar reproductor" aria-label="Cerrar reproductor">X</button>
+      </span>
     </div>
     <div class="radio-visor">
       <span class="radio-titulo" id="radio-titulo">Departure - Megaman Zero 2</span>
@@ -1165,6 +1295,11 @@
         </div>
       </div>
 
+      <button type="button" id="btn-radio" class="opt-btn activo" title="Mostrar u ocultar el reproductor">
+        <span data-i18n="optRadio">REPRODUCTOR</span>
+        <span class="opt-estado" id="estado-radio">ON</span>
+      </button>
+
       <button type="button" id="btn-lang" class="opt-btn activo" title="Cambiar idioma ES / EN">
         <span data-i18n="optLang">IDIOMA</span>
         <span class="opt-estado" id="estado-lang">ES</span>
@@ -1175,216 +1310,262 @@
         <span class="opt-estado">▶</span>
       </button>
 
-      <a href="#inicio" id="btn-home" class="opt-btn home-btn" title="Volver al inicio">
+      <a href="#bio" id="btn-home" class="opt-btn home-btn" data-vista-ir="bio" title="Volver al inicio">
         <span data-i18n="optHome">HOME</span>
         <span class="opt-estado">▲</span>
       </a>
     </div>
   </aside>
 
-  <nav>
-    <a href="#inicio" class="logo">MADVILLAIN42</a>
-    <ul>
-      <li><a class="link" href="#sobre-mi" data-i18n="nav1">Misión 01</a></li>
-      <li><a class="link" href="#equipo" data-i18n="nav2">Misión 02</a></li>
-      <li><a class="link" href="#proyectos" data-i18n="nav3">Misión 03</a></li>
-      <li><a class="link" href="#enlaces" data-i18n="nav4">Misión 04</a></li>
-    </ul>
-  </nav>
-
-  <header class="hero" id="inicio">
-    <span class="etiqueta" data-i18n="heroBadge">ARCHIVO DE OPERADOR</span>
-    <h1>madvillain42</h1>
-    <p class="sub" data-i18n-html="heroSub">
-      Estudiante de 3er año de <strong>Ingeniería en Informática</strong> en Santo Tomás Concepción.
-      Desarrollo multiplataforma, sistemas Linux y aprendizaje en pentesting.
-    </p>
-
-    <div class="estado">
-      <span data-i18n="stOp">OPERADOR</span><span>madvillain42</span>
-      <span data-i18n="stRank">RANGO</span><span data-i18n="stRankVal">3er Año Informática</span>
-      <span data-i18n="stBase">BASE</span><span>Santo Tomás Concepción</span>
-      <span data-i18n="stStatus">ESTADO</span><span class="en-linea" data-i18n="stOnline">EN LÍNEA</span>
+  <!-- Placa con el nombre del apartado actual -->
+  <div class="placa-cab">
+    <div class="placa">
+      <i class="remache"></i>
+      <div id="placa-titulo">HOME &amp; BIO</div>
+      <i class="remache"></i>
     </div>
-    <br>
-    <a href="#sobre-mi" class="btn btn-rojo" data-i18n="btnStart">Iniciar misión</a>
-    <a href="#proyectos" class="btn btn-acero" data-i18n="btnProjects">Proyectos</a>
-  </header>
+  </div>
 
-  <section id="sobre-mi">
-    <div class="mision-cab">
-      <span class="mision-num" data-i18n="m1Num">MISIÓN 01</span>
-      <h2 data-i18n="m1Title">Sobre mí</h2>
-    </div>
-    <div class="panel">
-      <p data-i18n-html="aboutP1">
-        Soy estudiante de <span class="destacado">3er año de Ingeniería en Informática</span> en
-        <span class="destacado">Santo Tomás Concepción</span>. Me desenvuelvo en desarrollo de software
-        utilizando lenguajes variados como <span class="destacado">C++, C#, HTML5, CSS, Python y Java</span>.
+  <!-- Botones grandes de apartados -->
+  <div class="tabs-barra">
+    <nav class="tabs" role="tablist" aria-label="Apartados del sitio">
+      <button type="button" class="tab-btn activo" role="tab" aria-selected="true" data-vista-ir="bio" data-i18n="tabBio">HOME &amp; BIO</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" data-vista-ir="herramientas" data-i18n="tabTools">HERRAMIENTAS</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" data-vista-ir="proyectos" data-i18n="tabProj">PROYECTOS</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" data-vista-ir="contacto" data-i18n="tabContact">CONTACTO</button>
+    </nav>
+  </div>
+
+  <!-- ===================== APARTADO 1: HOME & BIO ===================== -->
+  <div class="vista activa" id="vista-bio">
+    <header class="hero" id="inicio">
+      <span class="etiqueta" data-i18n="heroBadge">ARCHIVO DE OPERADOR</span>
+      <h1>madvillain42</h1>
+      <p class="sub" data-i18n-html="heroSub">
+        Estudiante de 3er año de <strong>Ingeniería en Informática</strong> en Santo Tomás Concepción.
+        Desarrollo multiplataforma, sistemas Linux y aprendizaje en pentesting.
       </p>
-      <p data-i18n-html="aboutP2">
-        Manejo entornos <span class="destacado">Linux</span> y contenedores <span class="destacado">Docker</span>,
-        tengo conocimientos de <span class="destacado">redes</span> y actualmente me encuentro aprendiendo
-        <span class="destacado">pentesting</span>, aplicando lo aprendido en distintos proyectos universitarios.
-      </p>
-    </div>
-  </section>
 
-  <section id="equipo">
-    <div class="mision-cab">
-      <span class="mision-num" data-i18n="m2Num">MISIÓN 02</span>
-      <h2 data-i18n="m2Title">Equipamiento</h2>
-    </div>
-    <div class="panel equipo">
-      <div>
-        <div class="skill-cab"><span>Python / Java / C# / C++</span><span>8/10</span></div>
-        <div class="barra"><div style="--n: 8"></div></div>
+      <div class="estado">
+        <span data-i18n="stOp">OPERADOR</span><span>madvillain42</span>
+        <span data-i18n="stRank">RANGO</span><span data-i18n="stRankVal">3er Año Informática</span>
+        <span data-i18n="stBase">BASE</span><span>Santo Tomás Concepción</span>
+        <span data-i18n="stStatus">ESTADO</span><span class="en-linea" data-i18n="stOnline">EN LÍNEA</span>
       </div>
-      <div>
-        <div class="skill-cab"><span>HTML5 &amp; CSS</span><span>8/10</span></div>
-        <div class="barra"><div style="--n: 8"></div></div>
-      </div>
-      <div>
-        <div class="skill-cab"><span>Linux</span><span>8/10</span></div>
-        <div class="barra"><div style="--n: 8"></div></div>
-      </div>
-      <div>
-        <div class="skill-cab"><span>Docker</span><span>7/10</span></div>
-        <div class="barra"><div style="--n: 7"></div></div>
-      </div>
-      <div>
-        <div class="skill-cab"><span data-i18n="skillNet">Redes</span><span>6/10</span></div>
-        <div class="barra"><div style="--n: 6"></div></div>
-      </div>
-      <div>
-        <div class="skill-cab"><span data-i18n="skillPen">Pentesting (En curso)</span><span>5/10</span></div>
-        <div class="barra"><div style="--n: 5"></div></div>
-      </div>
-    </div>
-  </section>
+      <br>
+      <a href="#sobre-mi" class="btn btn-rojo" data-i18n="btnStart">Iniciar misión</a>
+      <button type="button" class="btn btn-acero" data-vista-ir="proyectos" data-i18n="btnProjects">Proyectos</button>
+    </header>
 
-  <section id="proyectos">
-    <div class="mision-cab">
-      <span class="mision-num" data-i18n="m3Num">MISIÓN 03</span>
-      <h2 data-i18n="m3Title">Proyectos Universitarios</h2>
-    </div>
-    <div class="panel">
-      <!-- Barra de Filtros HUD -->
-      <div class="filtros-hud" role="toolbar" aria-label="Filtrar proyectos por tecnología o área">
-        <div class="filtros-grupo">
-          <button type="button" class="filtro-btn activo" data-filtro="all" data-i18n="filterAll">Todos</button>
-          <button type="button" class="filtro-btn" data-filtro="c#,c++">C# / C++</button>
-          <button type="button" class="filtro-btn" data-filtro="python,java">Python / Java</button>
-          <button type="button" class="filtro-btn" data-filtro="html5,css">Web</button>
-          <button type="button" class="filtro-btn" data-filtro="linux,docker">Linux / Docker</button>
-          <button type="button" class="filtro-btn" data-filtro="redes,pentesting" data-i18n="filterNet">Redes / Pentesting</button>
+    <section id="sobre-mi">
+      <div class="mision-cab">
+        <span class="mision-num" data-i18n="m1Num">MISIÓN 01</span>
+        <h2 data-i18n="m1Title">Acerca de mí</h2>
+      </div>
+      <div class="panel">
+        <p data-i18n-html="aboutP1">
+          Soy estudiante de <span class="destacado">3er año de Ingeniería en Informática</span> en
+          <span class="destacado">Santo Tomás Concepción</span>. Me desenvuelvo en desarrollo de software
+          utilizando lenguajes variados como <span class="destacado">C++, C#, HTML5, CSS, Python y Java</span>.
+        </p>
+        <p data-i18n-html="aboutP2">
+          Manejo entornos <span class="destacado">Linux</span> y contenedores <span class="destacado">Docker</span>,
+          tengo conocimientos de <span class="destacado">redes</span> y actualmente me encuentro aprendiendo
+          <span class="destacado">pentesting</span>, aplicando lo aprendido en distintos proyectos universitarios.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== APARTADO 2: HERRAMIENTAS ===================== -->
+  <div class="vista" id="vista-herramientas">
+    <section>
+      <div class="mision-cab">
+        <span class="mision-num" data-i18n="t1Num">MISIÓN 01</span>
+        <h2 data-i18n="t1Title">Habilidades</h2>
+      </div>
+      <div class="panel equipo">
+        <div>
+          <div class="skill-cab"><span>Python / Java / C# / C++</span><span>8/10</span></div>
+          <div class="barra"><div style="--n: 8"></div></div>
         </div>
-        <span class="filtros-contador" id="filtros-contador">[ EXPEDIENTES: 3/3 ]</span>
+        <div>
+          <div class="skill-cab"><span>HTML5 &amp; CSS</span><span>8/10</span></div>
+          <div class="barra"><div style="--n: 8"></div></div>
+        </div>
+        <div>
+          <div class="skill-cab"><span>Linux</span><span>8/10</span></div>
+          <div class="barra"><div style="--n: 8"></div></div>
+        </div>
+        <div>
+          <div class="skill-cab"><span>Docker</span><span>7/10</span></div>
+          <div class="barra"><div style="--n: 7"></div></div>
+        </div>
+        <div>
+          <div class="skill-cab"><span data-i18n="skillNet">Redes</span><span>6/10</span></div>
+          <div class="barra"><div style="--n: 6"></div></div>
+        </div>
+        <div>
+          <div class="skill-cab"><span data-i18n="skillPen">Pentesting (En curso)</span><span>5/10</span></div>
+          <div class="barra"><div style="--n: 5"></div></div>
+        </div>
       </div>
+    </section>
 
-      <div class="proyectos-grid" id="proyectos-grid">
-        <!-- Plantilla Proyecto 01 -->
-        <article class="proyecto-card" tabindex="0" role="button"
-          data-codigo="EXPEDIENTE // 01"
-          data-codigo-en="FILE // 01"
-          data-estado="PLANTILLA EN ESPERA"
-          data-estado-en="TEMPLATE STANDBY"
-          data-titulo="Proyecto Universitario #01"
-          data-titulo-en="University Project #01"
-          data-descripcion="Espacio reservado para describir el problema resuelto, contexto de la asignatura en Santo Tomás Concepción y el enfoque técnico utilizado."
-          data-descripcion-en="Reserved slot to describe the solved problem, course context at Santo Tomás Concepción, and the technical approach used."
-          data-detalles="Arquitectura modular implementada desde cero.|Despliegue reproducible mediante contenedores Docker.|Pruebas de rendimiento y validación de datos."
-          data-detalles-en="Modular architecture built from scratch.|Reproducible deployment using Docker containers.|Performance benchmarking and data validation."
-          data-tech="C#,C++,Docker"
-          data-repo="https://github.com/madvillain42"
-          data-img="">
-          <div>
-            <span class="proyecto-tag" data-i18n="p1Tag">[ REGISTRO 01 // PENDIENTE ]</span>
-            <h3 data-i18n="p1Title">Proyecto Universitario #01</h3>
-            <p data-i18n="p1Desc">Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
-          </div>
-          <div class="proyecto-pie">
-            <div class="proyecto-tech">
-              <span>C# / C++</span>
-              <span>DOCKER</span>
-            </div>
-            <span class="proyecto-abrir">▶ BRIEFING</span>
-          </div>
-        </article>
-
-        <!-- Plantilla Proyecto 02 -->
-        <article class="proyecto-card" tabindex="0" role="button"
-          data-codigo="EXPEDIENTE // 02"
-          data-codigo-en="FILE // 02"
-          data-estado="PLANTILLA EN ESPERA"
-          data-estado-en="TEMPLATE STANDBY"
-          data-titulo="Proyecto Universitario #02"
-          data-titulo-en="University Project #02"
-          data-descripcion="Espacio reservado para describir el desarrollo de backend, procesamiento de datos o automatización en entornos Linux."
-          data-descripcion-en="Reserved slot to describe backend development, data processing, or automation in Linux environments."
-          data-detalles="Desarrollo orientado a objetos y manejo de estructuras eficientes.|Automatización de tareas y scripts en entorno Linux.|Control de versiones y documentación técnica en GitHub."
-          data-detalles-en="Object-oriented development and efficient data structures.|Task automation and shell scripting in Linux.|Version control and technical documentation on GitHub."
-          data-tech="Java,Python,Linux"
-          data-repo="https://github.com/madvillain42"
-          data-img="">
-          <div>
-            <span class="proyecto-tag" data-i18n="p2Tag">[ REGISTRO 02 // PENDIENTE ]</span>
-            <h3 data-i18n="p2Title">Proyecto Universitario #02</h3>
-            <p data-i18n="p2Desc">Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
-          </div>
-          <div class="proyecto-pie">
-            <div class="proyecto-tech">
-              <span>JAVA / PYTHON</span>
-              <span>LINUX</span>
-            </div>
-            <span class="proyecto-abrir">▶ BRIEFING</span>
-          </div>
-        </article>
-
-        <!-- Plantilla Proyecto 03 -->
-        <article class="proyecto-card" tabindex="0" role="button"
-          data-codigo="EXPEDIENTE // 03"
-          data-codigo-en="FILE // 03"
-          data-estado="PLANTILLA EN ESPERA"
-          data-estado-en="TEMPLATE STANDBY"
-          data-titulo="Proyecto Universitario #03"
-          data-titulo-en="University Project #03"
-          data-descripcion="Espacio reservado para proyectos de desarrollo web, topologías de red o prácticas iniciales de auditoría y pentesting."
-          data-descripcion-en="Reserved slot for web development projects, network topologies, or introductory auditing and pentesting labs."
-          data-detalles="Interfaz responsiva construida con estándares HTML5 y CSS.|Configuración y análisis de servicios en red.|Documentación de hallazgos y medidas de mitigación."
-          data-detalles-en="Responsive interface built with HTML5 and CSS standards.|Network service configuration and traffic analysis.|Documentation of findings and mitigation steps."
-          data-tech="HTML5,CSS,Redes,Pentesting"
-          data-repo="https://github.com/madvillain42"
-          data-img="">
-          <div>
-            <span class="proyecto-tag" data-i18n="p3Tag">[ REGISTRO 03 // PENDIENTE ]</span>
-            <h3 data-i18n="p3Title">Proyecto Universitario #03</h3>
-            <p data-i18n="p3Desc">Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
-          </div>
-          <div class="proyecto-pie">
-            <div class="proyecto-tech">
-              <span>HTML5 / CSS</span>
-              <span>REDES</span>
-            </div>
-            <span class="proyecto-abrir">▶ BRIEFING</span>
-          </div>
-        </article>
+    <section>
+      <div class="mision-cab">
+        <span class="mision-num" data-i18n="t2Num">MISIÓN 02</span>
+        <h2 data-i18n="t2Title">Frameworks y tecnologías</h2>
       </div>
-
-      <div class="sin-resultados" id="sin-resultados" data-i18n="noResults">
-        [ SIN EXPEDIENTES REGISTRADOS EN ESTE SECTOR ]
+      <div class="panel">
+        <!-- Para agregar un framework, copia una línea <span>...</span> y cambia el nombre -->
+        <div class="fw-grupo">
+          <span class="fw-titulo" data-i18n="fwLang">Lenguajes y web</span>
+          <div class="chips">
+            <span>C++</span>
+            <span>C#</span>
+            <span>Java</span>
+            <span>Python</span>
+            <span>HTML5</span>
+            <span>CSS</span>
+          </div>
+        </div>
+        <div class="fw-grupo">
+          <span class="fw-titulo" data-i18n="fwSys">Sistemas y herramientas</span>
+          <div class="chips">
+            <span>Linux</span>
+            <span>Docker</span>
+            <span>GitHub</span>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <section id="enlaces" class="enlaces">
-    <div class="mision-cab">
-      <span class="mision-num" data-i18n="m4Num">MISIÓN 04</span>
-      <h2 data-i18n="m4Title">Enlaces</h2>
-    </div>
-    <p data-i18n="linksDesc">Aquí puedes encontrar mi código y repositorios universitarios.</p>
-    <a href="https://github.com/madvillain42" class="btn btn-rojo" target="_blank" rel="noopener">GitHub</a>
-  </section>
+  <!-- ===================== APARTADO 3: PROYECTOS ===================== -->
+  <div class="vista" id="vista-proyectos">
+    <section>
+      <div class="panel">
+        <!-- Barra de Filtros HUD -->
+        <div class="filtros-hud" role="toolbar" aria-label="Filtrar proyectos por tecnología o área">
+          <div class="filtros-grupo">
+            <button type="button" class="filtro-btn activo" data-filtro="all" data-i18n="filterAll">Todos</button>
+            <button type="button" class="filtro-btn" data-filtro="c#,c++">C# / C++</button>
+            <button type="button" class="filtro-btn" data-filtro="python,java">Python / Java</button>
+            <button type="button" class="filtro-btn" data-filtro="html5,css">Web</button>
+            <button type="button" class="filtro-btn" data-filtro="linux,docker">Linux / Docker</button>
+            <button type="button" class="filtro-btn" data-filtro="redes,pentesting" data-i18n="filterNet">Redes / Pentesting</button>
+          </div>
+          <span class="filtros-contador" id="filtros-contador">[ EXPEDIENTES: 3/3 ]</span>
+        </div>
+
+        <div class="proyectos-grid" id="proyectos-grid">
+          <!-- Misión 01 -->
+          <article class="proyecto-card" tabindex="0" role="button"
+            data-codigo="MISIÓN 01"
+            data-codigo-en="MISSION 01"
+            data-estado="PLANTILLA EN ESPERA"
+            data-estado-en="TEMPLATE STANDBY"
+            data-titulo="Proyecto Re-Eko"
+            data-titulo-en="Re-Eko Project"
+            data-descripcion="Espacio reservado para describir el proyecto Re-Eko: el problema que resuelve, el contexto en Santo Tomás Concepción y el enfoque técnico utilizado."
+            data-descripcion-en="Reserved slot to describe the Re-Eko project: the problem it solves, the course context at Santo Tomás Concepción, and the technical approach used."
+            data-detalles="Arquitectura modular implementada desde cero.|Despliegue reproducible mediante contenedores Docker.|Pruebas de rendimiento y validación de datos."
+            data-detalles-en="Modular architecture built from scratch.|Reproducible deployment using Docker containers.|Performance benchmarking and data validation."
+            data-tech="C#,C++,Docker"
+            data-repo="https://github.com/madvillain42"
+            data-img="">
+            <div>
+              <span class="proyecto-tag" data-i18n="p1Tag">MISIÓN 01</span>
+              <h3 data-i18n="p1Title">Proyecto Re-Eko</h3>
+              <p data-i18n="p1Desc">Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
+            </div>
+            <div class="proyecto-pie">
+              <div class="proyecto-tech">
+                <span>C# / C++</span>
+                <span>DOCKER</span>
+              </div>
+              <span class="proyecto-abrir">▶ BRIEFING</span>
+            </div>
+          </article>
+
+          <!-- Misión 02 -->
+          <article class="proyecto-card" tabindex="0" role="button"
+            data-codigo="MISIÓN 02"
+            data-codigo-en="MISSION 02"
+            data-estado="PLANTILLA EN ESPERA"
+            data-estado-en="TEMPLATE STANDBY"
+            data-titulo="Proyecto 02"
+            data-titulo-en="Project 02"
+            data-descripcion="Espacio reservado para describir el desarrollo de backend, procesamiento de datos o automatización en entornos Linux."
+            data-descripcion-en="Reserved slot to describe backend development, data processing, or automation in Linux environments."
+            data-detalles="Desarrollo orientado a objetos y manejo de estructuras eficientes.|Automatización de tareas y scripts en entorno Linux.|Control de versiones y documentación técnica en GitHub."
+            data-detalles-en="Object-oriented development and efficient data structures.|Task automation and shell scripting in Linux.|Version control and technical documentation on GitHub."
+            data-tech="Java,Python,Linux"
+            data-repo="https://github.com/madvillain42"
+            data-img="">
+            <div>
+              <span class="proyecto-tag" data-i18n="p2Tag">MISIÓN 02</span>
+              <h3 data-i18n="p2Title">Proyecto 02</h3>
+              <p data-i18n="p2Desc">Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
+            </div>
+            <div class="proyecto-pie">
+              <div class="proyecto-tech">
+                <span>JAVA / PYTHON</span>
+                <span>LINUX</span>
+              </div>
+              <span class="proyecto-abrir">▶ BRIEFING</span>
+            </div>
+          </article>
+
+          <!-- Misión 03 -->
+          <article class="proyecto-card" tabindex="0" role="button"
+            data-codigo="MISIÓN 03"
+            data-codigo-en="MISSION 03"
+            data-estado="PLANTILLA EN ESPERA"
+            data-estado-en="TEMPLATE STANDBY"
+            data-titulo="Proyecto 03"
+            data-titulo-en="Project 03"
+            data-descripcion="Espacio reservado para proyectos de desarrollo web, topologías de red o prácticas iniciales de auditoría y pentesting."
+            data-descripcion-en="Reserved slot for web development projects, network topologies, or introductory auditing and pentesting labs."
+            data-detalles="Interfaz responsiva construida con estándares HTML5 y CSS.|Configuración y análisis de servicios en red.|Documentación de hallazgos y medidas de mitigación."
+            data-detalles-en="Responsive interface built with HTML5 and CSS standards.|Network service configuration and traffic analysis.|Documentation of findings and mitigation steps."
+            data-tech="HTML5,CSS,Redes,Pentesting"
+            data-repo="https://github.com/madvillain42"
+            data-img="">
+            <div>
+              <span class="proyecto-tag" data-i18n="p3Tag">MISIÓN 03</span>
+              <h3 data-i18n="p3Title">Proyecto 03</h3>
+              <p data-i18n="p3Desc">Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.</p>
+            </div>
+            <div class="proyecto-pie">
+              <div class="proyecto-tech">
+                <span>HTML5 / CSS</span>
+                <span>REDES</span>
+              </div>
+              <span class="proyecto-abrir">▶ BRIEFING</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="sin-resultados" id="sin-resultados" data-i18n="noResults">
+          [ SIN EXPEDIENTES REGISTRADOS EN ESTE SECTOR ]
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== APARTADO 4: CONTACTO ===================== -->
+  <div class="vista" id="vista-contacto">
+    <section class="enlaces">
+      <div class="mision-cab">
+        <span class="mision-num" data-i18n="c1Num">MISIÓN 01</span>
+        <h2 data-i18n="c1Title">Enlaces</h2>
+      </div>
+      <p data-i18n="linksDesc">Aquí puedes encontrar mi código y repositorios universitarios.</p>
+      <a href="https://github.com/madvillain42" class="btn btn-rojo" target="_blank" rel="noopener">GitHub</a>
+    </section>
+  </div>
 
   <footer>
     <p data-i18n="footerText">© 2026 MADVILLAIN42 · FIN DE LA TRANSMISIÓN</p>
@@ -1395,7 +1576,7 @@
     <div class="briefing-box">
       <div class="briefing-top">
         <div class="briefing-top-izq">
-          <span class="briefing-badge" id="briefing-codigo">EXPEDIENTE // 01</span>
+          <span class="briefing-badge" id="briefing-codigo">MISIÓN 01</span>
           <span class="briefing-status" id="briefing-estado">● EN ESPERA</span>
         </div>
         <button type="button" id="briefing-cerrar" class="briefing-cerrar" aria-label="Cerrar briefing" data-i18n="modalClose">[ X ] CERRAR</button>
@@ -1433,6 +1614,7 @@
       var btnLang = document.getElementById("btn-lang");
       var btnReplay = document.getElementById("btn-replay");
       var btnHome = document.getElementById("btn-home");
+      var btnRadio = document.getElementById("btn-radio");
       var modal = document.getElementById("modal-briefing");
       var btnCerrarModal = document.getElementById("briefing-cerrar");
 
@@ -1483,6 +1665,7 @@
       var radioPlayBtn = document.getElementById("radio-play");
       var radioPrevBtn = document.getElementById("radio-prev");
       var radioNextBtn = document.getElementById("radio-next");
+      var radioCerrarBtn = document.getElementById("radio-cerrar");
       var radioProgresoWrap = document.getElementById("radio-progreso-wrap");
       var radioProgresoBar = document.getElementById("radio-progreso-bar");
       var radioVolSlider = document.getElementById("radio-vol");
@@ -1499,6 +1682,8 @@
       var usuarioPausoManual = false;
       var introIniciada = false;
       var idioma = "es";
+      var vistaActual = "bio";
+      var radioVisible = true;
       var timerFin = null;
       var ultimoHover = 0;
       var ultimoClickSfx = 0;
@@ -1512,13 +1697,14 @@
           optTab: "OPCIONES",
           optHeader: "// SISTEMA",
           optSfx: "SFX",
+          optRadio: "REPRODUCTOR",
           optLang: "IDIOMA",
           optSlash: "Z-SLASH",
           optHome: "HOME",
-          nav1: "Misión 01",
-          nav2: "Misión 02",
-          nav3: "Misión 03",
-          nav4: "Misión 04",
+          tabBio: "HOME & BIO",
+          tabTools: "HERRAMIENTAS",
+          tabProj: "PROYECTOS",
+          tabContact: "CONTACTO",
           heroBadge: "ARCHIVO DE OPERADOR",
           heroSub: "Estudiante de 3er año de <strong>Ingeniería en Informática</strong> en Santo Tomás Concepción. Desarrollo multiplataforma, sistemas Linux y aprendizaje en pentesting.",
           stOp: "OPERADOR",
@@ -1531,29 +1717,31 @@
           btnStart: "Iniciar misión",
           btnProjects: "Proyectos",
           m1Num: "MISIÓN 01",
-          m1Title: "Sobre mí",
+          m1Title: "Acerca de mí",
           aboutP1: 'Soy estudiante de <span class="destacado">3er año de Ingeniería en Informática</span> en <span class="destacado">Santo Tomás Concepción</span>. Me desenvuelvo en desarrollo de software utilizando lenguajes variados como <span class="destacado">C++, C#, HTML5, CSS, Python y Java</span>.',
           aboutP2: 'Manejo entornos <span class="destacado">Linux</span> y contenedores <span class="destacado">Docker</span>, tengo conocimientos de <span class="destacado">redes</span> y actualmente me encuentro aprendiendo <span class="destacado">pentesting</span>, aplicando lo aprendido en distintos proyectos universitarios.',
-          m2Num: "MISIÓN 02",
-          m2Title: "Equipamiento",
+          t1Num: "MISIÓN 01",
+          t1Title: "Habilidades",
+          t2Num: "MISIÓN 02",
+          t2Title: "Frameworks y tecnologías",
+          fwLang: "Lenguajes y web",
+          fwSys: "Sistemas y herramientas",
           skillNet: "Redes",
           skillPen: "Pentesting (En curso)",
-          m3Num: "MISIÓN 03",
-          m3Title: "Proyectos Universitarios",
           filterAll: "Todos",
           filterNet: "Redes / Pentesting",
-          p1Tag: "[ REGISTRO 01 // PENDIENTE ]",
-          p1Title: "Proyecto Universitario #01",
+          p1Tag: "MISIÓN 01",
+          p1Title: "Proyecto Re-Eko",
           p1Desc: "Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.",
-          p2Tag: "[ REGISTRO 02 // PENDIENTE ]",
-          p2Title: "Proyecto Universitario #02",
+          p2Tag: "MISIÓN 02",
+          p2Title: "Proyecto 02",
           p2Desc: "Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.",
-          p3Tag: "[ REGISTRO 03 // PENDIENTE ]",
-          p3Title: "Proyecto Universitario #03",
+          p3Tag: "MISIÓN 03",
+          p3Title: "Proyecto 03",
           p3Desc: "Espacio reservado para documentación, arquitectura y enlace al repositorio del proyecto.",
           noResults: "[ SIN EXPEDIENTES REGISTRADOS EN ESTE SECTOR ]",
-          m4Num: "MISIÓN 04",
-          m4Title: "Enlaces",
+          c1Num: "MISIÓN 01",
+          c1Title: "Enlaces",
           linksDesc: "Aquí puedes encontrar mi código y repositorios universitarios.",
           footerText: "© 2026 MADVILLAIN42 · FIN DE LA TRANSMISIÓN",
           modalClose: "[ X ] CERRAR",
@@ -1570,13 +1758,14 @@
           optTab: "OPTIONS",
           optHeader: "// SYSTEM",
           optSfx: "SFX",
+          optRadio: "PLAYER",
           optLang: "LANGUAGE",
           optSlash: "Z-SLASH",
           optHome: "HOME",
-          nav1: "Mission 01",
-          nav2: "Mission 02",
-          nav3: "Mission 03",
-          nav4: "Mission 04",
+          tabBio: "HOME & BIO",
+          tabTools: "TOOLS",
+          tabProj: "PROJECTS",
+          tabContact: "CONTACT",
           heroBadge: "OPERATOR FILE",
           heroSub: "3rd-year <strong>Computer Science Engineering</strong> student at Santo Tomás Concepción. Multi-language software development, Linux systems, and pentesting trainee.",
           stOp: "OPERATOR",
@@ -1592,26 +1781,28 @@
           m1Title: "About me",
           aboutP1: 'I am a <span class="destacado">3rd-year Computer Science Engineering</span> student at <span class="destacado">Santo Tomás Concepción</span>. I build software across multiple languages including <span class="destacado">C++, C#, HTML5, CSS, Python, and Java</span>.',
           aboutP2: 'I work comfortably with <span class="destacado">Linux</span> environments and <span class="destacado">Docker</span> containers, have foundational <span class="destacado">networking</span> skills, and am currently learning <span class="destacado">pentesting</span> through university projects.',
-          m2Num: "MISSION 02",
-          m2Title: "Loadout",
+          t1Num: "MISSION 01",
+          t1Title: "Skills",
+          t2Num: "MISSION 02",
+          t2Title: "Frameworks & technologies",
+          fwLang: "Languages & web",
+          fwSys: "Systems & tools",
           skillNet: "Networking",
           skillPen: "Pentesting (In progress)",
-          m3Num: "MISSION 03",
-          m3Title: "University Projects",
           filterAll: "All",
           filterNet: "Networking / Pentesting",
-          p1Tag: "[ RECORD 01 // STANDBY ]",
-          p1Title: "University Project #01",
+          p1Tag: "MISSION 01",
+          p1Title: "Re-Eko Project",
           p1Desc: "Reserved slot for documentation, system architecture, and repository link.",
-          p2Tag: "[ RECORD 02 // STANDBY ]",
-          p2Title: "University Project #02",
+          p2Tag: "MISSION 02",
+          p2Title: "Project 02",
           p2Desc: "Reserved slot for documentation, system architecture, and repository link.",
-          p3Tag: "[ RECORD 03 // STANDBY ]",
-          p3Title: "University Project #03",
+          p3Tag: "MISSION 03",
+          p3Title: "Project 03",
           p3Desc: "Reserved slot for documentation, system architecture, and repository link.",
           noResults: "[ NO FILES REGISTERED IN THIS SECTOR ]",
-          m4Num: "MISSION 04",
-          m4Title: "Links",
+          c1Num: "MISSION 01",
+          c1Title: "Links",
           linksDesc: "Here you can find my source code and university repositories.",
           footerText: "© 2026 MADVILLAIN42 · END OF TRANSMISSION",
           modalClose: "[ X ] CLOSE",
@@ -1676,16 +1867,32 @@
         } catch (e) {}
       }
 
-      /* BarritaDerecha adelantado 0.3s + enfriamiento de hover tras clic */
+      /* BarritaDerecha: sonido opaco, se usa para abrir/cerrar paneles y para CERRAR cualquier cosa */
       function reproducirBarraDerecha() {
         ultimoClickSfx = performance.now();
         dispararSfx("barra", 0.6, 0.3);
       }
 
-      /* PasarMouse adelantado 0.22s, bloqueado 450 ms después de hacer clic */
+      /* Seleccionar: se usa para elegir apartados, botones y filtros */
+      function reproducirSeleccionar() {
+        ultimoClickSfx = performance.now();
+        dispararSfx("seleccionar", 0.6, 0.22);
+      }
+
+      /* PasarMouse: NO suena durante 700 ms después de cualquier clic o toque,
+         ni cuando un botón recibe foco por un clic (solo por teclado). */
       function reproducirHover(e) {
         var ahoraMs = performance.now();
-        if (ahoraMs - ultimoClickSfx < 450) return;
+
+        if (e && e.type === "focus" && e.currentTarget && e.currentTarget.matches) {
+          try {
+            if (!e.currentTarget.matches(":focus-visible")) return;
+          } catch (err) {
+            return;
+          }
+        }
+
+        if (ahoraMs - ultimoClickSfx < 700) return;
         if (ahoraMs - ultimoHover < 90) return;
 
         var objetivo = e && e.currentTarget ? e.currentTarget : null;
@@ -1698,11 +1905,11 @@
         dispararSfx("hover", 0.45, 0.22);
       }
 
-      /* Seleccionar adelantado 0.22s + enfriamiento de hover tras clic */
-      function reproducirSeleccionar() {
+      /* Cualquier presión (mouse o toque) abre la ventana de silencio para el hover,
+         así el hover nunca se acopla con el sonido de seleccionar */
+      document.addEventListener("pointerdown", function () {
         ultimoClickSfx = performance.now();
-        dispararSfx("seleccionar", 0.6, 0.22);
-      }
+      }, true);
 
       /* =====================================================
          SISTEMA DE PLAYLIST ROTATIVA (Departure por defecto)
@@ -1824,6 +2031,23 @@
         });
       }
 
+      /* Mostrar u ocultar el reproductor de la esquina (la música sigue sonando) */
+      function ocultarRadio() {
+        radioVisible = false;
+        if (radioHud) radioHud.classList.add("oculto");
+        var est = document.getElementById("estado-radio");
+        if (est) est.textContent = "OFF";
+        if (btnRadio) btnRadio.classList.remove("activo");
+      }
+
+      function mostrarRadio() {
+        radioVisible = true;
+        if (radioHud) radioHud.classList.remove("oculto");
+        var est = document.getElementById("estado-radio");
+        if (est) est.textContent = "ON";
+        if (btnRadio) btnRadio.classList.add("activo");
+      }
+
       /* Reproductor esquina inferior izquierda -> BarritaDerecha.mp3 */
       if (radioPlayBtn) {
         radioPlayBtn.addEventListener("mouseenter", reproducirHover);
@@ -1845,6 +2069,15 @@
       if (radioPrevBtn) {
         radioPrevBtn.addEventListener("mouseenter", reproducirHover);
         radioPrevBtn.addEventListener("click", anteriorPista);
+      }
+
+      /* Cerrar reproductor: suena BarritaDerecha (sonido de cierre) */
+      if (radioCerrarBtn) {
+        radioCerrarBtn.addEventListener("mouseenter", reproducirHover);
+        radioCerrarBtn.addEventListener("click", function () {
+          reproducirBarraDerecha();
+          ocultarRadio();
+        });
       }
 
       if (radioProgresoWrap) {
@@ -1943,6 +2176,52 @@
         });
       }
 
+      /* =====================================================
+         APARTADOS (HOME & BIO / HERRAMIENTAS / PROYECTOS / CONTACTO)
+         ===================================================== */
+      var nombresVista = ["bio", "herramientas", "proyectos", "contacto"];
+      var claveVista = {
+        bio: "tabBio",
+        herramientas: "tabTools",
+        proyectos: "tabProj",
+        contacto: "tabContact"
+      };
+      var vistas = document.querySelectorAll(".vista");
+      var tabBtns = document.querySelectorAll(".tab-btn");
+      var placaTitulo = document.getElementById("placa-titulo");
+
+      function actualizarPlaca() {
+        if (placaTitulo) {
+          placaTitulo.textContent = textos[idioma][claveVista[vistaActual]];
+        }
+      }
+
+      function mostrarVista(nombre) {
+        var destino = document.getElementById("vista-" + nombre);
+        if (!destino) return;
+        vistaActual = nombre;
+
+        vistas.forEach(function (v) {
+          v.classList.toggle("activa", v === destino);
+        });
+        tabBtns.forEach(function (t) {
+          var activo = t.getAttribute("data-vista-ir") === nombre;
+          t.classList.toggle("activo", activo);
+          t.setAttribute("aria-selected", activo ? "true" : "false");
+        });
+
+        actualizarPlaca();
+        window.scrollTo({ top: 0, behavior: "auto" });
+        try { history.replaceState(null, "", "#" + nombre); } catch (err) {}
+      }
+
+      document.querySelectorAll("[data-vista-ir]").forEach(function (el) {
+        el.addEventListener("click", function (e) {
+          e.preventDefault();
+          mostrarVista(el.getAttribute("data-vista-ir"));
+        });
+      });
+
       /* Traducción ES / EN */
       function aplicarIdioma(nuevoIdioma) {
         idioma = nuevoIdioma;
@@ -1961,6 +2240,8 @@
 
         var estadoLang = document.getElementById("estado-lang");
         if (estadoLang) estadoLang.textContent = idioma.toUpperCase();
+
+        actualizarPlaca();
 
         var btnActivo = document.querySelector(".filtro-btn.activo");
         aplicarFiltroProyectos(btnActivo ? btnActivo.getAttribute("data-filtro") : "all");
@@ -2027,7 +2308,7 @@
         var esIngles = idioma === "en";
         var dict = textos[idioma];
 
-        var codigo = (esIngles ? card.getAttribute("data-codigo-en") : card.getAttribute("data-codigo")) || "EXPEDIENTE";
+        var codigo = (esIngles ? card.getAttribute("data-codigo-en") : card.getAttribute("data-codigo")) || "MISIÓN";
         var estado = (esIngles ? card.getAttribute("data-estado-en") : card.getAttribute("data-estado")) || "ACTIVO";
         var titulo = (esIngles ? card.getAttribute("data-titulo-en") : card.getAttribute("data-titulo")) || "Proyecto";
         var desc = (esIngles ? card.getAttribute("data-descripcion-en") : card.getAttribute("data-descripcion")) || "";
@@ -2083,9 +2364,10 @@
         btnCerrarModal.focus();
       }
 
+      /* Cerrar briefing: suena BarritaDerecha (sonido opaco de cierre) */
       function cerrarBriefing() {
         if (!modal || !modal.classList.contains("abierto")) return;
-        reproducirSeleccionar();
+        reproducirBarraDerecha();
         modal.classList.remove("abierto");
         document.documentElement.classList.remove("bloqueado");
       }
@@ -2126,13 +2408,15 @@
         }
       });
 
-      /* Vincular PasarMouse y Seleccionar SOLO a enlaces y botones interactuables */
-      var elementosInteractivos = document.querySelectorAll("nav a, .btn, .opt-btn");
+      /* Vincular PasarMouse y Seleccionar a apartados, botones y opciones.
+         Se excluyen los botones que manejan su propio sonido (SFX, Z-Slash y Reproductor). */
+      var sonidoPropio = ["btn-sfx", "btn-replay", "btn-radio"];
+      var elementosInteractivos = document.querySelectorAll(".tab-btn, .btn, .opt-btn");
       elementosInteractivos.forEach(function (el) {
         el.addEventListener("mouseenter", reproducirHover);
         el.addEventListener("focus", reproducirHover);
 
-        if (el.id !== "btn-sfx") {
+        if (sonidoPropio.indexOf(el.id) === -1) {
           el.addEventListener("click", reproducirSeleccionar);
         }
       });
@@ -2145,6 +2429,19 @@
           if (estadoSfx) estadoSfx.textContent = sfxActivo ? "ON" : "OFF";
           btnSfx.classList.toggle("activo", sfxActivo);
           if (sfxActivo) reproducirSeleccionar();
+        });
+      }
+
+      /* Mostrar/ocultar reproductor: cerrar = BarritaDerecha, abrir = Seleccionar */
+      if (btnRadio) {
+        btnRadio.addEventListener("click", function () {
+          if (radioVisible) {
+            reproducirBarraDerecha();
+            ocultarRadio();
+          } else {
+            reproducirSeleccionar();
+            mostrarRadio();
+          }
         });
       }
 
@@ -2172,6 +2469,10 @@
           }
         });
       }
+
+      /* Apartado inicial según el enlace (#herramientas, #proyectos, #contacto) */
+      var hashInicial = (location.hash || "").replace("#", "");
+      mostrarVista(nombresVista.indexOf(hashInicial) !== -1 ? hashInicial : "bio");
     })();
   </script>
 
